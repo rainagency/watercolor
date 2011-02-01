@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Graphic version="1.0" viewHeight="284.581" viewWidth="495" xmlns="http://ns.adobe.com/fxg/2008">
+  <Library/>
+  <Group x="22.7744" y="23.0146" d:type="layer" d:userLabel="Layer 1" xmlns:d="http://ns.adobe.com/fxg/2008/dt">
+    <Rect x="0.5" y="0.5" width="106.931" height="102.971">
+      <fill>
+        <SolidColor color="#4ab749"/>
+      </fill>
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Rect>
+    <Ellipse x="246.253" y="0.500977" width="65.0176" height="102.97">
+      <fill>
+        <SolidColor color="#375fac"/>
+      </fill>
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Ellipse>
+    <Ellipse x="339.343" y="22.9424" width="58.0859" height="58.0859">
+      <fill>
+        <SolidColor color="#ed1c24"/>
+      </fill>
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Ellipse>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="42.9556" y="119.317">
+      <content><p><span>Rect</span></p></content>
+    </TextGraphic>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="140.778" y="119.317">
+      <content><p><span>Rounded Rect</span></p></content>
+    </TextGraphic>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="262.778" y="118.373">
+      <content><p><span>Ellipse</span></p></content>
+    </TextGraphic>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="354.509" y="118.373">
+      <content><p><span>Circle</span></p></content>
+    </TextGraphic>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="427.394" y="118.373">
+      <content><p><span>Line</span></p></content>
+    </TextGraphic>
+    <Path winding="nonZero" data="M219.13 93.4707C219.13 98.9932 214.653 103.471 209.13 103.471L143.981 103.471C138.458 103.471 133.981 98.9932 133.981 93.4707L133.981 10.5C133.981 4.97705 138.458 0.5 143.981 0.5L209.13 0.5C214.653 0.5 219.13 4.97705 219.13 10.5L219.13
+ 93.4707Z" >
+      <fill>
+        <SolidColor color="#fee600"/>
+      </fill>
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Path>
+    <Line xFrom="437.965" yFrom="15.1968" xTo="437.965" yTo="92.0947">
+      <stroke>
+        <SolidColorStroke color="#b3499b" caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Line>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="15.4819" y="224.267">
+      <content><p><span>Linear Gradient</span></p></content>
+    </TextGraphic>
+    <TextGraphic fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="139.39" y="224.267">
+      <content><p><span>Radial Gradient</span></p></content>
+    </TextGraphic>
+    <TextGraphic textAlign="center" fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="254.495" y="224.267">
+      <content><p><span>Open Path</span></p></content>
+    </TextGraphic>
+    <TextGraphic textAlign="center" fontFamily="Myriad Pro" lineHeight="120%" whiteSpaceCollapse="preserve" kerning="on" x="342.695" y="224.267">
+      <content><p><span>Filled Path</span></p></content>
+    </TextGraphic>
+    <Group y="149.515">
+      <Rect x="0.5" y="0.5" width="106.931" height="60.3965">
+        <fill>
+          <LinearGradient x="0.5" y="30.6982" scaleX="106.931" rotation="-0">
+            <GradientEntry color="#2bb673" ratio="0"/>
+            <GradientEntry color="#006838" ratio="1"/>
+          </LinearGradient>
+        </fill>
+        <stroke>
+          <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+        </stroke>
+      </Rect>
+    </Group>
+    <Group x="146.87" y="151.495">
+      <Ellipse x="0.5" y="0.499512" width="60.7314" height="60.7314">
+        <fill>
+          <RadialGradient x="30.8657" y="30.8652" scaleX="60.7319" scaleY="60.7319">
+            <GradientEntry color="#2bb673" ratio="0"/>
+            <GradientEntry color="#006838" ratio="1"/>
+          </RadialGradient>
+        </fill>
+        <stroke>
+          <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+        </stroke>
+      </Ellipse>
+    </Group>
+    <Path winding="nonZero" data="M297.156 208.101C280.752 212.11 264.202 202.063 260.192 185.658 256.984 172.534 265.022 159.295 278.146 156.087 288.646 153.521 299.236 159.951 301.803 170.45 303.856 178.85 298.712 187.322 290.313 189.376 283.594 191.019 276.814 186.902
+ 275.172 180.184 273.858 174.808 277.15 169.385 282.526 168.071 286.826 167.02 291.165 169.653 292.216 173.954 293.057 177.395 290.95 180.865 287.51 181.706 284.758 182.379 281.98 180.693 281.308 177.941 280.77 175.739 282.118 173.518 284.32 172.979
+ 286.081 172.549 287.858 173.628 288.289 175.389 288.634 176.798 287.771 178.22 286.361 178.564 285.234 178.84 284.097 178.15 283.821 177.022 283.601 176.121 284.153 175.211 285.055 174.99" >
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Path>
+    <Path winding="nonZero" data="M349.437 157.936C348.776 163.877 349.437 194.899 349.437 194.899L349.437 212.727 360.19 212.727C360.19 212.727 361.978 215.36 361.978 199.85 361.978 184.339 374.069 185.416 374.069 185.416 374.069 185.416 389.163 184.339 387.946 170.478
+ 386.729 156.616 378.567 157.936 374.067 157.936 369.567 157.936 349.437 157.936 349.437 157.936Z" >
+      <fill>
+        <SolidColor color="#2dbec1"/>
+      </fill>
+      <stroke>
+        <SolidColorStroke caps="none" weight="1" joints="miter" miterLimit="4"/>
+      </stroke>
+    </Path>
+  </Group>
+</Graphic>

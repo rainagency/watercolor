@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Graphic version="2.0" viewHeight="20" viewWidth="20" ai:appVersion="15.0.0.399" ATE:version="1.0.0" flm:version="1.0.0" d:id="1" d:using="" xmlns="http://ns.adobe.com/fxg/2008" xmlns:ATE="http://ns.adobe.com/ate/2009" xmlns:ai="http://ns.adobe.com/ai/2009" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:flm="http://ns.adobe.com/flame/2008">
+  <Library/>
+  <Group ai:artboardActive="1" ai:artboardIndex="0" ai:seqID="1" d:layerType="page" d:pageHeight="20" d:pageWidth="20" d:type="layer" d:userLabel="Artboard 1">
+    <Group ai:objID="1429c200" ai:seqID="2" d:id="2" d:type="layer" d:userLabel="Layer 1">
+      <Group ai:objID="14550600" ai:seqID="3">
+        <Group ai:objID="1454a300" ai:seqID="4" flm:knockout="false">
+          <Rect width="20" height="20" ai:objID="144c6400" ai:seqID="5">
+            <fill>
+              <SolidColor color="#818181"/>
+            </fill>
+          </Rect>
+        </Group>
+        <Path x="2.96338" y="3.38966" winding="nonZero" ai:objID="144c4a80" ai:seqID="6" data="M5.41162 1.47362C5.41162 1.47362 5.51318 4.23192 5.51318 5.07762L0 5.07762 0 9.09081 5.51611 9.09081C5.51611 9.91503 5.41162 12.665 5.41162 12.665 5.41162 14.0771 6.38818 14.7324 7.38525 13.7373 8.38525 12.7402 14.0786 7.07665 14.0786 7.07665
+ 14.0786 7.07665 8.38525 1.38622 7.46338 0.461901 6.53955 -0.462416 5.41699 0.0644398 5.41162 1.47362Z">
+          <fill>
+            <SolidColor color="#FFFFFF"/>
+          </fill>
+        </Path>
+      </Group>
+    </Group>
+  </Group>
+  <Private>
+      <ai:PrivateElement d:ref="#1">
+        <ai:SaveOptions>
+          <ai:Dict data="I preserveGradientPolicy 4 B downsampleLinkedImages 0 I preserveTextPolicy 4 I preserveFilterPolicy 3 I expandBlendsOption 5 I rasterizeResolution 72 B writeImages 1 B includeXMP 0 B aiEditCap 1 B includeSymbol 0 I versionKey 2 B includeObjectOutsideArtboard 0 "/>
+        </ai:SaveOptions>
+        <ai:DocData base="rightMiddle.assets/images" rulerCanvasDiffH="10.5" rulerCanvasDiffV="10.5">
+          <ai:DocRasterSettings>
+            <ai:Dict data="B spot 1 B mask 0 R padd 36 I dpi. 300 I colr 5 B alis 0 "/>
+          </ai:DocRasterSettings>
+        </ai:DocData>
+        <ai:AutoGenImageList>
+          <ai:Dict/>
+        </ai:AutoGenImageList>
+      </ai:PrivateElement>
+      <ai:PrivateElement flm:hashcode="5E66124933669F6741AAACB34CA25618" d:ref="#2">
+        <ai:LayerOptions color="5 79.31 257 128.502"/>
+      </ai:PrivateElement>
+    </Private>
+  </Graphic>

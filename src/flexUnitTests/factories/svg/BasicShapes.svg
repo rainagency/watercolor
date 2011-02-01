@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="495px" height="284.582px" viewBox="0 0 495 284.582" enable-background="new 0 0 495 284.582" xml:space="preserve">
+	 
+<rect x="23.274" y="23.515" fill="#4AB749" stroke="#000000" width="106.931" height="102.971"/>
+<ellipse fill="#375FAC" stroke="#000000" cx="301.536" cy="75" rx="32.509" ry="51.485"/>
+<circle fill="#ED1C24" stroke="#000000" cx="391.16" cy="75" r="29.043"/>
+
+<text transform="matrix(1 0 0 1 65.73 150.8511)" font-family="'MyriadPro-Regular'" font-size="12">Rect</text>
+<text transform="matrix(1 0 0 1 163.5522 150.8511)" font-family="'MyriadPro-Regular'" font-size="12">Rounded Rect</text>
+<text transform="matrix(1 0 0 1 285.5527 149.9077)" font-family="'MyriadPro-Regular'" font-size="12">Ellipse</text>
+<text transform="matrix(1 0 0 1 377.2832 149.9077)" font-family="'MyriadPro-Regular'" font-size="12">Circle</text>
+<text transform="matrix(1 0 0 1 450.168 149.9077)" font-family="'MyriadPro-Regular'" font-size="12">Line</text>
+
+<rect rx="10" ry="10" x="160.205" y="23.515" fill="yellow" stroke="#000000" width="80" height="102.971" />
+<line fill="none" stroke="#B3499B" x1="460.739" y1="38.211" x2="460.739" y2="115.109"/>
+
+<text transform="matrix(1 0 0 1 38.2563 255.8022)" font-family="'MyriadPro-Regular'" font-size="12">Linear Gradient</text>
+<text transform="matrix(1 0 0 1 162.1641 255.8022)" font-family="'MyriadPro-Regular'" font-size="12">Radial Gradient</text>
+<text transform="matrix(1 0 0 1 277.0898 255.8022)" font-family="'MyriadPro-Regular'" font-size="12">Open Path</text>
+<text transform="matrix(1 0 0 1 365.1348 255.8022)" font-family="'MyriadPro-Regular'" font-size="12">Filled Path</text>
+
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="171.7739" y1="-99.646" x2="278.7051" y2="-99.646" gradientTransform="matrix(1 0 0 -1 -148.5 103.5811)">
+	<stop  offset="0" style="stop-color:#2BB673"/>
+	<stop  offset="1" style="stop-color:#006838"/>
+</linearGradient>
+
+<rect x="23.274" y="173.029" fill="url(#SVGID_1_)" stroke="#000000" width="106.931" height="60.396"/>
+
+
+<radialGradient id="SVGID_2_" cx="349.0098" cy="-101.7944" r="30.3662" gradientTransform="matrix(1 0 0 -1 -148.5 103.5811)" gradientUnits="userSpaceOnUse">
+	<stop  offset="0" style="stop-color:#2BB673"/>
+	<stop  offset="1" style="stop-color:#006838"/>
+</radialGradient>
+
+<circle fill="url(#SVGID_2_)" stroke="#000000" cx="200.51" cy="205.375" r="30.366"/>
+
+<path fill="none" stroke="#000000" d="M319.932,231.115c-16.404,4.01-32.955-6.037-36.965-22.441
+	c-3.208-13.125,4.83-26.363,17.954-29.571c10.499-2.565,21.091,3.864,23.656,14.362c2.054,8.4-3.091,16.873-11.49,18.927
+	c-6.719,1.644-13.498-2.474-15.141-9.192c-1.313-5.375,1.979-10.799,7.354-12.111c4.3-1.053,8.64,1.582,9.689,5.883
+	c0.841,3.439-1.267,6.91-4.706,7.752c-2.752,0.673-5.529-1.014-6.202-3.766c-0.538-2.201,0.812-4.424,3.013-4.961
+	c1.762-0.432,3.538,0.647,3.969,2.408c0.346,1.409-0.519,2.831-1.928,3.176c-1.127,0.275-2.265-0.414-2.539-1.541
+	c-0.222-0.901,0.332-1.813,1.232-2.033"/>
+	
+<path fill="#2DBEC1" stroke="#000000" d="M372.211,180.951c-0.66,5.94,0,36.963,0,36.963v17.828h10.754
+	c0,0,1.787,2.633,1.787-12.878s12.092-14.434,12.092-14.434s15.094-1.077,13.877-14.938s-9.379-12.541-13.879-12.541
+	S372.211,180.951,372.211,180.951z"/>
+	
+</svg>

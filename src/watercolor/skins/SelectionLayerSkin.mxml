@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:transform="watercolor.transform.*" xmlns:elements="watercolor.elements.*" xmlns:components="watercolor.elements.components.*">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("watercolor.elements.components.SelectionLayer")]
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="disabled"/>
+	</s:states>
+			
+	<s:Group id="contentGroup" width="100%" height="100%"/>
+	
+	<transform:TransformLayer id="transformLayer" width="100%" height="100%" skinClass="watercolor.skins.TransformSkin"/>
+	
+</s:Skin>

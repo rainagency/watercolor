@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+	The default skin for the brightnessSelector of the HSBColorPicker 
+	component.
+
+ 	@see watercolor.components.HSBColorPicker#brightnessSelector
+
+	@langversion 3.0
+	@playerversion Flash 10
+	@playerversion AIR 1.5
+	@productversion Flex 4
+
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
+    xmlns:fb="http://ns.adobe.com/flashbuilder/2009" minWidth="11" alpha.disabled="0.5">
+
+    <fx:Metadata>
+    <![CDATA[[HostComponent("spark.components.VSlider")]]]>
+    </fx:Metadata> 
+    
+    <s:states>
+        <s:State name="normal" />
+        <s:State name="disabled" />
+    </s:states>
+    
+    <fx:Declarations>
+        <fx:Component id="dataTip">
+            <s:DataRenderer minHeight="24" minWidth="40" x="20"> 
+                <s:Rect top="0" left="0" right="0" bottom="0">
+                    <s:fill>
+                        <s:SolidColor color="0x000000" alpha=".9"/>
+                    </s:fill>
+                    <s:filters>
+                        <s:DropShadowFilter angle="90" color="0x999999" distance="3"/>
+                    </s:filters>
+                </s:Rect>
+                <s:Label id="labelDisplay" text="{data}"
+                         horizontalCenter="0" verticalCenter="1"
+                         left="5" right="5" top="5" bottom="5"
+                         textAlign="center" verticalAlign="middle"
+                         fontWeight="normal" color="white" fontSize="11">
+                </s:Label>
+            </s:DataRenderer>
+        </fx:Component>
+    </fx:Declarations>
+    
+	<!-- The default skin class for the BrightnessSelectorTrackSkin -->
+    <s:Button id="track" left="0" right="0" top="0" bottom="0" minHeight="33" height="100"
+              skinClass="watercolor.skins.BrightnessSelectorTrackSkin" />
+              
+    <s:Button id="thumb" left="0" right="0" width="11" height="11" 
+              skinClass="spark.skins.spark.VSliderThumbSkin" />
+
+</s:SparkSkin>

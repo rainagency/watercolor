@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Graphic version="2.0" viewHeight="15" viewWidth="14.9985" ai:appVersion="15.0.0.399" ATE:version="1.0.0" flm:version="1.0.0" d:using="" xmlns="http://ns.adobe.com/fxg/2008" xmlns:ATE="http://ns.adobe.com/ate/2009" xmlns:ai="http://ns.adobe.com/ai/2009" xmlns:d="http://ns.adobe.com/fxg/2008/dt" xmlns:flm="http://ns.adobe.com/flame/2008">
+  <Library/>
+  <Group ai:seqID="1" d:layerType="page" d:pageHeight="15" d:pageWidth="14.999" d:type="layer" d:userLabel="Artboard 1">
+    <Group ai:seqID="2" d:type="layer" d:userLabel="Layer 1">
+      <Path x="2.92285" y="2.94629" winding="nonZero" ai:seqID="3" data="M5.49463 2.30762 4.00195 2.30762 4.00195 0.816406C4.00195 0.369629 3.63721 0.00390625 3.18994 0.00390625L3.11816 0C2.67383 0.00390625 2.3042 0.369629 2.3042 0.816406L2.3042 2.30762 0.813477 2.30762C0.366211 2.30762 0 2.6748 0 3.12061L0 3.18896
+C0 3.63818 0.366211 4.00488 0.81543 4.00488L2.3042 4.00488 2.3042 5.49414C2.3042 5.94434 2.67383 6.30957 3.11816 6.30811L3.18994 6.31104C3.63428 6.30811 4.00195 5.94434 4.00195 5.49561L4.00195 4.00293 5.49463 4.00488C5.94238 4.00049 6.30713 3.63672
+ 6.30713 3.18896L6.30713 3.12061C6.30713 2.6748 5.94238 2.30762 5.49463 2.30762Z">
+        <fill>
+          <SolidColor color="#666666"/>
+        </fill>
+      </Path>
+      <Path x="-0.00012207" y="-0.000244141" winding="nonZero" ai:seqID="4" data="M14.6637 13.0535 11.2301 9.61743C12.8658 7.22046 12.6295 3.93042 10.5026 1.802 8.10022 -0.60083 4.20569 -0.60083 1.80286 1.802 -0.600952 4.20728 -0.600952 8.10034 1.80286 10.5042 3.92688 12.6321 7.2179 12.8679 9.61389 11.2288L13.0514 14.6682C13.4957
+ 15.1106 14.2184 15.1106 14.6637 14.6643 15.11 14.2224 15.11 13.4998 14.6637 13.0535ZM9.28528 9.28687C7.55481 11.0134 4.74915 11.0168 3.01868 9.28687 1.2887 7.55591 1.2887 4.75024 3.01868 3.02075 4.74915 1.28882 7.55481 1.28882 9.28674 3.02075
+ 11.0167 4.75024 11.0167 7.55444 9.28528 9.28687Z">
+        <fill>
+          <LinearGradient x="7.49915" y="-3.86255" scaleX="23.0497" rotation="90">
+            <GradientEntry ratio="0" color="#4D4D4D"/>
+            <GradientEntry ratio="0.496933" color="#666666"/>
+            <GradientEntry ratio="0.552147" color="#404040"/>
+            <GradientEntry ratio="1" color="#1A1A1A"/>
+          </LinearGradient>
+        </fill>
+      </Path>
+    </Group>
+  </Group>
+  <Private/>
+</Graphic>

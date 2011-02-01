@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:elements="watercolor.elements.*"
+		xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" xmlns:assets="watercolor.assets.*">
+	
+	<fx:Metadata>[HostComponent("watercolor.transform.TransformLayer")]</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="nonselected"/>
+		<s:State name="selected"/>
+	</s:states>
+	
+	<s:Rect id="selectionBounds" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}">
+		<s:stroke>
+			<s:SolidColorStroke color="#808080" weight="2" scaleMode="none" alpha="0.7"/>
+		</s:stroke>
+	</s:Rect>
+	
+	<assets:topLeft id="topLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>	
+	<assets:topRight id="topRightRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:bottomLeft id="bottomLeftRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:bottomRight id="bottomRightBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:topMiddle id="skewTopBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:leftMiddle id="skewLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:bottomMiddle id="bottomMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<assets:rightMiddle id="rightMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	
+	<!--<s:Group id="centerBtn" width="15" height="15" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}">
+		<s:Ellipse width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="0x000000"/>
+			</s:fill>
+		</s:Ellipse>
+	</s:Group>-->
+	
+</s:Skin>

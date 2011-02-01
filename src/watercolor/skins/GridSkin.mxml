@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:elements="watercolor.elements.*"
+		xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" xmlns:assets="watercolor.assets.*">
+	
+	<fx:Metadata>[HostComponent("watercolor.elements.components.Grid")]</fx:Metadata>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="disabled"/>
+		<s:State name="normal"/>
+	</s:states>
+	
+	<s:Group id="leftRulerLayer" width="100%" height="100%"></s:Group>
+	<s:Group id="topRulerLayer" width="100%" height="100%"></s:Group>
+	<s:Group id="rightRulerLayer" width="100%" height="100%"></s:Group>
+	<s:Group id="bottomRulerLayer" height="100%" width="100%"></s:Group>
+	<s:Group id="gridLayer" left="0" top="0" right="0" bottom="0"></s:Group>
+</s:Skin>

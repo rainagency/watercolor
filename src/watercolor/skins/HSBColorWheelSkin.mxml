@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+	The default skin for the HSBColorWheel component.
+	
+	@see watercolor.components.HSBColorWheel
+	
+	@langversion 3.0
+	@playerversion Flash 10
+	@playerversion AIR 1.5
+	@productversion Flex 4
+
+-->
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:components="watercolor.components.*" 
+		minWidth="50" minHeight="50" 
+		width="200" height="200">
+	
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("watercolor.components.HSBColorWheel")]
+	</fx:Metadata>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<s:Ellipse id="background" left="0" top="0" right="0" bottom="0">
+		<s:fill>
+			<s:SolidColor />
+		</s:fill>
+	</s:Ellipse>
+	
+	<s:BitmapImage id="colorWheelDisplay" left="0" top="0" right="0" bottom="0" />
+	
+	<s:Ellipse id="border" left="0" top="0" right="0" bottom="0">
+		<s:stroke>
+			<s:SolidColorStroke color="#333333" />
+		</s:stroke>
+	</s:Ellipse>
+	
+	<s:Ellipse id="selectedColorIndicator" width="10" height="10">
+		<s:stroke>
+			<s:SolidColorStroke color="#FFFFFF" />
+		</s:stroke>
+		<s:filters>
+			<s:DropShadowFilter />
+		</s:filters>
+	</s:Ellipse>
+	
+</s:Skin>

@@ -1,0 +1,23 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace comp "watercolor.elements.components.*";
+
+comp|Workarea {
+	skinClass: ClassReference('watercolor.skins.IsolationLayerSkin');
+	skinClass: ClassReference('watercolor.skins.SelectionLayerSkin');
+	skinClass: ClassReference('watercolor.skins.TransformSkin');
+	skinClass: ClassReference('watercolor.skins.WorkareaSkin');
+}
+
+HSBColorPicker {
+	skinClass: ClassReference("watercolor.skins.HSBColorPickerSkin");
+}
+
+HSBColorWheel {
+	skinClass: ClassReference("watercolor.skins.HSBColorWheelSkin");
+}
+
+HSBColorPicker #brightnessSelector {
+	skinClass: ClassReference("watercolor.skins.BrightnessSelectorSkin");
+}

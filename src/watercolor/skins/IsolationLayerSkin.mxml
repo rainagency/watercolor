@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx" 
+		xmlns:elements="watercolor.elements.*"
+		creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Metadata>[HostComponent("watercolor.elements.components.IsolationLayer")]</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.ResizeEvent;
+			
+			import watercolor.utils.CoordinateUtils;
+			
+			[Bindable] private var scrollX:Number = 0;
+			[Bindable] private var scrollY:Number = 0;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				hostComponent.viewPort.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, propertyChanged);
+			}
+			
+			private function propertyChanged(event:PropertyChangeEvent):void 
+			{				
+				if (event.property == "verticalScrollPosition" || event.property == "horizontalScrollPosition") {					
+					var p:Point = CoordinateUtils.localToLocal(event.currentTarget, this, new Point(event.currentTarget.scrollRect.x, event.currentTarget.scrollRect.y));					
+					scrollX = p.x;
+					scrollY = p.y;					
+				}				
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:states>
+		<s:State name="disabled"/>
+		<s:State name="normal"/>
+		<s:State name="contourMode"/>
+	</s:states>
+	
+	
+	<s:Group width="100%" height="100%" scaleX="{hostComponent.contentGroupScaleX}" scaleY="{hostComponent.contentGroupScaleY}">		
+		<elements:Group id="contentGroup" mouseEnabled="false"/>
+	</s:Group>
+	
+	
+	<s:Group x="{scrollX}" y="{scrollY}">
+		
+		<!-- Gray Banner -->
+		<s:Rect left="0" right="0" height="38">
+			<s:fill>
+				<s:SolidColor color="#8D8D8D" />
+			</s:fill>
+		</s:Rect>
+		
+		<s:HGroup verticalAlign="middle" gap="0" top="7">
+			
+			<!-- Exit Button -->
+			<s:Button id="exitBtn" label="Exit:" visible.contourMode="true" 
+						   visible="{currentState == 'normal' || currentState == 'contourMode'}" 
+						   includeInLayout="{currentState == 'normal' || currentState == 'contourMode'}" 
+						   fontSize="16"/>
+			
+			<!-- Breadcrumb Trail -->
+			<s:HGroup id="trail" verticalAlign="middle" gap="0">
+				
+			</s:HGroup>
+			
+			<!-- Current Item -->
+			<s:Label id="currentItem" paddingLeft="10" paddingTop="3"/>
+		</s:HGroup>
+		
+		<!--<mx:Spacer width="100%" /> -->
+		
+		<mx:LinkButton id="separateBtn" visible.normal="true" visible="false" includeInLayout.normal="true" includeInLayout="false"/>
+	
+	</s:Group>
+	
+	
+</s:Skin>
