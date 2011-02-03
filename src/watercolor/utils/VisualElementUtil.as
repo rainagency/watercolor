@@ -80,6 +80,10 @@ package watercolor.utils
 
 				return clonedTextGroup;
 			}
+			else if( source is watercolor.elements.Path )
+			{
+				return cloneWCPath( watercolor.elements.Path( source ), watercolor.elements.Path( target ));
+			}
 			else if( source is spark.primitives.Path )
 			{
 				return clonePath( spark.primitives.Path( source ), spark.primitives.Path( target ));
@@ -255,7 +259,7 @@ package watercolor.utils
 			target.fill = cloneIFill( source.fill );
 			target.stroke = IStroke( ObjectUtil.copy( source.stroke ));
 			target.winding = source.winding;
-			target.data = source.data;
+			target.pathData = source.pathData.clone();
 			target.width = source.width;
 			target.height = source.height;
 			target.transform.matrix = source.transform.matrix;

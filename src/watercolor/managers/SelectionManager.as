@@ -246,14 +246,14 @@ package watercolor.managers
 		 * Checks all selected items. If item(s) have been removed, or their layer's
 		 * visibility is hidden. They will be removed from the selection.
 		 */
-		public function updateSelection( rebuildSelection:Boolean = false, updateBounds:Boolean = false ):void
+		public function updateSelection( rebuildSelection:Boolean = false, updateBounds:Boolean = false, updateCenter:Boolean = false ):void
 		{
-			update( rebuildSelection, updateBounds );
+			update( rebuildSelection, updateBounds, updateCenter );
 			dispatchEvent( new SelectionManagerEvent( SelectionManagerEvent.ELEMENTS_UPDATE, _elements ));
 		}
 
 
-		private function update( rebuildSelection:Boolean = false, updateBounds:Boolean = false ):void
+		private function update( rebuildSelection:Boolean = false, updateBounds:Boolean = false, updateCenter:Boolean = false):void
 		{
 
 			var elements:Vector.<Element> = new Vector.<Element>();
@@ -276,7 +276,7 @@ package watercolor.managers
 				/*
 				   If Nothing has changed, just update the current selection box.
 				 */
-				_workarea.selectionLayer.transformLayer.update( false, updateBounds );
+				_workarea.selectionLayer.transformLayer.update( updateCenter, updateBounds );
 			}
 			else
 			{
