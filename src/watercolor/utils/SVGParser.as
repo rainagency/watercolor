@@ -67,7 +67,7 @@ package watercolor.utils
 			if( index > 0 )
 			{
 				number = Number( parseString.substr( 0, index ));
-				if (number < .005)
+				if (Math.abs(number) < .005)
 				{
 					number = 0;
 				}
@@ -85,9 +85,7 @@ package watercolor.utils
 		
 		public function getPoint():Point
 		{
-			var p:Point = new Point( getNumber(), getNumber());
-			
-			return p;
+			return new Point( getNumber(), getNumber());
 		}
 	}
 }
