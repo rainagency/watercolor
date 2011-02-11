@@ -569,7 +569,7 @@ package watercolor.utils
 		{
 			// target2 may have not been positioned on parent before, if not, pre-position it vertically
 			if( target2.x == 0 )
-				target2.y = commonParent.height - target2.height;
+				target2.y = target1.y + target1.height - target2.height;
 
 			// get bounding boxes in common parent's coordinate space
 			var rect1:Rectangle = getElementRectangle( target1, commonParent, true );
