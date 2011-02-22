@@ -3,7 +3,6 @@ package watercolor.transform
 
 	/**
 	 * Available transformation modes.
-	 *
 	 */
 	public class TransformMode
 	{
@@ -17,6 +16,8 @@ package watercolor.transform
 		static public const MODE_ROTATE:String = "modeRotate";
 		static public const MODE_CENTER_POINT:String = "modeRevPoint";
 		static public const MODE_MOVE:String = "modeMove";
+		static public const MODE_MOVE_X:String = "modeMoveX";
+		static public const MODE_MOVE_Y:String = "modeMoveY";
 		static public const MODE_FLIP:String = "modeFlip";
 		static public const MODE_NUDGE:String = "modeNudge";
 		static public const MODE_MOVETO:String = "modeMoveTo";

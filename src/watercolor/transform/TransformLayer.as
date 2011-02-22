@@ -20,7 +20,7 @@ package watercolor.transform
 
 	/**
 	 * Transformation layer. This handles rotation, skew and scale at the same time.
-	 * Type of operation depends on where mouse down event occures, active areas are ilustrated below
+	 * Type of operation depends on where mouse down event occures, active areas are illustrated below
 	 *
 	 * <pre>
 	 * (  r  )  skX       skX   (  r  )
@@ -86,13 +86,13 @@ package watercolor.transform
 		 * mouse down coordinates in
 		 * transform coordinate space
 		 */
-		private var mdt:Point;
+		private var localMouseDownPoint:Point;
 
 
 		/**
 		 * global mouse down coordinates
 		 */
-		private var globalMdt:Point;
+		private var globalMouseDownPoint:Point;
 
 
 		private var _topLeft:Point = new Point();
@@ -405,7 +405,17 @@ package watercolor.transform
 		 * @default
 		 */
 		public var skewRightBtn:Sprite = new Sprite();
+		
+		/**
+		 * SkewLocked
+		 */
+		private var skewLocked:Boolean = false;
 
+		/**
+		 * SkewVertical when Locked
+		 * If false, skew will be locked horizontal.
+		 */ 	
+		private var skewVertical:Boolean = true;
 
 		[SkinState("selected", "nonselected")]
 
@@ -604,6 +614,9 @@ package watercolor.transform
 				{
 					addMouseMoveGlobalListener(mouseDownHandler, mouseMoveUp);
 				}
+				
+				// Handle Skins need to have a width so they can be positioned correctly.
+				validateNow();
 				
 				// display the selection box with the center button in the right place
 				redrawSelectionBox();
@@ -1043,8 +1056,13 @@ package watercolor.transform
 			tmp.x += tmp2.x;
 			tmp.y += tmp2.y;
 			tmp2.x = Math.atan2(tmp.y, tmp.x) * 180 / Math.PI;
-			topLeftBtn.rotation = topLeftRotateBtn.rotation = (tmp2.x + 135);
-			bottomRightBtn.rotation = bottomRightRotateBtn.rotation = (tmp2.x + 135);
+			
+			if ((topLeftBtn is Handle && Handle(topLeftBtn).rotateWithSelectionBox) || !(topLeftBtn is Handle))	topLeftBtn.rotation = (tmp2.x + 135);
+			if ((topLeftRotateBtn is Handle && Handle(topLeftRotateBtn).rotateWithSelectionBox) || !(topLeftRotateBtn is Handle))	topLeftRotateBtn.rotation = (tmp2.x + 135);
+			
+			if ((bottomRightBtn is Handle && Handle(bottomRightBtn).rotateWithSelectionBox) || !(bottomRightBtn is Handle))	bottomRightBtn.rotation = (tmp2.x + 135);
+			if ((bottomRightRotateBtn is Handle && Handle(bottomRightRotateBtn).rotateWithSelectionBox) || !(bottomRightRotateBtn is Handle))	bottomRightRotateBtn.rotation = (tmp2.x + 135);
+			
 
 			// top left
 			adjustBtnByRotation(topLeft, topLeftBtn);			
@@ -1061,8 +1079,13 @@ package watercolor.transform
 			tmp.x += tmp2.x;
 			tmp.y += tmp2.y;
 			tmp2.x = Math.atan2(tmp.y, tmp.x) * 180 / Math.PI;
-			topRightBtn.rotation = topRightRotateBtn.rotation = (tmp2.x + 45);
-			bottomLeftBtn.rotation = bottomLeftRotateBtn.rotation = (tmp2.x + 45);
+			
+			
+			if ((topRightBtn is Handle && Handle(topRightBtn).rotateWithSelectionBox) || !(topRightBtn is Handle))	topRightBtn.rotation = (tmp2.x + 45);
+			if ((topRightRotateBtn is Handle && Handle(topRightRotateBtn).rotateWithSelectionBox) || !(topRightRotateBtn is Handle))	topRightRotateBtn.rotation = (tmp2.x + 45);
+			
+			if ((bottomLeftBtn is Handle && Handle(bottomLeftBtn).rotateWithSelectionBox) || !(bottomLeftBtn is Handle))	bottomLeftBtn.rotation = (tmp2.x + 45);
+			if ((bottomLeftRotateBtn is Handle && Handle(bottomLeftRotateBtn).rotateWithSelectionBox) || !(bottomLeftRotateBtn is Handle))	bottomLeftRotateBtn.rotation = (tmp2.x + 45);
 
 			adjustBtnByRotation(topRight, topRightBtn);			
 			adjustBtnByRotation(topRight, topRightRotateBtn);
@@ -1076,10 +1099,11 @@ package watercolor.transform
 			var btnRotation2:Number = (Math.atan2(bottomLeft.y - topLeft.y, bottomLeft.x - topLeft.x) * 180 / Math.PI) - 90;
 
 			// use the rotations calculated above to determine the rotation of the middle and skew buttons
-			rightMiddleBtn.rotation = btnRotation;
-			topMiddleBtn.rotation = btnRotation;
-			bottomMiddleBtn.rotation = btnRotation2;
-			leftMiddleBtn.rotation = btnRotation2;
+			// only rotate if it is a Handle and is allowed to rotate
+			if ((rightMiddleBtn is Handle && Handle(rightMiddleBtn).rotateWithSelectionBox) || !(rightMiddleBtn is Handle))	rightMiddleBtn.rotation = btnRotation;
+			if ((topMiddleBtn is Handle && Handle(topMiddleBtn).rotateWithSelectionBox) || !(topMiddleBtn is Handle))	topMiddleBtn.rotation = btnRotation;
+			if ((bottomMiddleBtn is Handle && Handle(bottomMiddleBtn).rotateWithSelectionBox) || !(bottomMiddleBtn is Handle))	bottomMiddleBtn.rotation = btnRotation2;
+			if ((leftMiddleBtn is Handle && Handle(leftMiddleBtn).rotateWithSelectionBox) || !(leftMiddleBtn is Handle))	leftMiddleBtn.rotation = btnRotation2;
 
 			skewRightBtn.rotation = btnRotation;
 			skewTopBtn.rotation = btnRotation;
@@ -1129,10 +1153,10 @@ package watercolor.transform
 				ctrp2 = localToGlobal(ctrp2);
 	
 				// grab the global mouse down location
-				globalMdt = new Point(event.stageX, event.stageY);
+				globalMouseDownPoint = new Point(event.stageX, event.stageY);
 	
 				// determine the local mouse down location
-				mdt = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(globalMdt));
+				localMouseDownPoint = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(globalMouseDownPoint));
 	
 				cMode = TransformMode.MODE_IDLE;
 	
@@ -1162,9 +1186,8 @@ package watercolor.transform
 						cMode = TransformMode.MODE_ROTATE;
 						break;
 					case topLeftBtn:
-						ctrp1.x = bottomRight.x;
-						ctrp1.y = bottomRight.y;
-						cMode = TransformMode.MODE_SCALE;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : bottomRight;
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
 						break;
 					case topRightRotateBtn:
 						ctrp1.x = bottomLeft.x;
@@ -1172,9 +1195,8 @@ package watercolor.transform
 						cMode = TransformMode.MODE_ROTATE;
 						break;
 					case topRightBtn:
-						ctrp1.x = bottomLeft.x;
-						ctrp1.y = bottomLeft.y;
-						cMode = TransformMode.MODE_SCALE;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : bottomLeft;
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
 						break;
 					case bottomLeftRotateBtn:
 						ctrp1.x = topRight.x;
@@ -1182,9 +1204,8 @@ package watercolor.transform
 						cMode = TransformMode.MODE_ROTATE;
 						break;
 					case bottomLeftBtn:
-						ctrp1.x = topRight.x;
-						ctrp1.y = topRight.y;
-						cMode = TransformMode.MODE_SCALE;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : topRight;
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
 						break;
 					case bottomRightRotateBtn:
 						ctrp1.x = topLeft.x;
@@ -1192,25 +1213,24 @@ package watercolor.transform
 						cMode = TransformMode.MODE_ROTATE;
 						break;
 					case bottomRightBtn:
-						ctrp1.x = topLeft.x;
-						ctrp1.y = topLeft.y;
-						cMode = TransformMode.MODE_SCALE;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : topLeft;
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
 						break;
 					case topMiddleBtn:						
-						with (Point.interpolate(bottomRight, bottomLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }						
-						cMode = TransformMode.MODE_SCALEY;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(bottomRight, bottomLeft, 0.5);
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEY;					
 						break;
 					case bottomMiddleBtn:
-						with (Point.interpolate(topLeft, topRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SCALEY;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(topLeft, topRight, 0.5);
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEY;		
 						break;
 					case rightMiddleBtn:
-						with (Point.interpolate(bottomLeft, topLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SCALEX;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(bottomLeft, topLeft, 0.5);
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEX;		
 						break;
 					case leftMiddleBtn:
-						with (Point.interpolate(topRight, bottomRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SCALEX;
+						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(topRight, bottomRight, 0.5);
+						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEX;		
 						break;
 					case centerBtn:
 						cMode = TransformMode.MODE_CENTER_POINT;
@@ -1238,6 +1258,9 @@ package watercolor.transform
 					case TransformMode.MODE_ROTATE:
 						addMouseMoveGlobalListener(onMouseRotate, deactivateHandler);
 						break;
+					case TransformMode.MODE_SKEW:
+						addMouseMoveGlobalListener(onMouseSkew, deactivateHandler);
+						break;
 					case TransformMode.MODE_SKEWY:
 						addMouseMoveGlobalListener(onMouseSkewY, deactivateHandler);
 						break;
@@ -1246,6 +1269,12 @@ package watercolor.transform
 						break;
 					case TransformMode.MODE_MOVE:
 						addMouseMoveGlobalListener(onMouseMove, deactivateHandler);
+						break;
+					case TransformMode.MODE_MOVE_X:
+						addMouseMoveGlobalListener(onMouseMoveX, deactivateHandler);
+						break;
+					case TransformMode.MODE_MOVE_Y:
+						addMouseMoveGlobalListener(onMouseMoveY, deactivateHandler);
 						break;
 					case TransformMode.MODE_CENTER_POINT:
 						addMouseMoveGlobalListener(centerPointMouseMove, mouseMoveUp);
@@ -1265,6 +1294,33 @@ package watercolor.transform
 				dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_BEGIN, matrices, _elements, getCurrentRect(), cMode));
 			}
 		}
+		
+		/**
+		 * Convert Enums to Actual Points from handles in a custom TransformLayerSkin
+		 */ 
+		private function convertCenterPointEnumToPoint(centerPointEnum:String):Point
+		{
+			switch (centerPointEnum)
+			{
+				case HandleCenterPointEnum.TOP_LEFT:
+					return topLeft;
+				case HandleCenterPointEnum.TOP_MIDDLE:
+					return Point.interpolate(topLeft, topRight, 0.5);
+				case HandleCenterPointEnum.TOP_RIGHT:
+					return topRight;
+				case HandleCenterPointEnum.LEFT_MIDDLE:
+					return Point.interpolate(topLeft, bottomLeft, 0.5);
+				case HandleCenterPointEnum.CENTER:
+					return center;
+				case HandleCenterPointEnum.BOTTOM_LEFT:
+					return bottomLeft;
+				case HandleCenterPointEnum.BOTTOM_MIDDLE:
+					return Point.interpolate(bottomLeft, bottomRight, 0.5);
+				case HandleCenterPointEnum.BOTTOM_RIGHT:
+					return bottomRight;
+			}
+			return null;
+		}
 
 
 		/**
@@ -1282,8 +1338,11 @@ package watercolor.transform
 			totalMatrixInversion.invert();
 			ctrp1 = null;
 			ctrp2 = null;
-			mdt = null;
+			localMouseDownPoint = null;
 			currentMatrix.identity();
+			
+			// Remove SkewLock
+			skewLocked = false;
 
 			// dispatch an event to indicate that the transformation is finished
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_FINISH, matrices, _elements, getCurrentRect()));
@@ -1419,7 +1478,7 @@ package watercolor.transform
 		private function onMouseMove(event:MouseEvent):void
 		{
 			// get the center point
-			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
+			var gp:Point = ctrp1;
 
 			// calculate the new location
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
@@ -1430,6 +1489,58 @@ package watercolor.transform
 			// alter the element's location
 			currentMatrix.translate(-p.x, -p.y);
 			currentMatrix.concat(totalMatrix);
+			addTransformation(currentMatrix);
+
+			// update the selection box and dispatch an event
+			redrawSelectionBox();
+			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
+		}
+
+		/**
+		 * Mouse move handler function
+		 * @param The mouse click event
+		 */
+		private function onMouseMoveX(event:MouseEvent):void
+		{
+			// get the center point
+			var gp:Point = ctrp1;
+			
+			// Calculate Mouse Delta from MouseDown
+			var mouseDownPoint:Point = _parentContainer.globalToLocal(globalMouseDownPoint);
+			var mouseMovePoint:Point = new Point(_parentContainer.mouseX, _parentContainer.mouseY);
+			var delta:Point = new Point();
+			delta.x = mouseMovePoint.x - mouseDownPoint.x;
+			delta.y = mouseMovePoint.y - mouseDownPoint.y;
+			
+			currentMatrix = totalMatrix.clone();
+			currentMatrix.translate(delta.x, 0);
+			
+			addTransformation(currentMatrix);
+
+			// update the selection box and dispatch an event
+			redrawSelectionBox();
+			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
+		}
+
+		/**
+		 * Mouse move handler function
+		 * @param The mouse click event
+		 */
+		private function onMouseMoveY(event:MouseEvent):void
+		{
+			// get the center point
+			var gp:Point = ctrp1;
+			
+			// Calculate Mouse Delta from MouseDown
+			var mouseDownPoint:Point = _parentContainer.globalToLocal(globalMouseDownPoint);
+			var mouseMovePoint:Point = new Point(_parentContainer.mouseX, _parentContainer.mouseY)
+			var delta:Point = new Point();
+			delta.x = mouseMovePoint.x - mouseDownPoint.x;
+			delta.y = mouseMovePoint.y - mouseDownPoint.y;
+			
+			currentMatrix = totalMatrix.clone();
+			currentMatrix.translate(0, delta.y);
+			
 			addTransformation(currentMatrix);
 
 			// update the selection box and dispatch an event
@@ -1514,7 +1625,7 @@ package watercolor.transform
 		{
 			var gp:Point = (event.altKey) ? ctrp1.clone() : ctrp2.clone();
 			var ms:Point = new Point(event.stageX - gp.x, event.stageY - gp.y);
-			var md:Point = new Point(globalMdt.x - gp.x, globalMdt.y - gp.y);
+			var md:Point = new Point(globalMouseDownPoint.x - gp.x, globalMouseDownPoint.y - gp.y);
 
 			var alfa:Number = Math.atan2(md.x * ms.y - md.y * ms.x, md.x * ms.x + md.y * ms.y);
 
@@ -1594,7 +1705,7 @@ package watercolor.transform
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 
 			currentMatrix.identity();
-			p.y = (gp.y - p.y) / (gp.y - mdt.y);
+			p.y = (gp.y - p.y) / (gp.y - localMouseDownPoint.y);
 
 			currentMatrix.translate(0, -gp.y);
 			currentMatrix.scale(1, p.y);
@@ -1617,7 +1728,7 @@ package watercolor.transform
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 
 			currentMatrix.identity();
-			p.x = (gp.x - p.x) / (gp.x - mdt.x);
+			p.x = (gp.x - p.x) / (gp.x - localMouseDownPoint.x);
 
 			currentMatrix.translate(-gp.x, 0);
 			currentMatrix.scale(p.x, 1);
@@ -1641,8 +1752,8 @@ package watercolor.transform
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 
 			currentMatrix.identity();
-			p.x = (gp.x - p.x) / (gp.x - mdt.x);
-			p.y = (gp.y - p.y) / (gp.y - mdt.y);
+			p.x = (gp.x - p.x) / (gp.x - localMouseDownPoint.x);
+			p.y = (gp.y - p.y) / (gp.y - localMouseDownPoint.y);
 
 			if((scaleProportional && !event.shiftKey) || (!scaleProportional && event.shiftKey))
 			{
@@ -1697,6 +1808,60 @@ package watercolor.transform
 
 
 		/**
+		 * Mouse Skew handling function
+		 * Detects if mouseY or mouseX is greater and only skews on that axis unless alt key is pressed.
+		 * @param The mouse click event
+		 */
+		private function onMouseSkew(event:MouseEvent):void
+		{
+			var gp:Point = ctrp1;
+			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			
+			var delta:Point = new Point();
+			delta.x = p.x - localMouseDownPoint.x;
+			delta.y = p.y - localMouseDownPoint.y;
+
+			currentMatrix.a = currentMatrix.d = 1;
+			currentMatrix.b = currentMatrix.c = 0;
+			currentMatrix.tx = -gp.x;
+			currentMatrix.ty = -gp.y;
+			
+			// Both X and Y
+			if (event.altKey)
+			{
+				currentMatrix.concat(new Matrix(1, (localMouseDownPoint.y - p.y) / (gp.x - localMouseDownPoint.x), -(p.x - localMouseDownPoint.x) / (gp.y - localMouseDownPoint.y), 1)); // SkewX and Y at the same time
+			}
+			else if ( (skewLocked && !skewVertical) || (!skewLocked && (Math.abs(delta.x) > Math.abs(delta.y)) ))
+			{
+				// X Only
+				if (!skewLocked)
+				{
+					skewLocked = true;
+					skewVertical = false;
+				}
+				currentMatrix.concat(new Matrix(1, 0, -(p.x - localMouseDownPoint.x) / (gp.y - localMouseDownPoint.y), 1));
+			}
+			else
+			{
+				// Y Only
+				if (!skewLocked)
+				{
+					skewLocked = true;
+					skewVertical = true;
+				}
+				currentMatrix.concat(new Matrix(1, (localMouseDownPoint.y - p.y) / (gp.x - localMouseDownPoint.x)));
+			}
+			
+			currentMatrix.translate(gp.x, gp.y);
+			currentMatrix.concat(totalMatrix);
+
+			addTransformation(currentMatrix);
+
+			redrawSelectionBox(event.altKey);
+			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
+		}
+		
+		/**
 		 * X skew handling function
 		 * @param The mouse click event
 		 */
@@ -1709,7 +1874,7 @@ package watercolor.transform
 			currentMatrix.b = currentMatrix.c = 0;
 			currentMatrix.tx = -gp.x;
 			currentMatrix.ty = -gp.y;
-			currentMatrix.concat(new Matrix(1, 0, -(p.x - mdt.x) / (gp.y - mdt.y), 1));
+			currentMatrix.concat(new Matrix(1, 0, -(p.x - localMouseDownPoint.x) / (gp.y - localMouseDownPoint.y), 1));
 			currentMatrix.translate(gp.x, gp.y);
 			currentMatrix.concat(totalMatrix);
 
@@ -1733,7 +1898,7 @@ package watercolor.transform
 			currentMatrix.b = currentMatrix.c = 0;
 			currentMatrix.tx = -gp.x;
 			currentMatrix.ty = -gp.y;
-			currentMatrix.concat(new Matrix(1, (mdt.y - p.y) / (gp.x - mdt.x)));
+			currentMatrix.concat(new Matrix(1, (localMouseDownPoint.y - p.y) / (gp.x - localMouseDownPoint.x)));
 			currentMatrix.translate(gp.x, gp.y);
 			currentMatrix.concat(totalMatrix);
 
