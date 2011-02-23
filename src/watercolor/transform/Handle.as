@@ -23,7 +23,7 @@ package watercolor.transform
 		 * Center point to base this handle's calculations from.
 		 * @see watercolor.transform.HandleCenterPointEnum
 		 */ 
-		public var centerPoint:String;
+		public var anchorPoint:String;
 		
 		/**
 		 * If the skin should rotate with the selection box.

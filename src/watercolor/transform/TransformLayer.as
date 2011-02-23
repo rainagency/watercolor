@@ -228,7 +228,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var topRightBtn:Sprite = new Sprite();
+		public var topRightBtn:Handle = new Handle();
 
 
 		/**
@@ -239,7 +239,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var topLeftBtn:Sprite = new Sprite();
+		public var topLeftBtn:Handle = new Handle();
 
 
 		/**
@@ -250,7 +250,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var bottomRightBtn:Sprite = new Sprite();
+		public var bottomRightBtn:Handle = new Handle();
 
 
 		/**
@@ -261,7 +261,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var bottomLeftBtn:Sprite = new Sprite();
+		public var bottomLeftBtn:Handle = new Handle();
 
 
 		/**
@@ -272,7 +272,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var topRightRotateBtn:Sprite = new Sprite();
+		public var topRightRotateBtn:Handle = new Handle();
 
 
 		/**
@@ -283,7 +283,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var topLeftRotateBtn:Sprite = new Sprite();
+		public var topLeftRotateBtn:Handle = new Handle();
 
 
 		/**
@@ -294,7 +294,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var bottomRightRotateBtn:Sprite = new Sprite();
+		public var bottomRightRotateBtn:Handle = new Handle();
 
 
 		/**
@@ -305,7 +305,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var bottomLeftRotateBtn:Sprite = new Sprite();
+		public var bottomLeftRotateBtn:Handle = new Handle();
 
 
 		/**
@@ -316,7 +316,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var topMiddleBtn:Sprite = new Sprite();
+		public var topMiddleBtn:Handle = new Handle();
 
 
 		/**
@@ -327,7 +327,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var rightMiddleBtn:Sprite = new Sprite();
+		public var rightMiddleBtn:Handle = new Handle();
 
 
 		/**
@@ -338,7 +338,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var bottomMiddleBtn:Sprite = new Sprite();
+		public var bottomMiddleBtn:Handle = new Handle();
 
 
 		/**
@@ -349,7 +349,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var leftMiddleBtn:Sprite = new Sprite();
+		public var leftMiddleBtn:Handle = new Handle();
 
 
 		/**
@@ -360,7 +360,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var centerBtn:Sprite = new Sprite();
+		public var centerBtn:Handle = new Handle();
 
 
 		/**
@@ -371,7 +371,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var skewTopBtn:Sprite = new Sprite();
+		public var skewTopBtn:Handle = new Handle();
 
 
 		/**
@@ -382,7 +382,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var skewBottomBtn:Sprite = new Sprite();
+		public var skewBottomBtn:Handle = new Handle();
 
 
 		/**
@@ -393,7 +393,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var skewLeftBtn:Sprite = new Sprite();
+		public var skewLeftBtn:Handle = new Handle();
 
 
 		/**
@@ -404,7 +404,7 @@ package watercolor.transform
 		 *
 		 * @default
 		 */
-		public var skewRightBtn:Sprite = new Sprite();
+		public var skewRightBtn:Handle = new Handle();
 		
 		/**
 		 * SkewLocked
@@ -495,7 +495,7 @@ package watercolor.transform
 		{
 			super.partAdded(partName, instance);
 
-			// go through each sprite and set the appropriate event listeners
+			// go through each handle and set the appropriate event listeners
 			switch(instance)
 			{
 				case skewTopBtn:
@@ -529,7 +529,7 @@ package watercolor.transform
 		{
 			super.partRemoved(partName, instance);
 
-			// go through each sprite and remove the appropriate event listeners
+			// go through each Handle and remove the appropriate event listeners
 			switch(instance)
 			{
 				case skewTopBtn:
@@ -1057,12 +1057,15 @@ package watercolor.transform
 			tmp.y += tmp2.y;
 			tmp2.x = Math.atan2(tmp.y, tmp.x) * 180 / Math.PI;
 			
-			if ((topLeftBtn is Handle && Handle(topLeftBtn).rotateWithSelectionBox) || !(topLeftBtn is Handle))	topLeftBtn.rotation = (tmp2.x + 135);
-			if ((topLeftRotateBtn is Handle && Handle(topLeftRotateBtn).rotateWithSelectionBox) || !(topLeftRotateBtn is Handle))	topLeftRotateBtn.rotation = (tmp2.x + 135);
+			if (topLeftBtn.rotateWithSelectionBox)	
+				topLeftBtn.rotation = (tmp2.x + 135);
+			if (topLeftRotateBtn.rotateWithSelectionBox)  
+				topLeftRotateBtn.rotation = (tmp2.x + 135);
 			
-			if ((bottomRightBtn is Handle && Handle(bottomRightBtn).rotateWithSelectionBox) || !(bottomRightBtn is Handle))	bottomRightBtn.rotation = (tmp2.x + 135);
-			if ((bottomRightRotateBtn is Handle && Handle(bottomRightRotateBtn).rotateWithSelectionBox) || !(bottomRightRotateBtn is Handle))	bottomRightRotateBtn.rotation = (tmp2.x + 135);
-			
+			if (bottomRightBtn.rotateWithSelectionBox)  
+				bottomRightBtn.rotation = (tmp2.x + 135);
+			if (bottomRightRotateBtn.rotateWithSelectionBox)  
+				bottomRightRotateBtn.rotation = (tmp2.x + 135);
 
 			// top left
 			adjustBtnByRotation(topLeft, topLeftBtn);			
@@ -1081,12 +1084,16 @@ package watercolor.transform
 			tmp2.x = Math.atan2(tmp.y, tmp.x) * 180 / Math.PI;
 			
 			
-			if ((topRightBtn is Handle && Handle(topRightBtn).rotateWithSelectionBox) || !(topRightBtn is Handle))	topRightBtn.rotation = (tmp2.x + 45);
-			if ((topRightRotateBtn is Handle && Handle(topRightRotateBtn).rotateWithSelectionBox) || !(topRightRotateBtn is Handle))	topRightRotateBtn.rotation = (tmp2.x + 45);
+			if (topRightBtn.rotateWithSelectionBox)
+				topRightBtn.rotation = (tmp2.x + 45);
+			if (topRightRotateBtn.rotateWithSelectionBox)
+				topRightRotateBtn.rotation = (tmp2.x + 45);
 			
-			if ((bottomLeftBtn is Handle && Handle(bottomLeftBtn).rotateWithSelectionBox) || !(bottomLeftBtn is Handle))	bottomLeftBtn.rotation = (tmp2.x + 45);
-			if ((bottomLeftRotateBtn is Handle && Handle(bottomLeftRotateBtn).rotateWithSelectionBox) || !(bottomLeftRotateBtn is Handle))	bottomLeftRotateBtn.rotation = (tmp2.x + 45);
-
+			if (bottomLeftBtn.rotateWithSelectionBox)
+				bottomLeftBtn.rotation = (tmp2.x + 45);
+			if (bottomLeftRotateBtn.rotateWithSelectionBox)
+				bottomLeftRotateBtn.rotation = (tmp2.x + 45);
+			
 			adjustBtnByRotation(topRight, topRightBtn);			
 			adjustBtnByRotation(topRight, topRightRotateBtn);
 			adjustBtnByRotation(bottomLeft, bottomLeftBtn);
@@ -1100,15 +1107,23 @@ package watercolor.transform
 
 			// use the rotations calculated above to determine the rotation of the middle and skew buttons
 			// only rotate if it is a Handle and is allowed to rotate
-			if ((rightMiddleBtn is Handle && Handle(rightMiddleBtn).rotateWithSelectionBox) || !(rightMiddleBtn is Handle))	rightMiddleBtn.rotation = btnRotation;
-			if ((topMiddleBtn is Handle && Handle(topMiddleBtn).rotateWithSelectionBox) || !(topMiddleBtn is Handle))	topMiddleBtn.rotation = btnRotation;
-			if ((bottomMiddleBtn is Handle && Handle(bottomMiddleBtn).rotateWithSelectionBox) || !(bottomMiddleBtn is Handle))	bottomMiddleBtn.rotation = btnRotation2;
-			if ((leftMiddleBtn is Handle && Handle(leftMiddleBtn).rotateWithSelectionBox) || !(leftMiddleBtn is Handle))	leftMiddleBtn.rotation = btnRotation2;
+			if (rightMiddleBtn.rotateWithSelectionBox) 
+				rightMiddleBtn.rotation = btnRotation;
+			if (topMiddleBtn.rotateWithSelectionBox) 
+				topMiddleBtn.rotation = btnRotation;
+			if (bottomMiddleBtn.rotateWithSelectionBox) 
+				bottomMiddleBtn.rotation = btnRotation2;
+			if (leftMiddleBtn.rotateWithSelectionBox) 
+				leftMiddleBtn.rotation = btnRotation2;
 
-			skewRightBtn.rotation = btnRotation;
-			skewTopBtn.rotation = btnRotation;
-			skewBottomBtn.rotation = btnRotation2;
-			skewLeftBtn.rotation = btnRotation2;
+			if (skewRightBtn.rotateWithSelectionBox)
+				skewRightBtn.rotation = btnRotation;
+			if (skewTopBtn.rotateWithSelectionBox)
+				skewTopBtn.rotation = btnRotation;
+			if (skewBottomBtn.rotateWithSelectionBox)
+				skewBottomBtn.rotation = btnRotation2;
+			if (skewLeftBtn.rotateWithSelectionBox)
+				skewLeftBtn.rotation = btnRotation2;
 			
 			adjustBtnByRotation(Point.interpolate(topRight, bottomRight, 0.5), rightMiddleBtn);
 			adjustBtnByRotation(Point.interpolate(topRight, bottomRight, 0.5), skewRightBtn);			
@@ -1120,7 +1135,8 @@ package watercolor.transform
 			adjustBtnByRotation(Point.interpolate(bottomLeft, topLeft, 0.5), skewLeftBtn);
 
 			// also rotate the center button
-			centerBtn.rotation = btnRotation;
+			if (centerBtn.rotateWithSelectionBox)
+				centerBtn.rotation = btnRotation;
 			adjustBtnByRotation(center, centerBtn);
 		}
 		
@@ -1159,86 +1175,92 @@ package watercolor.transform
 				localMouseDownPoint = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(globalMouseDownPoint));
 	
 				cMode = TransformMode.MODE_IDLE;
-	
+				
 				// check which button was clicked on
-				var btn:Sprite = event.currentTarget as Sprite;
-				switch(btn)
+				if (event.currentTarget is Handle)
 				{
-					case skewTopBtn:
-						with (Point.interpolate(topLeft, topRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SKEWX;
-						break;
-					case skewBottomBtn:
-						with (Point.interpolate(bottomRight, bottomLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SKEWX;
-						break;
-					case skewRightBtn:
-						with (Point.interpolate(topRight, bottomRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SKEWY;
-						break;
-					case skewLeftBtn:
-						with (Point.interpolate(bottomLeft, topLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
-						cMode = TransformMode.MODE_SKEWY;
-						break;
-					case topLeftRotateBtn:
-						ctrp1.x = bottomRight.x;
-						ctrp1.y = bottomRight.y;
-						cMode = TransformMode.MODE_ROTATE;
-						break;
-					case topLeftBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : bottomRight;
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
-						break;
-					case topRightRotateBtn:
-						ctrp1.x = bottomLeft.x;
-						ctrp1.y = bottomLeft.y;
-						cMode = TransformMode.MODE_ROTATE;
-						break;
-					case topRightBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : bottomLeft;
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
-						break;
-					case bottomLeftRotateBtn:
-						ctrp1.x = topRight.x;
-						ctrp1.y = topRight.y;
-						cMode = TransformMode.MODE_ROTATE;
-						break;
-					case bottomLeftBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : topRight;
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
-						break;
-					case bottomRightRotateBtn:
-						ctrp1.x = topLeft.x;
-						ctrp1.y = topLeft.y;
-						cMode = TransformMode.MODE_ROTATE;
-						break;
-					case bottomRightBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : topLeft;
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALE;
-						break;
-					case topMiddleBtn:						
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(bottomRight, bottomLeft, 0.5);
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEY;					
-						break;
-					case bottomMiddleBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(topLeft, topRight, 0.5);
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEY;		
-						break;
-					case rightMiddleBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(bottomLeft, topLeft, 0.5);
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEX;		
-						break;
-					case leftMiddleBtn:
-						ctrp1 = (btn is Handle && Handle(btn).centerPoint != "") ? convertCenterPointEnumToPoint(Handle(btn).centerPoint) : Point.interpolate(topRight, bottomRight, 0.5);
-						cMode = (btn is Handle && Handle(btn).transformMode != "") ? Handle(btn).transformMode : TransformMode.MODE_SCALEX;		
-						break;
-					case centerBtn:
-						cMode = TransformMode.MODE_CENTER_POINT;
-						break;
-					default:
-						ctrp1.x = mouseX;
-						ctrp1.y = mouseY;
-						cMode = TransformMode.MODE_MOVE;
+					var btn:Handle = Handle(event.currentTarget);
+					switch(btn)
+					{
+						case skewTopBtn:
+							with (Point.interpolate(topLeft, topRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
+							cMode = TransformMode.MODE_SKEWX;
+							break;
+						case skewBottomBtn:
+							with (Point.interpolate(bottomRight, bottomLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
+							cMode = TransformMode.MODE_SKEWX;
+							break;
+						case skewRightBtn:
+							with (Point.interpolate(topRight, bottomRight, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
+							cMode = TransformMode.MODE_SKEWY;
+							break;
+						case skewLeftBtn:
+							with (Point.interpolate(bottomLeft, topLeft, 0.5)) { ctrp1.x = x; ctrp1.y = y; }
+							cMode = TransformMode.MODE_SKEWY;
+							break;
+						case topLeftRotateBtn:
+							ctrp1 = bottomRight;
+							cMode = TransformMode.MODE_ROTATE;
+							break;
+						case topLeftBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : bottomRight;
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALE;
+							break;
+						case topRightRotateBtn:
+							ctrp1 = bottomLeft;
+							cMode = TransformMode.MODE_ROTATE;
+							break;
+						case topRightBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : bottomLeft;
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALE;
+							break;
+						case bottomLeftRotateBtn:
+							ctrp1 = topRight;
+							cMode = TransformMode.MODE_ROTATE;
+							break;
+						case bottomLeftBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : topRight;
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALE;
+							break;
+						case bottomRightRotateBtn:
+							ctrp1 = topLeft;
+							cMode = TransformMode.MODE_ROTATE;
+							break;
+						case bottomRightBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : topLeft;
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALE;
+							break;
+						case topMiddleBtn:						
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : Point.interpolate(bottomRight, bottomLeft, 0.5);
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALEY;					
+							break;
+						case bottomMiddleBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : Point.interpolate(topLeft, topRight, 0.5);
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALEY;		
+							break;
+						case rightMiddleBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : Point.interpolate(bottomLeft, topLeft, 0.5);
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALEX;		
+							break;
+						case leftMiddleBtn:
+							ctrp1 = (btn.anchorPoint) ? convertCenterPointEnumToPoint(btn.anchorPoint) : Point.interpolate(topRight, bottomRight, 0.5);
+							cMode = (btn.transformMode) ? btn.transformMode : TransformMode.MODE_SCALEX;		
+							break;
+						case centerBtn:
+							cMode = TransformMode.MODE_CENTER_POINT;
+							break;
+						default:
+							ctrp1.x = mouseX;
+							ctrp1.y = mouseY;
+							cMode = TransformMode.MODE_MOVE;
+					}
+				}
+				else
+				{
+					// Stage is CurrentTarget
+					ctrp1.x = mouseX;
+					ctrp1.y = mouseY;
+					cMode = TransformMode.MODE_MOVE;
 				}
 	
 				ctrp1 = localToGlobal(ctrp1);
