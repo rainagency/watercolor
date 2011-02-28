@@ -212,6 +212,22 @@ package watercolor.transform
 		
 		private var dict:Dictionary;
 		private var transformMatrix:Matrix;
+		
+		private var switchA:Boolean = false;
+		private var switchD:Boolean = false;
+		
+		private var _handleMode:Boolean = false;
+
+		public function get handleMode():Boolean
+		{
+			return _handleMode;
+		}
+
+		public function set handleMode(value:Boolean):void
+		{
+			_handleMode = value;
+		}
+
 
 		[SkinPart(type="spark.primitives.supportClasses.GraphicElement",required="false")]
 		/**
@@ -709,22 +725,39 @@ package watercolor.transform
 			var bottomRightTemp:Point;
 			var bottomLeftTemp:Point;
 			
+			var temp:Rectangle;
 			if (_elements.length > 1 || _identityBounds)
 			{
-				// find all of the corners
-				topLeftTemp = transformMatrix.transformPoint(new Point(0, 0));
-				topRightTemp = transformMatrix.transformPoint(new Point(dict[this].width, 0));
-				bottomRightTemp = transformMatrix.transformPoint(new Point(dict[this].width, dict[this].height));
-				bottomLeftTemp = transformMatrix.transformPoint(new Point(0, dict[this].height));
+				temp = new Rectangle(0,0,dict[this].width,dict[this].height);
 			}
 			else
 			{
-				// find the four corners around the element
-				topLeftTemp = transformMatrix.transformPoint(_rect.topLeft);
-				topRightTemp = transformMatrix.transformPoint(new Point(_rect.bottomRight.x, _rect.topLeft.y));
-				bottomRightTemp = transformMatrix.transformPoint(_rect.bottomRight);
-				bottomLeftTemp = transformMatrix.transformPoint(new Point(_rect.topLeft.x, _rect.bottomRight.y));
+				temp = _rect.clone();
 			}
+			
+			if (handleMode)
+			{
+				var bc:Point = temp.bottomRight.clone();
+				var tc:Point = temp.topLeft.clone();
+				
+				if (switchA)
+				{					
+					temp.bottomRight = new Point(tc.x, temp.bottomRight.y);
+					temp.topLeft = new Point(bc.x, temp.topLeft.y);
+				}
+				
+				if (switchD)
+				{
+					temp.bottomRight = new Point(temp.bottomRight.x, tc.y);
+					temp.topLeft = new Point(temp.topLeft.x, bc.y);
+				}
+			}
+			
+			// find the four corners around the element
+			topLeftTemp = transformMatrix.transformPoint(temp.topLeft);
+			topRightTemp = transformMatrix.transformPoint(new Point(temp.bottomRight.x, temp.topLeft.y));
+			bottomRightTemp = transformMatrix.transformPoint(temp.bottomRight);
+			bottomLeftTemp = transformMatrix.transformPoint(new Point(temp.topLeft.x, temp.bottomRight.y));
 			
 			topLeft.x = topLeftTemp.x;
 			topLeft.y = topLeftTemp.y;
@@ -1036,9 +1069,23 @@ package watercolor.transform
 				selectionBounds.height = _rect.height;
 				
 				var sm:Matrix = transformMatrix.clone();				
-				sm.concat(_parentContainer.transform.concatenatedMatrix);				
-				sm.tx = topLeft.x;
-				sm.ty = topLeft.y;
+				sm.concat(_parentContainer.transform.concatenatedMatrix);
+				
+				var temp:Rectangle;
+				if (_elements.length > 1 || _identityBounds)
+				{
+					temp = new Rectangle(0,0,dict[this].width,dict[this].height);
+				}
+				else
+				{
+					temp = _rect.clone();
+				}
+				
+				with (globalToLocal(_parentContainer.localToGlobal(transformMatrix.transformPoint(temp.topLeft))))
+				{
+					sm.ty = y;
+					sm.tx = x;
+				}
 				
 				selectionBounds.transform.matrix = sm;
 			}
@@ -1365,7 +1412,28 @@ package watercolor.transform
 			
 			// Remove SkewLock
 			skewLocked = false;
-
+			
+			if (handleMode)
+			{
+				if (transformMatrix.a < 0) 
+				{
+					switchA = true;
+				}
+				else
+				{
+					switchA = false;
+				}
+				
+				if (transformMatrix.d < 0) 
+				{
+					switchD = true;
+				}
+				else
+				{
+					switchD = false;
+				}
+			}
+			
 			// dispatch an event to indicate that the transformation is finished
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_FINISH, matrices, _elements, getCurrentRect()));
 		}
@@ -1633,6 +1701,19 @@ package watercolor.transform
 				currentMatrix.translate(gp.x, gp.y);
 				currentMatrix.concat(totalMatrix);
 				addTransformation(currentMatrix);
+				
+				if (handleMode)
+				{
+					if ((axis == TransformFlip.HORIZONTAL || axis == TransformFlip.BOTH))
+					{
+						switchA = !switchA;
+					}
+					
+					if ((axis == TransformFlip.VERTICAL || axis == TransformFlip.BOTH))
+					{
+						switchD = !switchD;
+					}
+				}
 				
 				redrawSelectionBox();
 				dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_FINISH, matrices, _elements, getCurrentRect(), TransformMode.MODE_FLIP));
