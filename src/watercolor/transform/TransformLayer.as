@@ -109,7 +109,15 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get topLeft():Point { return _topLeft; }
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] /**
 		[Bindable]  * 
 		[Bindable]  * @return 
@@ -127,6 +135,10 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get bottomRight():Point { return _bottomRight; }
 		[Bindable] /**
 		[Bindable]  * 
@@ -136,7 +148,15 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get bottomLeft():Point { return _bottomLeft; }
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] /**
 		[Bindable]  * 
 		[Bindable]  * @return 
@@ -203,6 +223,10 @@ package watercolor.transform
 		private var _elements:Vector.<Element>;	
 		private var _rect:Rectangle;
 
+		/**
+		 * 
+		 * @return 
+		 */
 		public function get rect():Rectangle
 		{
 			return _rect;
@@ -213,19 +237,35 @@ package watercolor.transform
 		private var dict:Dictionary;
 		private var transformMatrix:Matrix;
 		
-		private var switchA:Boolean = false;
-		private var switchD:Boolean = false;
+		/**
+		 * These are used to determine if the handles should maintain their position 
+		 * if elements have been scaled into the negative.  
+		 */ 
+		private var flipA:Boolean = false;
+		private var flipD:Boolean = false;
 		
-		private var _handleMode:Boolean = false;
-
-		public function get handleMode():Boolean
+		/**
+		 * This value determines if we want to maintain the positions of the handles
+		 * If the user scales the element into a negative scale then the handles will
+		 * snap back to their original position upon the completion of the transformation.
+		 * If the user flips the element, the handles will stay in the same place.
+		 */ 
+		private var _maintainHandlePosition:Boolean = false;
+		/**
+		 * Return if we want to maintain the positions of the handles
+		 * @return 
+		 */
+		public function get maintainHandlePosition():Boolean
 		{
-			return _handleMode;
+			return _maintainHandlePosition;
 		}
-
-		public function set handleMode(value:Boolean):void
+		/**
+		 * If we want to maintain the positions of the handles
+		 * @param value
+		 */
+		public function set maintainHandlePosition(value:Boolean):void
 		{
-			_handleMode = value;
+			_maintainHandlePosition = value;
 		}
 
 
@@ -586,6 +626,8 @@ package watercolor.transform
 			// the elements that are to be transformed
 			_elements = new Vector.<Element>();
 			
+			//flipA = flipD = false;
+			
 			// a dictionary list of elements and their original matrix
 			dict = new Dictionary(true);
 			
@@ -594,7 +636,7 @@ package watercolor.transform
 			
 			// sets the elements
 			elements = objects;
-		
+			
 			begin(listenForMove);
 			
 			// dispatch an event to inidicate that a selection has been made
@@ -735,19 +777,24 @@ package watercolor.transform
 				temp = _rect.clone();
 			}
 			
-			if (handleMode)
+			// if we want to maintain the handle positions
+			if (maintainHandlePosition)
 			{
 				var bc:Point = temp.bottomRight.clone();
 				var tc:Point = temp.topLeft.clone();
 				
-				if (switchA)
-				{					
+				// if the x scale is in the negative 
+				if (flipA)
+				{		
+					// swap the x positions between the top left and bottom right
 					temp.bottomRight = new Point(tc.x, temp.bottomRight.y);
 					temp.topLeft = new Point(bc.x, temp.topLeft.y);
 				}
 				
-				if (switchD)
+				// if the y scale is in the negative
+				if (flipD)
 				{
+					// swap the y positions between the top left and bottom right
 					temp.bottomRight = new Point(temp.bottomRight.x, tc.y);
 					temp.topLeft = new Point(temp.topLeft.x, bc.y);
 				}
@@ -919,7 +966,22 @@ package watercolor.transform
 		 */
 		public function getCurrentRotation():Number
 		{
+			var crt:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
 			var um:Matrix = transformMatrix.clone();
+			
+			if (flipA)
+			{
+				um.translate(-crt.x, -crt.y);			
+				um.scale(-1, 1);
+				um.translate(crt.x, crt.y);
+			}
+			
+			if (flipD)
+			{
+				um.translate(-crt.x, -crt.y);			
+				um.scale(1, -1);
+				um.translate(crt.x, crt.y);
+			}
 			
 			var scaleX:Number = Math.sqrt(Math.pow(um.a, 2) + Math.pow(um.b, 2));
 			var r:Number = Math.acos(um.a / scaleX);				
@@ -931,6 +993,10 @@ package watercolor.transform
 			return r;
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 */
 		public function getSkewX():Number
 		{
 			var um:Matrix = removeRotation(transformMatrix);			
@@ -944,6 +1010,10 @@ package watercolor.transform
 			return vSkewX;
 		}
 		
+		/**
+		 * 
+		 * @return 
+		 */
 		public function getSkewY():Number
 		{		
 			// This doesn't quite work yet
@@ -1413,25 +1483,11 @@ package watercolor.transform
 			// Remove SkewLock
 			skewLocked = false;
 			
-			if (handleMode)
+			// if we want to maintain the handle positions and the transformation was a scale
+			if (maintainHandlePosition && (cMode == TransformMode.MODE_SCALE || cMode == TransformMode.MODE_SCALEX || cMode == TransformMode.MODE_SCALEY))
 			{
-				if (transformMatrix.a < 0) 
-				{
-					switchA = true;
-				}
-				else
-				{
-					switchA = false;
-				}
-				
-				if (transformMatrix.d < 0) 
-				{
-					switchD = true;
-				}
-				else
-				{
-					switchD = false;
-				}
+				flipA = (transformMatrix.a < 0) ? true : false;
+				flipD = (transformMatrix.d < 0) ? true : false;
 			}
 			
 			// dispatch an event to indicate that the transformation is finished
@@ -1702,16 +1758,17 @@ package watercolor.transform
 				currentMatrix.concat(totalMatrix);
 				addTransformation(currentMatrix);
 				
-				if (handleMode)
+				// if we want to maintain the handle positions
+				if (maintainHandlePosition)
 				{
 					if ((axis == TransformFlip.HORIZONTAL || axis == TransformFlip.BOTH))
 					{
-						switchA = !switchA;
+						flipA = !flipA;
 					}
 					
 					if ((axis == TransformFlip.VERTICAL || axis == TransformFlip.BOTH))
 					{
-						switchD = !switchD;
+						flipD = !flipD;
 					}
 				}
 				
@@ -1960,7 +2017,7 @@ package watercolor.transform
 
 			addTransformation(currentMatrix);
 
-			redrawSelectionBox(event.altKey);
+			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
 		}
 		
@@ -1983,7 +2040,7 @@ package watercolor.transform
 
 			addTransformation(currentMatrix);
 
-			redrawSelectionBox(event.altKey);
+			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
 		}
 
@@ -2007,7 +2064,7 @@ package watercolor.transform
 
 			addTransformation(currentMatrix);
 
-			redrawSelectionBox(event.altKey);
+			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
 		}
 

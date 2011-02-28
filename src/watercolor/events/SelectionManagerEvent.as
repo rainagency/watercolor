@@ -38,8 +38,8 @@ package watercolor.events
 		 * @default
 		 */
 		static public const ELEMENTS_REMOVED:String = "eventElementsRemoved";
-
-
+		
+		
 		/**
 		 * Event to indicate that the selection layer has been update and may have removed some elements
 		 * @default
