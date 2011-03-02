@@ -887,6 +887,7 @@ package watercolor.utils
 						y = ( b * point.x ) + ( d * point.y ) + ty;
 						
 						transformedPath += x.toString() + " " + y.toString() + " ";
+						currentY = point.y;
 						break;
 					case 'l':
 						addx = currentX;
