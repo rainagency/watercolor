@@ -72,8 +72,15 @@ package watercolor.managers
 		 */
 		public function scaleElements( anchor:String, scaleX:Number, scaleY:Number, byBoundingBox:Boolean = false ):void
 		{
-			_workarea.selectionLayer.transformLayer.scale( anchor, scaleX, scaleY, byBoundingBox );
-		}
+			if (byBoundingBox)
+			{
+				_workarea.selectionLayer.transformLayer.scaleByBoundingBox( anchor, scaleX, scaleY );
+			}
+			else
+			{
+				_workarea.selectionLayer.transformLayer.scale( anchor, scaleX, scaleY );
+			}
+		}	
 
 		/**
 		 * 

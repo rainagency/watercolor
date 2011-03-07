@@ -113,7 +113,15 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get topLeft():Point { return _topLeft; }
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] /**
 		[Bindable]  * 
 		[Bindable]  * @return 
@@ -139,6 +147,10 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get bottomRight():Point { return _bottomRight; }
 		[Bindable] /**
 		[Bindable]  * 
@@ -152,7 +164,15 @@ package watercolor.transform
 		[Bindable]  * 
 		[Bindable]  * @return 
 		[Bindable]  */
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] public function get bottomLeft():Point { return _bottomLeft; }
+		[Bindable] /**
+		[Bindable]  * 
+		[Bindable]  * @return 
+		[Bindable]  */
 		[Bindable] /**
 		[Bindable]  * 
 		[Bindable]  * @return 
@@ -276,10 +296,18 @@ package watercolor.transform
 		 * Indicates if the center btn should be moveable
 		 */ 
 		private var _centerMoveable:Boolean = false;
+		/**
+		 * 
+		 * @return 
+		 */
 		public function get centerMoveable():Boolean
 		{
 			return _centerMoveable;
 		}
+		/**
+		 * 
+		 * @param value
+		 */
 		public function set centerMoveable(value:Boolean):void
 		{
 			_centerMoveable = value;
@@ -2067,7 +2095,13 @@ package watercolor.transform
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
 		}
 		
-		public function scale(anchor:String, x:Number = 1, y:Number = 1, byBoundingBox:Boolean = false):void
+		/**
+		 * Scales the elements based on the bounding box
+		 * @param anchor
+		 * @param x
+		 * @param y
+		 */
+		public function scaleByBoundingBox(anchor:String, x:Number = 1, y:Number = 1):void
 		{
 			if(elements)
 			{
@@ -2075,29 +2109,59 @@ package watercolor.transform
 				
 				if (gp)
 				{																						
+					// updates values on the transform layer for use by the bounding box
 					var changed:Boolean = false;
-					if (byBoundingBox && !_identityBounds)
+					if (!_identityBounds)
 					{					
 						changed = true;
 						_identityBounds = true;
-						updateTransformMatrix();
 					} 
-					else if (byBoundingBox)
-					{
-						updateTransformMatrix();
-					}
 					
-					gp = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));
+					updateTransformMatrix();
 					
-					matrices = getTransformations();
-					
+					// grab the anchor point and make the transformation
+					gp = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));					
+					matrices = getTransformations();					
 					scaleRecursive(gp, x, y);
 					
-					if (byBoundingBox && changed)
+					if (changed)
 					{
 						_identityBounds = false;
 						updateTransformMatrix();
 					}
+					
+					redrawSelectionBox();
+					
+					dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_FINISH, matrices, _elements, getCurrentRect(), TransformMode.MODE_SCALE));
+				}
+			}
+		}
+		
+		/**
+		 * 
+		 * @param anchor
+		 * @param x
+		 * @param y
+		 */
+		public function scale(anchor:String, x:Number = 1, y:Number = 1):void
+		{
+			if(elements)
+			{
+				var gp:Point = convertCenterPointEnumToPoint(anchor);
+				
+				if (gp)
+				{																						
+					gp = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));
+					
+					matrices = getTransformations();
+					
+					currentMatrix.identity();
+					currentMatrix.translate(-gp.x, -gp.y);
+					currentMatrix.scale(x, y);
+					currentMatrix.translate(gp.x, gp.y);
+					currentMatrix.concat(totalMatrix);
+					
+					addTransformation(currentMatrix);	
 					
 					redrawSelectionBox();
 					
