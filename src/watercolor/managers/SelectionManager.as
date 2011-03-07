@@ -3,6 +3,7 @@ package watercolor.managers
 	import flash.display.DisplayObjectContainer;
 	import flash.events.EventDispatcher;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import watercolor.elements.Element;
 	import watercolor.elements.Layer;
@@ -69,9 +70,9 @@ package watercolor.managers
 		 * @param scaleX
 		 * @param scaleY
 		 */
-		public function scaleElements( scaleX:Number, scaleY:Number, byBoundingBox:Boolean = false ):void
+		public function scaleElements( anchor:String, scaleX:Number, scaleY:Number, byBoundingBox:Boolean = false ):void
 		{
-			_workarea.selectionLayer.transformLayer.scale( scaleX, scaleY, byBoundingBox );
+			_workarea.selectionLayer.transformLayer.scale( anchor, scaleX, scaleY, byBoundingBox );
 		}
 
 		/**
@@ -107,11 +108,11 @@ package watercolor.managers
 		 * 
 		 * @param p
 		 */
-		public function moveElements(p:Point):void
+		public function moveElements(p:Point, byBoundingBox:Boolean = false):void
 		{
-			_workarea.selectionLayer.transformLayer.moveTo(p);
+			_workarea.selectionLayer.transformLayer.moveTo(p, byBoundingBox);
 		}
-
+		
 		/**
 		 * 
 		 * @param className
