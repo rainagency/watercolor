@@ -488,8 +488,12 @@ package watercolor.elements.components
 			leftRulerPosition.x += topInchText.y - topInchText.textHeight;
 			topRulerPosition.y += topInchText.y - topInchText.textHeight;
 
-			BindingUtils.bindSetter(handleHorizontalScroll, document.viewport, 'horizontalScrollPosition');
-			BindingUtils.bindSetter(handleVerticalScroll, document.viewport, 'verticalScrollPosition');
+			// Listener to have Rulers Always Visible		
+			// TODO: Make rulers always following the scroll an option
+			// This was commented out because in Yosemite it provided a poor user experience when a user zoomed in multiple times. 
+			// The ruler units were taking up more than half the screen.
+//			BindingUtils.bindSetter(handleHorizontalScroll, document.viewport, 'horizontalScrollPosition');
+//			BindingUtils.bindSetter(handleVerticalScroll, document.viewport, 'verticalScrollPosition');
 
 			isDrawn = true;
 		}
