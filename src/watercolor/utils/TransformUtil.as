@@ -2,14 +2,10 @@ package watercolor.utils
 {
 	import fl.motion.MatrixTransformer;
 	
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.IBitmapDrawable;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import mx.core.UIComponent;
 	import mx.utils.StringUtil;
 	
 	import watercolor.commands.vo.CommandVO;
