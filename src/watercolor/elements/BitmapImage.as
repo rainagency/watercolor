@@ -99,6 +99,11 @@ package watercolor.elements
 		}
 		
 		public function get displayObject():Object { return bitmapImage.displayObject; }
+		
+		/**
+		 * Bleed color used for overprint
+		 */
+		public var backgroundColor:uint;
 
 		private function loadBytes(value:ByteArray):void {
 			loader = new Loader();

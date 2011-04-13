@@ -33,6 +33,7 @@ package watercolor.factories.fxg.util
 							element.transform.matrix = parseTransform( attribute.toXMLString());
 							break;
 						case "color": // special case color
+						case "bg":
 							element.color = parseColor( attribute.toXMLString());
 							break;
 						case "source":

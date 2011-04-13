@@ -31,7 +31,7 @@ package watercolor.factories.fxg.util
 		 */ 
 		private static var _baseMap:Object = { group:GroupFactory,
 												bitmapimage:BitmapImageFactory,
-												rect:RectFactory,						
+												rect:RectFactory,
 												ellipse:EllipseFactory,
 												path:PathFactory,
 												line:LineFactory,
@@ -42,7 +42,7 @@ package watercolor.factories.fxg.util
 												solidcolorstroke:SolidColorStrokeFactory,
 												lineargradientstroke:LinearGradientStrokeFactory,
 												radialgradientstroke:RadialGradientStrokeFactory,
-												fill:ChildFactory,										
+												fill:ChildFactory,
 												stroke:ChildFactory,
 												mask:MaskFactory,
 												blurfilter:BlurFilterFactory,

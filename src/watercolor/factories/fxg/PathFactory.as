@@ -25,6 +25,19 @@ package watercolor.factories.fxg
 			{
 				element = new Path();
 			}
+
+			// get the fill element
+			var fill:XML;
+			if( node.fill[0] && node.fill[0].Fill[0] )
+			{
+				var nodes:XMLList = node.fill[0].children();
+				fill = nodes[0];
+			}
+			
+			if(fill && fill.@bg != "")
+			{
+				element.backgroundColor = FXGAttributes.parseColor(fill.@bg.toXMLString());
+			}
 			
 			// look for any children such as fills, strokes, or filters
 			GraphicsFactory.createSparkFromFXG(node, uriManager, element);	

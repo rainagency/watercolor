@@ -221,5 +221,11 @@ package watercolor.elements
 		{
 			path.stroke = value;
 		}
+
+		/**
+		 * Bleed color used for overprint
+		 */
+		public var backgroundColor:uint;
+		
 	}
 }
