@@ -214,14 +214,17 @@ package watercolor.pathData
 		{
 			// go through and get all of the data from the contours regardless
 			// if they are visible or not
+			
+			/* Why would this be different than get data?
 			var data:String = "";
 			for each (var con:PathDataContour in contours)
 			{
 				data += (con.toString(true) + "z");
 			}
+			*/
 			
 			// create a new path data object
-			var newData:PathData = new PathData(data);
+			var newData:PathData = new PathData(this.data);
 			
 			// now go through and look for contours that are hidden and 
 			// set that on the new path data object
