@@ -9,7 +9,6 @@ package watercolor.elements.components
 	import spark.components.SkinnableContainer;
 	import spark.events.ElementExistenceEvent;
 	
-	import watercolor.elements.Element;
 	import watercolor.elements.Layer;
 	import watercolor.elements.interfaces.IElementContainer;
 	import watercolor.events.WorkareaEvent;
