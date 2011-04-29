@@ -399,7 +399,11 @@ package watercolor.elements
 		 * These changes are executed in the processTextChanges function.
 		 */
 		protected var textChanges:Array = new Array();
-
+		
+		/**
+		 * If the TextGroup is currently being dragged.
+		 */ 
+		public var isDragging:Boolean = false;
 
 		/**
 		 *
