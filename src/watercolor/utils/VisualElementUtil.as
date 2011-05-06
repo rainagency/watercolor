@@ -48,7 +48,7 @@ package watercolor.utils
 		 *
 		 * @return Cloned Object
 		 */
-		public static function clone( source:IVisualElement, target:IVisualElement = null, cloneFunction:Function = null ):IVisualElement
+		public static function clone( source:IVisualElement, target:IVisualElement = null, cloneFunction:Function = null, cloneForViewing:Boolean = false ):IVisualElement
 		{
 			if (target is Layer)
 			{
@@ -82,7 +82,7 @@ package watercolor.utils
 			}
 			else if( source is watercolor.elements.Path )
 			{
-				return cloneWCPath( watercolor.elements.Path( source ), watercolor.elements.Path( target ));
+				return cloneWCPath( watercolor.elements.Path( source ), watercolor.elements.Path( target ), null, cloneForViewing);
 			}
 			else if( source is spark.primitives.Path )
 			{
@@ -94,7 +94,7 @@ package watercolor.utils
 			}
 			else if( source is Element )
 			{
-				return cloneElement( Element( source ), Element( target ), true, cloneFunction );
+				return cloneElement( Element( source ), Element( target ), true, cloneFunction, cloneForViewing );
 			}
 			else
 			{
@@ -246,7 +246,7 @@ package watercolor.utils
 		 *
 		 * @return Cloned Path
 		 */
-		public static function cloneWCPath( source:watercolor.elements.Path, target:watercolor.elements.Path = null, cloneFunction:Function = null ):watercolor.elements.Path
+		public static function cloneWCPath( source:watercolor.elements.Path, target:watercolor.elements.Path = null, cloneFunction:Function = null, cloneForViewing:Boolean = false ):watercolor.elements.Path
 		{
 			if( cloneFunction == null )
 				cloneFunction = clone;
@@ -259,7 +259,13 @@ package watercolor.utils
 			target.fill = cloneIFill( source.fill );
 			target.stroke = IStroke( ObjectUtil.copy( source.stroke ));
 			target.winding = source.winding;
-			target.pathData = source.pathData.clone();
+						
+			if (!cloneForViewing) {
+				target.pathData = source.pathData.clone();
+			} else {
+				target.data = source.data;
+			}
+			
 			target.width = source.width;
 			target.height = source.height;
 			target.transform.matrix = source.transform.matrix;
@@ -283,7 +289,7 @@ package watercolor.utils
 		 *
 		 * @return Cloned Element
 		 */
-		public static function cloneElement( source:Element, target:Element = null, cloneChildren:Boolean = true, cloneFunction:Function = null ):Element
+		public static function cloneElement( source:Element, target:Element = null, cloneChildren:Boolean = true, cloneFunction:Function = null, cloneForViewing:Boolean = false ):Element
 		{
 			if (target is Layer)
 			{
@@ -296,7 +302,7 @@ package watercolor.utils
 			// Make sure this Element doesn't have a special case.
 			if( source is watercolor.elements.Path )
 			{
-				return cloneWCPath( watercolor.elements.Path( source ), watercolor.elements.Path( target ));
+				return cloneWCPath( watercolor.elements.Path( source ), watercolor.elements.Path( target ), null, cloneForViewing);
 			}
 			else if( source is watercolor.elements.BitmapImage )
 			{
@@ -318,14 +324,19 @@ package watercolor.utils
 				for( var i:uint = 0; i < source.numElements; i++ )
 				{
 					var child:IVisualElement = source.getElementAt( i );
-					target.addElementAt( cloneFunction( child ), target.numElements );
+					
+					if (cloneFunction == clone) {
+						target.addElementAt( clone( child, null, null, cloneForViewing ), target.numElements );
+					} else {
+						target.addElementAt( cloneFunction( child ), target.numElements );
+					}
 				}
 			}
 
 			// Clone the mask (if any)
 			if( source.mask )
 			{
-				var clone:Object = cloneFunction( IVisualElement( source.mask ));
+				var clone:Object = (cloneFunction == clone) ? clone(IVisualElement( source.mask ), null, null, cloneForViewing) : cloneFunction( IVisualElement( source.mask ));
 
 				/*
 				   !! This is a needed hack !!
