@@ -704,12 +704,12 @@ package watercolor.utils
 					// combine the alpha maps
 					alpha1.draw( alpha2, null, null, BlendMode.LIGHTEN );
 
-					if( target1.stage.numChildren > 1 )
+					/*if( target1.stage.numChildren > 1 )
 					{
 						target1.stage.removeChildAt( target1.stage.numChildren - 1 );
 					}
 
-					target1.stage.addChild( new Bitmap( alpha1 ));
+					target1.stage.addChild( new Bitmap( alpha1 ));*/
 
 					// calculate the search color
 					var searchColor:uint;
