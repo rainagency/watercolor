@@ -411,7 +411,7 @@ package watercolor.elements.components
 		 */
 		public function get firstIsolatedElement():IElementContainer
 		{
-			return isolationElements[ 0 ];
+			return (isolationElements.length > 0) ? isolationElements[0] : null;
 		}
 	
 
