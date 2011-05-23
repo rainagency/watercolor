@@ -13,6 +13,7 @@ package watercolor.utils
 		
 		public function hasMore():Boolean
 		{
+			skipWhiteSpace();
 			return parseString.length > 0;			
 		}
 		

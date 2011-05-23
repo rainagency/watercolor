@@ -34,6 +34,18 @@ package watercolor.factories.fxg
 				fill = nodes[0];
 			}
 			
+			// look for a child fill exlement.
+			
+			if (fill == null)
+			{
+				fill = node.children()[0];
+				if (fill)
+				{
+					var nodes:XMLList = fill[0].children();
+					fill = nodes[0];
+				}
+			}
+			
 			if(fill && fill.@bg != "")
 			{
 				element.backgroundColor = FXGAttributes.parseColor(fill.@bg.toXMLString());
