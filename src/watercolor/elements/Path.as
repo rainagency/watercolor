@@ -61,17 +61,6 @@ package watercolor.elements
 		}
 		
 		
-		public override function addElement(element:IVisualElement):IVisualElement
-		{
-			return super.addElement(element);
-		}
-
-		public override function addElementAt(element:IVisualElement, index:int):IVisualElement
-		{
-			return super.addElementAt(element, index);
-		}
-		
-
 		/**
 		 * @copy spark.primitives.supportClasses.GraphicElement#width;
 		 */
