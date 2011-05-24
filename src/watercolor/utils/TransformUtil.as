@@ -790,6 +790,14 @@ package watercolor.utils
 				if( cmd == "" )
 				{
 					cmd = lastCmd;
+					if (lastCmd == "M")
+					{
+						cmd = "L";
+					}
+					else if (lastCmd == "m")
+					{
+						cmd = "l";
+					}
 				}
 				lastCmd = cmd;
 
