@@ -5,6 +5,7 @@ package watercolor.elements
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
 	
+	import mx.core.IVisualElement;
 	import mx.graphics.IFill;
 	import mx.graphics.IStroke;
 	import mx.graphics.Stroke;
@@ -58,7 +59,18 @@ package watercolor.elements
 			super.createChildren();
 			addElement( path );
 		}
+		
+		
+		public override function addElement(element:IVisualElement):IVisualElement
+		{
+			return super.addElement(element);
+		}
 
+		public override function addElementAt(element:IVisualElement, index:int):IVisualElement
+		{
+			return super.addElementAt(element, index);
+		}
+		
 
 		/**
 		 * @copy spark.primitives.supportClasses.GraphicElement#width;
@@ -114,8 +126,7 @@ package watercolor.elements
 		{
 			return (pathData) ? pathData.data : null;
 		}
-
-
+		
 		/**
 		 *
 		 * @param value

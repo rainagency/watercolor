@@ -1153,7 +1153,7 @@ package watercolor.elements.components
 			// record the current state of the data array
 			prop.originalProperties = new Object();
 			registerClassAlias("watercolor.pathData.PathData", watercolor.pathData.PathData);
-			prop.originalProperties["pathData"] = ObjectUtil.copy(collection[target].child.pathData);
+			prop.originalProperties["pathData"] = PathData(collection[target].pathData).clone();
 			
 			// change whether or not the contour is visible
 			contour.visible = visible;
@@ -1171,7 +1171,7 @@ package watercolor.elements.components
 			prop.element = Element(lastIsolatedElement);
 			
 			var newPath:Path = new Path();
-			newPath.pathData = ObjectUtil.copy(collection[target].pathData) as PathData;
+			newPath.pathData = PathData(collection[target].pathData).clone();
 			newPath.fill = new SolidColor(0xFFFFFF);
 			newPath.mouseEnabled = false;
 			

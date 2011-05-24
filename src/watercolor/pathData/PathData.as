@@ -34,7 +34,12 @@ package watercolor.pathData
 		private var workingData:String;
 		
 		
-		private var originalData:String;
+		private var _originalData:String;
+
+		public function get originalData():String
+		{
+			return _originalData;
+		}
 
 
 		/**
@@ -99,7 +104,7 @@ package watercolor.pathData
 			var currentPosition:Point = new Point();
 
 			workingData = newData;
-			originalData = newData;
+			_originalData = newData;
 
 			while( workingData.length )
 			{
@@ -221,6 +226,7 @@ package watercolor.pathData
 			
 			// create a new path data object
 			var newData:PathData = new PathData(originalData);
+			newData.offsetNegativePoints();
 			
 			// now go through and look for contours that are hidden and 
 			// set that on the new path data object

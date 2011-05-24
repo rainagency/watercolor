@@ -269,14 +269,7 @@ package watercolor.utils
 			target.width = source.width;
 			target.height = source.height;
 			target.transform.matrix = source.transform.matrix;
-
-			// Clone & Attach Children (if any)
-			for( var i:uint = 0; i < source.numElements; i++ )
-			{
-				var child:IVisualElement = source.getElementAt( i );
-				target.addElementAt( cloneFunction( child ), target.numElements );
-			}
-
+			
 			return target;
 		}
 
