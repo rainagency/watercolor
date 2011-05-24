@@ -41,8 +41,8 @@ package watercolor.factories.fxg
 				fill = node.children()[0];
 				if (fill)
 				{
-					var nodes:XMLList = fill[0].children();
-					fill = nodes[0];
+					var fillNodes:XMLList = fill[0].children();
+					fill = fillNodes[0];
 				}
 			}
 			
