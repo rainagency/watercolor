@@ -2,10 +2,10 @@ package watercolor.pathData
 {
 	import flash.geom.Point;
 	import flash.utils.setTimeout;
-
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
-
+	
 	import watercolor.math.EuclideanLine;
 	import watercolor.math.IntersectionPoint;
 	import watercolor.math.QuadraticBezierCurve;
@@ -278,6 +278,23 @@ package watercolor.pathData
 				return '';
 			}
 
+		}
+		
+		public function clone(parent:PathData):PathDataContour
+		{
+			var newContour:PathDataContour = new PathDataContour(parent, startPoint);
+			
+			for each (var command:PathDataCommand in commands)
+			{
+				if (command is IPathDataVisualCommand)
+				{
+					IPathDataVisualCommand(command).clone(newContour);
+				}
+			}
+			
+			newContour.visible = visible;
+			
+			return newContour;
 		}
 
 

@@ -155,5 +155,14 @@ package watercolor.pathData
 
 			return str;
 		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			var commandQ:PathDataQuadraticBezierCommand = new PathDataQuadraticBezierCommand( parentPathDataContour );
+			commandQ.controlPoint = controlPoint.clone();
+			commandQ.cordinate = cordinate.clone();
+			
+			return commandQ;
+		}
 	}
 }

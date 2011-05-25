@@ -84,5 +84,10 @@ package watercolor.pathData
 
 			return str;
 		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			return new PathDataSmoothQuadraticBezierCommand( parentPathDataContour, cordinate.clone() );
+		}
 	}
 }

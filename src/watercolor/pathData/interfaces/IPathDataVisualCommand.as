@@ -35,7 +35,7 @@ package watercolor.pathData.interfaces
 		 *
 		 * @return new clone of this command.
 		 */
-		function clone( parentPathDataContour:PathDataContour = null ):IPathDataVisualCommand;
+		function clone( parentPathDataContour:PathDataContour):IPathDataVisualCommand;
 
 		/**
 		 * Returns this command ending position.

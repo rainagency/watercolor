@@ -34,12 +34,12 @@ package watercolor.pathData
 		private var workingData:String;
 		
 		
-		private var _originalData:String;
+		/*private var _originalData:String;
 
 		public function get originalData():String
 		{
 			return _originalData;
-		}
+		}*/
 
 
 		/**
@@ -104,7 +104,7 @@ package watercolor.pathData
 			var currentPosition:Point = new Point();
 
 			workingData = newData;
-			_originalData = newData;
+			//_originalData = newData;
 
 			while( workingData.length )
 			{
@@ -219,7 +219,7 @@ package watercolor.pathData
 		 * Clones the pathdata object
 		 * @return 
 		 */
-		public function clone():PathData
+		/*public function clone():PathData
 		{
 			// go through and get all of the data from the contours regardless
 			// if they are visible or not
@@ -237,11 +237,24 @@ package watercolor.pathData
 					if (ncon.toString(true) == ocon.toString(true) && !ocon.visible)
 					{
 						ncon.visible = false;
+						break;
 					}
 				}
 			}
 			
 			return newData;
+		}*/
+		
+		public function clone():PathData
+		{
+			var newData:PathData = new PathData();
+			
+			for each (var contour:PathDataContour in contours)
+			{
+				contour.clone(newData);				
+			}
+			
+			return newData;			
 		}
 
 

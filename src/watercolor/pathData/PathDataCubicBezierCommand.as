@@ -2,7 +2,7 @@ package watercolor.pathData
 {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import watercolor.math.CubicBezierCurve;
 	import watercolor.math.EuclideanLine;
 	import watercolor.math.StraightLine;
@@ -216,6 +216,16 @@ package watercolor.pathData
 			str += cordinate.x.toPrecision( 5 ) + " " + cordinate.y.toPrecision( 5 )
 
 			return str;
+		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			var commandC:PathDataCubicBezierCommand = new PathDataCubicBezierCommand( parentPathDataContour );
+			commandC.controlPointA = controlPointA.clone();
+			commandC.controlPointB = controlPointB.clone();
+			commandC.cordinate = cordinate.clone();
+			
+			return commandC;
 		}
 	}
 }

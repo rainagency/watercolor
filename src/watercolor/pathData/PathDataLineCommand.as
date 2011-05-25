@@ -157,23 +157,6 @@ package watercolor.pathData
 			}
 		}
 
-
-
-
-		/**
-		 * Clone this command and add to new parent contour.
-		 *
-		 * @param parentPathDataContour New Path Data contour to copy command to.
-		 *
-		 * @return new clone of this command.
-		 */
-		override public function clone( parentPathDataContour:PathDataContour = null ):IPathDataVisualCommand
-		{
-			var parent:PathDataContour = parentPathDataContour ? parentPathDataContour : parent;
-			return new PathDataLineCommand( parent, cordinate.clone());
-		}
-
-
 		/**
 		 * FXG Data Serializer
 		 *
@@ -186,6 +169,11 @@ package watercolor.pathData
 			str += cordinate.x.toPrecision( 5 ) + " " + cordinate.y.toPrecision( 5 );
 
 			return str;
+		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			return new PathDataLineCommand( parentPathDataContour, cordinate.clone() );
 		}
 	}
 }

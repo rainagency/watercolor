@@ -109,5 +109,10 @@ package watercolor.pathData
 		{
 			return " H" + xTo.toPrecision( 5 );
 		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			return new PathDataHorizontialLineCommand( parentPathDataContour, xTo );
+		}
 	}
 }

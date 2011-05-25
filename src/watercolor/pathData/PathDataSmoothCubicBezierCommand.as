@@ -89,5 +89,14 @@ package watercolor.pathData
 		{
 			return null;
 		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			var commandS:PathDataSmoothCubicBezierCommand = new PathDataSmoothCubicBezierCommand( parentPathDataContour );
+			commandS.controlPoint = controlPoint.clone();
+			commandS.cordinate = cordinate.clone();
+			
+			return commandS;
+		}
 	}
 }

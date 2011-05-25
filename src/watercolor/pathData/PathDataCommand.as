@@ -2,9 +2,9 @@ package watercolor.pathData
 {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-
+	
 	import mx.containers.ControlBar;
-
+	
 	import watercolor.pathData.interfaces.IPathDataVisualCommand;
 
 
@@ -135,19 +135,6 @@ package watercolor.pathData
 		public function set index( newIndex:int ):void
 		{
 			contour.addCommandAt( this, newIndex );
-		}
-
-
-		/**
-		 * Clone this command and add to new parent contour.
-		 *
-		 * @param parentPathDataContour New Path Data contour to copy command to.
-		 *
-		 * @return new clone of this command.
-		 */
-		public function clone( parentPathDataContour:PathDataContour = null ):IPathDataVisualCommand
-		{
-			return null;
 		}
 	}
 }

@@ -155,5 +155,10 @@ package watercolor.pathData
 		{
 			return ' V' + yTo.toPrecision( 5 );
 		}
+		
+		public function clone(parentPathDataContour:PathDataContour):IPathDataVisualCommand
+		{
+			return new PathDataVerticalLineCommand( parentPathDataContour, yTo );
+		}
 	}
 }

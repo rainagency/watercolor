@@ -1,9 +1,9 @@
 package watercolor.utils
 {
 	import flash.geom.Point;
-
+	
 	import mx.core.IVisualElement;
-
+	
 	import watercolor.commands.vo.CreateVO;
 	import watercolor.commands.vo.DeleteVO;
 	import watercolor.commands.vo.GroupCommandVO;
@@ -37,11 +37,11 @@ package watercolor.utils
 		 *
 		 * @param A GroupCommand to execute the fill.
 		 */
-		public static function fillByQuanity( source:IVisualElement, layer:Layer, quanity:uint = 10, customCopyFunction:Function = null, padding:uint = 5 ):GroupCommandVO
+		public static function fillByQuanity( source:IVisualElement, layer:Layer, quanity:uint = 10, customCopyFunction:Function = null, padding:uint = 5, offSetLeft:uint = 0, offSetRight:uint = 0, offSetTop:uint = 0, offSetBottom:uint = 0 ):GroupCommandVO
 		{
 			// Find current grid size
-			var maxColumnCount:uint = Math.floor( layer.width / ( source.getLayoutBoundsWidth() + padding ));
-			var maxRowCount:uint = Math.floor( layer.height / ( source.getLayoutBoundsHeight() + padding ));
+			var maxColumnCount:uint = Math.floor( (layer.width - offSetLeft - offSetRight) / ( source.getLayoutBoundsWidth() + padding ));
+			var maxRowCount:uint = Math.floor( (layer.height - offSetTop - offSetBottom) / ( source.getLayoutBoundsHeight() + padding ));
 			var columnCount:uint = 0;
 			var rowCount:uint = 0;
 
@@ -76,7 +76,7 @@ package watercolor.utils
 				}
 			}
 
-			return fillByDimension( source, layer, columnCount, rowCount, customCopyFunction, quanity, padding );
+			return fillByDimension( source, layer, columnCount, rowCount, customCopyFunction, quanity, padding, offSetLeft, offSetTop );
 		}
 
 
@@ -95,7 +95,7 @@ package watercolor.utils
 		 *
 		 * @param A GroupCommandVO to execute the fill
 		 */
-		public static function fillByDimension( source:IVisualElement, layer:Layer, columns:uint = 10, rows:uint = 2, customCopyFunction:Function = null, maxQuanity:uint = 0, padding:uint = 5 ):GroupCommandVO
+		public static function fillByDimension( source:IVisualElement, layer:Layer, columns:uint = 10, rows:uint = 2, customCopyFunction:Function = null, maxQuanity:uint = 0, padding:uint = 5, offSetLeft:uint = 0, offSetTop:uint = 0):GroupCommandVO
 		{
 
 			// Loop thru rows
@@ -144,14 +144,14 @@ package watercolor.utils
 
 			//Figure out starting offsets (including rotation offset)
 			var leftRotationOffset:int = source.getLayoutBoundsX() * -1;
-			var leftOffset:int = leftRotationOffset;
-			var topOffset:int = source.getLayoutBoundsY() * -1;
+			var leftOffset:int = leftRotationOffset + offSetLeft;
+			var topOffset:int = (source.getLayoutBoundsY() * -1) + offSetTop;
 			var elementCount:uint = 0;
 
 			for( var rowIndex:uint = 0; rowIndex < rows; rowIndex++ )
 			{
 
-				leftOffset = leftRotationOffset;
+				leftOffset = leftRotationOffset + offSetLeft;
 
 				for( var columnIndex:uint = 0; columnIndex < columns; columnIndex++ )
 				{
@@ -209,18 +209,18 @@ package watercolor.utils
 		 *
 		 * @param A GroupCommandVO to execute the fill
 		 */
-		public static function fillBySpace( source:IVisualElement, layer:Layer, customCopyFunction:Function = null, maxQuanity:uint = 0, padding:uint = 5 ):GroupCommandVO
+		public static function fillBySpace( source:IVisualElement, layer:Layer, customCopyFunction:Function = null, maxQuanity:uint = 0, padding:uint = 5, offSetLeft:uint = 0, offSetRight:uint = 0, offSetTop:uint = 0, offSetBottom:uint = 0 ):GroupCommandVO
 		{
 			var groupCommandVO:GroupCommandVO = new GroupCommandVO();
 			groupCommandVO.addCommand( new DeleteVO( Element( source ), Element( source ).getPosition()));
 
 			// Figure out how many we can fit.
-			var columnCount:uint = Math.floor( layer.width / ( source.getLayoutBoundsWidth() + padding ));
-			var rowCount:uint = Math.floor( layer.height / ( source.getLayoutBoundsHeight() + padding ));
+			var columnCount:uint = Math.floor( (layer.width - offSetLeft - offSetRight) / ( source.getLayoutBoundsWidth() + padding));
+			var rowCount:uint = Math.floor( (layer.height - offSetTop - offSetBottom) / ( source.getLayoutBoundsHeight() + padding  ));
 
 			// Position variables
-			var leftOffset:uint = 0;
-			var topOffset:uint = 0;
+			var leftOffset:uint = offSetLeft;
+			var topOffset:uint = offSetTop;
 
 			// Loop thru rows
 			var elementCount:uint = 0;
@@ -228,7 +228,7 @@ package watercolor.utils
 			for( var rowIndex:uint = 0; rowIndex < rowCount; rowIndex++ )
 			{
 
-				leftOffset = 0;
+				leftOffset = offSetLeft;
 
 				// Loop thru columns
 				for( var columnIndex:uint = 0; columnIndex < columnCount; columnIndex++ )
