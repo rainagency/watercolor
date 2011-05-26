@@ -246,7 +246,7 @@ package watercolor.managers
 
 			update( true );
 			dispatchEvent( new SelectionManagerEvent( SelectionManagerEvent.ELEMENTS_REMOVED, elements ));
-			dispatchEvent( new SelectionManagerEvent( SelectionManagerEvent.ELEMENTS_UPDATE_COMPLETE, _elements ));
+			//dispatchEvent( new SelectionManagerEvent( SelectionManagerEvent.ELEMENTS_UPDATE_COMPLETE, _elements ));
 		}
 
 

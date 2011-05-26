@@ -336,5 +336,27 @@ package watercolor.utils
 
 			return null;
 		}
+		
+		/**
+		 * Helper function to return a element's Layer (if any)
+		 *
+		 * @param element Object to try to find Layer from
+		 *
+		 * @return Layer found(null if none)
+		 */
+		public static function getCurrentLayer( element:* ):*
+		{
+			while( true )
+			{
+				if( element is Layer || element is IsolationLayer)
+					return element;
+				if( Object( element ).hasOwnProperty( 'parent' ))
+					element = element.parent;
+				else
+					return null;
+			}
+			
+			return null;
+		}
 	}
 }
