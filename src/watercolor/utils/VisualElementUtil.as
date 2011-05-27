@@ -70,13 +70,14 @@ package watercolor.utils
 			if( source is TextGroup )
 			{
 				var sourceTextGroup:TextGroup = TextGroup( source );
-				var clonedTextGroup:TextGroup = TextGroup( cloneElement( Element( source ), Element( target ), false ));
+				var clonedTextGroup:TextGroup = TextGroup( cloneElement( Element( source ), Element( target ) ));
 
 				clonedTextGroup.textDirection = sourceTextGroup.textDirection;
 				clonedTextGroup.letterSpacing = sourceTextGroup.letterSpacing;
 				clonedTextGroup.verticalAlign = sourceTextGroup.verticalAlign;
 				clonedTextGroup.horizontalAlign = sourceTextGroup.horizontalAlign;
-				clonedTextGroup.text = sourceTextGroup.text;
+				clonedTextGroup.setText(sourceTextGroup.text, false);
+				//clonedTextGroup.text = sourceTextGroup.text;
 
 				return clonedTextGroup;
 			}
@@ -419,7 +420,7 @@ package watercolor.utils
 				}
 				else
 				{
-					rect = target.getRect(( multiSelected ) ? parent : target );
+					rect = target.getRect(( multiSelected ) ? parent : target );			
 				}
 	
 				// if the rectangle is missing an x or y value but the mask has an x or y value specified

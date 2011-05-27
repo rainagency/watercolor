@@ -326,6 +326,18 @@ package watercolor.elements
 			// process the changes that are requested
 			processTextChanges();
 		}
+		
+		public function setText(value:String, update:Boolean = true):void
+		{
+			if (update)
+			{
+				text = value;
+			}
+			else
+			{
+				_text = value;
+			}
+		}
 
 
 		/**
