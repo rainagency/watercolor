@@ -223,6 +223,14 @@ package watercolor.elements
 		protected var _letterSpacing:Number = 5;
 
 
+		private var _rendered:Boolean = false;
+
+		public function get rendered():Boolean
+		{
+			return _rendered;
+		}
+
+		
 		/**
 		 *
 		 * @return
@@ -287,7 +295,7 @@ package watercolor.elements
 		/**
 		 * Text for the area. This is the text that the user types.
 		 */
-		private var _text:String = "";
+		protected var _text:String = "";
 
 
 		/**
@@ -326,43 +334,21 @@ package watercolor.elements
 			// process the changes that are requested
 			processTextChanges();
 		}
-		
-		public function setText(value:String, update:Boolean = true):void
-		{
-			if (update)
-			{
-				text = value;
-			}
-			else
-			{
-				_text = value;
-			}
-		}
 
 
 		/**
 		 * This is a string of the characters from the Letter objects in the lettersByIndex array.
 		 */
-		private var _lettersString:String = "";
+		protected var _lettersString:String = "";
 
-
-		/**
-		 *
-		 * @param value
-		 */
-		protected function set lettersString( value:String ):void
-		{
-			_lettersString = value;
-		}
-
-
+		
 		/**
 		 * all the Letter objects for each letter image, stored at the same index they appear in the string.
 		 * Be aware about looping through this array, it is likely at any index that there won't be an object, for spaces and unrecognized characters.
 		 */
-		private var _lettersByIndex:Array = new Array();
+		protected var _lettersByIndex:Array = new Array();
 
-
+		
 		/**
 		 *
 		 * @return
@@ -373,6 +359,8 @@ package watercolor.elements
 		}
 
 
+		
+		
 		/**
 		 * The scale of the letter objects.
 		 */
@@ -481,6 +469,32 @@ package watercolor.elements
 			{
 				render();
 			}
+		}
+		
+		public function clone():TextGroup
+		{
+			var newGroup:TextGroup = VisualElementUtil.cloneElement(this) as TextGroup;
+			newGroup._text = _text;
+			newGroup._lettersString = _lettersString;
+			newGroup.textDirection = textDirection;
+			newGroup.letterSpacing = letterSpacing;
+			newGroup.verticalAlign = verticalAlign;
+			newGroup.horizontalAlign = horizontalAlign;
+			
+			for (var x:int = 0; x < newGroup.numElements; x++)
+			{
+				newGroup._lettersByIndex[x] = newGroup.getElementAt(x) as Element;
+			}
+			
+			for (var y:int = 0; y < newGroup._lettersString.length; y++)
+			{
+				if (newGroup._lettersString.charAt(y) == " ")
+				{
+					newGroup._lettersByIndex.splice(y,0,null); 
+				}
+			}
+			
+			return newGroup;
 		}
 
 
@@ -735,7 +749,7 @@ package watercolor.elements
 
 			// replace the text with the text we just build.
 			// use the lettersString setter to put it into the node as well.
-			lettersString = editedText;
+			_lettersString = editedText;
 		}
 
 
@@ -900,6 +914,7 @@ package watercolor.elements
 			}
 
 			// dispatch an event to indicate that the display has changed
+			_rendered = true;
 			dispatchEvent( new TextGroupEvent( TextGroupEvent.RENDER ));
 		}
 
@@ -930,7 +945,7 @@ package watercolor.elements
 					createLetters( change.text );
 
 					// update the lettersString
-					lettersString = change.text;
+					_lettersString = change.text;
 
 					// displatch an event to indicate that the text has completely changed
 					dispatchEvent( new TextGroupEvent( TextGroupEvent.CHANGE ));

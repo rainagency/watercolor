@@ -69,17 +69,7 @@ package watercolor.utils
 			 */
 			if( source is TextGroup )
 			{
-				var sourceTextGroup:TextGroup = TextGroup( source );
-				var clonedTextGroup:TextGroup = TextGroup( cloneElement( Element( source ), Element( target ) ));
-
-				clonedTextGroup.textDirection = sourceTextGroup.textDirection;
-				clonedTextGroup.letterSpacing = sourceTextGroup.letterSpacing;
-				clonedTextGroup.verticalAlign = sourceTextGroup.verticalAlign;
-				clonedTextGroup.horizontalAlign = sourceTextGroup.horizontalAlign;
-				clonedTextGroup.setText(sourceTextGroup.text, false);
-				//clonedTextGroup.text = sourceTextGroup.text;
-
-				return clonedTextGroup;
+				return TextGroup(source).clone();;
 			}
 			else if( source is watercolor.elements.Path )
 			{
