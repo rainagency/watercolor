@@ -223,14 +223,6 @@ package watercolor.elements
 		protected var _letterSpacing:Number = 5;
 
 
-		private var _rendered:Boolean = false;
-
-		public function get rendered():Boolean
-		{
-			return _rendered;
-		}
-
-		
 		/**
 		 *
 		 * @return
@@ -333,6 +325,30 @@ package watercolor.elements
 
 			// process the changes that are requested
 			processTextChanges();
+		}
+		
+		public function setText(value:String, update:Boolean = true):void
+		{
+			if (update)
+			{
+				text = value;
+			}
+			else 
+			{
+				if (numElements == value.replace(/ /g, "").length && _lettersByIndex.length == numElements)
+				{
+					_text = value;
+					_lettersString = value;
+					
+					for (var x:int = 0; x < _lettersString.length; x++) 
+					{
+						if (_lettersString.charAt(x) == " ")
+						{
+							_lettersByIndex.splice(x,0,null);
+						}
+					}
+				}
+			}
 		}
 
 
@@ -496,7 +512,7 @@ package watercolor.elements
 			
 			return newGroup;
 		}
-
+		
 
 		/**
 		 * Remove all the letters.
@@ -578,7 +594,7 @@ package watercolor.elements
 			adapter.addEventListener( TextGroupEvent.EVENT_LETTER_LOADED, letterLoaded );
 						
 			// create the letter
-			adapter.createLetter( char, _lettersByIndex, index );
+			adapter.createLetter( char, index );
 		}
 
 
@@ -588,14 +604,23 @@ package watercolor.elements
 		 */
 		private function letterLoaded( event:TextGroupEvent ):void
 		{
-
 			_currentLetter--;
 
-			if (event.letter)
+			if (event.letter && event.index != -1)
 			{
+				//addLoadedElement(event.letter, event.index, false);
+				
 				var thisLetter:IVisualElement = addElement(event.letter);
+				
 				// don't show the letter until it gets positioned
 				thisLetter.visible = false;
+				
+				_lettersByIndex[event.index] = event.letter;
+				
+			}
+			else if (event.index)
+			{
+				_lettersByIndex[event.index] = null;
 			}
 			
 			// check if we have any more changes to work on and if not then go ahead and render the text
@@ -606,6 +631,24 @@ package watercolor.elements
 				
 				// TODO: figure a better way around this hack
 				callLater(callLater,[callLater,[callLater,[render]]]);
+			}
+		}
+		
+		public function addLoadedElement(element:Element, char:String):void
+		{
+			if (element)
+			{
+				addElement(element);
+			
+				_lettersByIndex[_lettersByIndex.length] = element;
+				_text += char;
+				_lettersString += char;
+			}
+			else
+			{
+				_lettersByIndex[_lettersByIndex.length] = null;
+				_text += " ";
+				_lettersString += " ";
 			}
 		}
 
@@ -914,7 +957,6 @@ package watercolor.elements
 			}
 
 			// dispatch an event to indicate that the display has changed
-			_rendered = true;
 			dispatchEvent( new TextGroupEvent( TextGroupEvent.RENDER ));
 		}
 

@@ -16,6 +16,6 @@ package watercolor.elements.interfaces
 	public interface ITextGroup extends IEventDispatcher
 	{
 		function get spaceWidth():Number;					
-		function createLetter(char:String, lettersByIndex:Array, index:int):void;	
+		function createLetter(char:String, index:int):void;	
 	}
 }

@@ -45,13 +45,17 @@ package watercolor.events
 		 */
 		public var letter:Element;
 		
+		
+		public var index:int = -1;
+		
 		/**
 		 * 
 		 */
-		public function TextGroupEvent(type:String, letter:Element = null)
+		public function TextGroupEvent(type:String, letter:Element = null, index:int = -1)
 		{
 			super(type, false, false);
 			this.letter = letter;
+			this.index = index;
 		}
 
 		/**
@@ -59,7 +63,7 @@ package watercolor.events
 		 */
 		override public function clone():Event
 		{
-			return new TextGroupEvent(type, letter);
+			return new TextGroupEvent(type, letter, index);
 		}
 
 	}
