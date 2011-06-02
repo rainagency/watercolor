@@ -690,7 +690,7 @@ package watercolor.transform
 			// the elements that are to be transformed
 			_elements = new Vector.<Element>();
 			
-			//flipA = flipD = false;
+			flipA = flipD = false;
 			
 			// a dictionary list of elements and their original matrix
 			dict = new Dictionary(true);
