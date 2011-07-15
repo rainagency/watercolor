@@ -41,13 +41,18 @@ package watercolor.elements
 		 */
 		private var _pathData:PathData;
 
-
+		
+		private var _offSetNegativePoints:Boolean = true;
+		public function get offSetNegativePoints():Boolean { return _offSetNegativePoints; }
+		
 		/**
 		 *
 		 */
-		public function Path()
+		public function Path(offSetNegativePoints:Boolean = true)
 		{
 			path = new spark.primitives.Path();
+			
+			_offSetNegativePoints = offSetNegativePoints;
 		}
 
 
@@ -138,7 +143,10 @@ package watercolor.elements
 
 			if (_pathData)
 			{
-				_pathData.offsetNegativePoints();
+				if (_offSetNegativePoints) {
+					_pathData.offsetNegativePoints();
+				}
+				
 				reloadPathData();
 			}
 		}
