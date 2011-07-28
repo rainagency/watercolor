@@ -28,6 +28,7 @@ package watercolor.utils
 	import watercolor.elements.Element;
 	import watercolor.elements.Layer;
 	import watercolor.elements.TextGroup;
+	import watercolor.pathData.PathData;
 
 
 	/**
@@ -166,10 +167,13 @@ package watercolor.utils
 
 			// Copy Bitmap Data
 			var sourceBitmap:Bitmap = Bitmap( source.source );
-			var targetBitmap:Bitmap = new Bitmap( sourceBitmap.bitmapData.clone(), sourceBitmap.pixelSnapping, sourceBitmap.smoothing );
-
-			// Key properties
-			target.source = targetBitmap;
+			
+			if (sourceBitmap)
+			{
+				// Key properties
+				target.source = new Bitmap( sourceBitmap.bitmapData.clone(), sourceBitmap.pixelSnapping, sourceBitmap.smoothing );
+			}
+			
 			target.x = source.x;
 			target.y = source.y;
 			target.width = source.width;
@@ -250,7 +254,7 @@ package watercolor.utils
 			target.fill = cloneIFill( source.fill );
 			target.stroke = IStroke( ObjectUtil.copy( source.stroke ));
 			target.winding = source.winding;
-			target.pathData = source.pathData.clone();
+			target.pathData = (source.pathData) ? source.pathData.clone() : new PathData();
 			target.width = source.width;
 			target.height = source.height;
 			target.transform.matrix = source.transform.matrix;
