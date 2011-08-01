@@ -251,13 +251,11 @@ package watercolor.utils
 			target = checkTarget( source, target );
 
 			// Key properties
-			target.fill = cloneIFill( source.fill );
 			target.stroke = IStroke( ObjectUtil.copy( source.stroke ));
 			target.winding = source.winding;
 			target.pathData = (source.pathData) ? source.pathData.clone() : new PathData();
-			target.width = source.width;
-			target.height = source.height;
 			target.transform.matrix = source.transform.matrix;
+			target.fill = cloneIFill( source.fill );
 			
 			return target;
 		}
@@ -544,6 +542,7 @@ package watercolor.utils
 				else
 				{
 					var targetClass:Class = Object( source ).constructor;
+					
 					try
 					{
 						return new targetClass();
