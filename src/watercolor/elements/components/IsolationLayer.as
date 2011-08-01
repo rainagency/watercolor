@@ -554,7 +554,7 @@ package watercolor.elements.components
 			}
 		}
 		
-		private function revertMatrix(correctParent:Object, child:Object):void
+		private function revertMatrix(correctParent:Object, child:Object, apply:Boolean = true):Matrix
 		{
 			// copy the concatenated matrix for the child and for the element (old parent)
 			var elmConcat:Matrix = correctParent.transform.concatenatedMatrix.clone();
@@ -573,7 +573,12 @@ package watercolor.elements.components
 			childConcat.ty = newPoint.y;
 			
 			// move the child back to the old parent
-			child.transform.matrix = childConcat;	
+			if (apply)
+			{
+				child.transform.matrix = childConcat;
+			}
+			
+			return childConcat;
 		}
 		
 		private function adjustMatrix(previousParent:Object, child:Object, apply:Boolean = true):Matrix
@@ -905,7 +910,8 @@ package watercolor.elements.components
 				var different:Boolean = false;
 				for each(var elm:Element in currentChildElements)
 				{
-					if(!compareMatricies(elm.childMatrix, elm.transform.matrix))
+					var reverted:Matrix = revertMatrix(lastIsolatedElement, elm, false);				
+					if(!compareMatricies(elm.childMatrix, reverted))
 					{
 						different = true;
 						break;
@@ -957,7 +963,7 @@ package watercolor.elements.components
 		 */
 		private function compareMatricies(m1:Matrix, m2:Matrix):Boolean
 		{
-			if((m1 && m2) && (m1.a != m2.a || m1.b != m2.b || m1.c != m2.c || m1.d != m2.d || m1.tx.toFixed(5) != m2.tx.toFixed(5) || m1.ty.toFixed(5) != m2.ty.toFixed(5)))
+			if((m1 && m2) && (m1.a != m2.a || m1.b != m2.b || m1.c != m2.c || m1.d != m2.d || m1.tx.toFixed(0) != m2.tx.toFixed(0) || m1.ty.toFixed(0) != m2.ty.toFixed(0)))
 			{
 				return false;
 			}
