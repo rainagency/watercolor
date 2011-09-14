@@ -23,7 +23,7 @@
 	<target name="compile" description="compiles the Library">
 		<echo>Starting the ${LIBRARY_NAME} compile</echo>
 		<compc 
-			output="${DEPLOY_DIR}/${LIBRARY_NAME}.swc"
+			output="${DEPLOY_DIR}/${LIBRARY_NAME}_${BUILD_NUMBER}.swc"
 			locale="${LOCALE}"
 			debug="${DEBUG}"
 			failonerror="true"
