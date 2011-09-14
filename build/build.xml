@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="My App Builder" basedir=".." default="build">
+	
+	<property environment="env"/>
+	<property file="build/build.properties" />
+	
+	<taskdef resource="flexTasks.tasks" classpath="${FLEX_TASKS}"/> 
+	
+	
+	<target name="build" description="compiles application">
+		<!--echoproperties/-->
+		<echo message="Build: ${BUILD_NUMBER}"/>
+		<echo message="Debug: ${DEBUG}"/>
+		<antcall target="init"/>
+		<antcall target="compile"/>
+	</target>
+	
+	<target name="init" description="delete and recreates directories">
+		<delete dir="${DEPLOY_DIR}" failOnError="false" includeEmptyDirs="true" />
+		<mkdir dir="${DEPLOY_DIR}" />
+	</target>
+	
+	<target name="compile" description="compiles the Library">
+		<echo>Starting the ${LIBRARY_NAME} compile</echo>
+		<compc 
+			output="${DEPLOY_DIR}/${LIBRARY_NAME}.swc"
+			locale="${LOCALE}"
+			debug="${DEBUG}"
+			failonerror="true"
+			fork="true"
+			maxmemory="512m"
+		>
+			<jvmarg value="-Xmx512m" />
+			<load-config filename="${FLEX_CONFIG}/flex-config.xml"/>
+
+			<source-path path-element="${HOME_DIR}/src" />
+			<include-sources dir="${HOME_DIR}/src" includes="*"/>
+			<source-path path-element="${HOME_DIR}/src" />
+			<compiler.source-path path-element="${HOME_DIR}/src"/>
+			<compiler.library-path dir="${HOME_DIR}/" append="true">
+				<include name="${LIBS_DIR}" />
+			</compiler.library-path>
+
+			<compiler.include-libraries dir="${FLEX_UNIT}" append="true">
+				<include name="libs/version4libs/Common" />
+				<include name="libs/version4libs/FlexProject" />
+				<include name="locale/version4locale" />
+			</compiler.include-libraries>
+		</compc>	
+		<echo>Finished the ${LIBRARY_NAME} compile</echo>
+	</target>
+	
+</project>
