@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="My App Builder" basedir=".." default="build">
+<project name="Watercolor SWC Builder" basedir=".." default="build">
 	
 	<property environment="env"/>
 	<property file="build/build.properties" />
