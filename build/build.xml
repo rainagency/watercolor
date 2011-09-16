@@ -23,7 +23,7 @@
 	<target name="compile" description="compiles the Library">
 		<echo>Starting the ${LIBRARY_NAME} compile</echo>
 		<compc 
-			output="${DEPLOY_DIR}/${LIBRARY_NAME}_${BUILD_NUMBER}.swc"
+			output="${DEPLOY_DIR}/${LIBRARY_NAME}.swc"
 			locale="${LOCALE}"
 			debug="${DEBUG}"
 			failonerror="true"
@@ -37,9 +37,9 @@
 			<include-sources dir="${HOME_DIR}/src" includes="*"/>
 			<source-path path-element="${HOME_DIR}/src" />
 			<compiler.source-path path-element="${HOME_DIR}/src"/>
-			<compiler.library-path dir="${HOME_DIR}/" append="true">
-				<include name="${LIBS_DIR}" />
-			</compiler.library-path>
+			<compiler.include-libraries dir="${LIBS_DIR}" append="true">
+				<include name="*.swc" />
+			</compiler.include-libraries>
 
 			<compiler.include-libraries dir="${FLEX_UNIT}" append="true">
 				<include name="libs/version4libs/Common" />
