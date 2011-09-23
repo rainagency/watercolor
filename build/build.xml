@@ -33,19 +33,17 @@
 			<jvmarg value="-Xmx512m" />
 			<load-config filename="${FLEX_CONFIG}/flex-config.xml"/>
 
-			<source-path path-element="${HOME_DIR}/src" />
+			<source-path path-element="${HOME_DIR}/src"/>
 			<include-sources dir="${HOME_DIR}/src" includes="*"/>
-			<source-path path-element="${HOME_DIR}/src" />
-			<compiler.source-path path-element="${HOME_DIR}/src"/>
-			<compiler.include-libraries dir="${LIBS_DIR}" append="true">
+			<compiler.library-path dir="${LIBS_DIR}" append="true">
 				<include name="*.swc" />
-			</compiler.include-libraries>
+			</compiler.library-path>
 
-			<compiler.include-libraries dir="${FLEX_UNIT}" append="true">
+			<compiler.library-path dir="${FLEX_UNIT}" append="true">
 				<include name="libs/version4libs/Common" />
 				<include name="libs/version4libs/FlexProject" />
 				<include name="locale/version4locale" />
-			</compiler.include-libraries>
+			</compiler.library-path>
 		</compc>	
 		<echo>Finished the ${LIBRARY_NAME} compile</echo>
 	</target>

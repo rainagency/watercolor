@@ -68,13 +68,13 @@ in accordance with the terms of the license agreement accompanying it.
 		-->
 
 		<!-- List of SWC files or directories that contain SWC files. -->
-		<library-path>
-		         <path-element>${flexlib}/libs</path-element>   
-				 <!-- keep the original location in the libpath for backwards-compatibility -->
-		         <path-element>${flexlib}/libs/player</path-element>
-		         <path-element>${flexlib}/libs/player/{targetPlayerMajorVersion}.{targetPlayerMinorVersion}</path-element>    
-	     		<path-element>${flexlib}/locale/{locale}</path-element>
-       </library-path>
+		<external-library-path>
+			<path-element>${flexlib}/libs</path-element>   
+			<!-- keep the original location in the libpath for backwards-compatibility -->
+			<path-element>${flexlib}/libs/player</path-element>
+			<path-element>${flexlib}/libs/player/{targetPlayerMajorVersion}.{targetPlayerMinorVersion}</path-element>    
+			<path-element>${flexlib}/locale/{locale}</path-element>
+       </external-library-path>
 	
 	
       <namespaces>
