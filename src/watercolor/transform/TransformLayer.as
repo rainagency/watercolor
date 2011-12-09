@@ -1785,6 +1785,17 @@ package watercolor.transform
 			// alter the element's location
 			currentMatrix.translate(-p.x, -p.y);
 			currentMatrix.concat(totalMatrix);
+			
+			// to restrict selected element from going off the mat from top and left
+			if(currentMatrix.tx<0)
+			{
+				currentMatrix.tx = 0;
+			}
+			if(currentMatrix.ty<0)
+			{
+				currentMatrix.ty = 0;	
+			}
+			
 			addTransformation(currentMatrix);
 			
 			// update the selection box and dispatch an event
