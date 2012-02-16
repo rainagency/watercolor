@@ -2,7 +2,7 @@
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:elements="watercolor.elements.*"
-		xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" xmlns:assets="watercolor.assets.*">
+		xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" xmlns:assets="watercolor.assets.*" xmlns:transform="watercolor.transform.*">
 	
 	<fx:Metadata>[HostComponent("watercolor.transform.TransformLayer")]</fx:Metadata>
 	
@@ -21,14 +21,14 @@
 		</s:stroke>
 	</s:Rect>
 	
-	<assets:topLeft id="topLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>	
-	<assets:topRight id="topRightRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:bottomLeft id="bottomLeftRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:bottomRight id="bottomRightBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:topMiddle id="skewTopBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:leftMiddle id="skewLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:bottomMiddle id="bottomMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
-	<assets:rightMiddle id="rightMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="topLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>	
+	<transform:Handle id="topRightRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="bottomLeftRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="bottomRightBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="skewTopBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="skewLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="bottomMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
+	<transform:Handle id="rightMiddleBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>
 	
 	<!--<s:Group id="centerBtn" width="15" height="15" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}">
 		<s:Ellipse width="100%" height="100%">

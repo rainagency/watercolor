@@ -78,7 +78,7 @@
 		
 		<!--<mx:Spacer width="100%" /> -->
 		
-		<mx:LinkButton id="separateBtn" visible.normal="true" visible="false" includeInLayout.normal="true" includeInLayout="false"/>
+		<s:Button id="separateBtn" visible.normal="true" visible="false" includeInLayout.normal="true" includeInLayout="false"/>
 	
 	</s:Group>
 	

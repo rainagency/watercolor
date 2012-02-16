@@ -155,6 +155,8 @@ package watercolor.elements.components
 		
 		
 		private var _contourMask:Path;
+		
+		private var _cartridgeId:String;
 
 
 		public function get contourMode():Boolean
@@ -313,9 +315,11 @@ package watercolor.elements.components
 		 * @param element The element to use for isolation mode.
 		 * This will basically grab all of the imediate children in the element and transfer them to the isolation layer
 		 */
-		public function enterIsolation(element:Element):void
+		public function enterIsolation(element:Element, cartridgeId:String = null):void
 		{
 
+			_cartridgeId = cartridgeId;
+			
 			// check if we are already in isolation mode and if so then undo the last one
 			// this will basically move the group back to it's original layer
 			// the rest of this function will then move the sub group of elements into the isolation layer
@@ -1025,7 +1029,14 @@ package watercolor.elements.components
 						path = new Path();
 						path.mouseEnabled = false;
 						path.data = obj.toString(true);
-						path.fill = new SolidColor(0x000000);
+						if(_cartridgeId == "Tags_Bags_Boxes_2")
+						{
+							path.stroke = new SolidColorStroke(0x000000, 1.4, 1, true, ScaleMode.NONE);
+						}
+						else
+						{
+							path.fill = new SolidColor(0x000000);	
+						}
 
 						// create a non watercolor group to hold the path created above
 						// we use a spark group because we only to listen for a mouse click
@@ -1178,7 +1189,15 @@ package watercolor.elements.components
 			
 			var newPath:Path = new Path();
 			newPath.pathData = PathData(collection[target].pathData).clone();
-			newPath.fill = new SolidColor(0xFFFFFF);
+			if(_cartridgeId == "Tags_Bags_Boxes_2")
+			{
+				newPath.stroke = new SolidColorStroke(0x000000, 1.4, 1, false, ScaleMode.NONE);
+			}
+			else
+			{
+				newPath.fill = new SolidColor(0xFFFFFF);
+			}
+			
 			newPath.mouseEnabled = false;
 			
 			prop.originalProperties["mask"] = _contourMask;
