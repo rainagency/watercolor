@@ -424,6 +424,18 @@ package watercolor.utils
 					if( target.y > 0 && rect.y == 0 )
 						rect.y = target.y;
 				}
+				
+				if(target.width == 0)
+				{     
+					rect.width = element.height / 2.5;
+					rect.x -= rect.width / 2; 
+				}
+				else if(target.height == 0)
+				{
+					rect.height = element.width / 2.5;
+					rect.y -= rect.height / 2;
+				}
+
 			}
 			
 			// return the result
@@ -471,6 +483,17 @@ package watercolor.utils
 				rectTemp2 = selectionBmp.getColorBoundsRect(0x010100, 0x010100, true);
 				rectTemp2.x += space.x;
 				rectTemp2.y += space.y;
+
+				if(rectTemp2.width == 0 || rectTemp2.width == 1)
+				{     
+					rectTemp2.width = element.height;
+					rectTemp2.x -= rectTemp2.width / 2;
+				}
+				else if(rectTemp2.height == 0 || rectTemp2.height == 1)
+				{
+					rectTemp2.height = element.width;
+					rectTemp2.y -= rectTemp2.height / 2;
+				}
 
 				selectionBmp.dispose();
 				rectBmp.dispose();
