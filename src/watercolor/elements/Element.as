@@ -50,8 +50,10 @@ package watercolor.elements
 
 
 		private var _childMatrix:Matrix;
-
-
+		
+		public var widthAfterTransform:Number;
+		
+		public var heightAfterTransform:Number;
 
 		/**
 		 * Optional value to indicate a child element's original location in a group
