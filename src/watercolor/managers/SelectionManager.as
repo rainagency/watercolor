@@ -345,6 +345,7 @@ package watercolor.managers
 				}
 			}
 			elements = allElements;
+			updateSelection(true, true);
 		}
 	}
 }
