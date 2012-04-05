@@ -425,12 +425,12 @@ package watercolor.utils
 						rect.y = target.y;
 				}
 				
-				if(target.width == 0)
+				if(target.width < 5)
 				{     
 					rect.width = element.height / 2.5;
 					rect.x -= rect.width / 2; 
 				}
-				else if(target.height == 0)
+				else if(target.height < 5)
 				{
 					rect.height = element.width / 2.5;
 					rect.y -= rect.height / 2;
@@ -484,12 +484,12 @@ package watercolor.utils
 				rectTemp2.x += space.x;
 				rectTemp2.y += space.y;
 
-				if(rectTemp2.width == 0 || rectTemp2.width == 1)
+				if(rectTemp2.width < 5)
 				{     
 					rectTemp2.width = element.height;
 					rectTemp2.x -= rectTemp2.width / 2;
 				}
-				else if(rectTemp2.height == 0 || rectTemp2.height == 1)
+				else if(rectTemp2.height < 5)
 				{
 					rectTemp2.height = element.width;
 					rectTemp2.y -= rectTemp2.height / 2;
