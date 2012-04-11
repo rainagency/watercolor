@@ -39,7 +39,7 @@ package watercolor.managers
 		 *  @private
 		 */
 		protected var _index:int = -1;
-
+		protected var _numberOfCommandsAdded:int = -1;
 
 		/**
 		 * A convenient function to add a command to the commands vector.
@@ -53,7 +53,7 @@ package watercolor.managers
 				_commandVOs.splice( _index + 1, _commandVOs.length - ( _index + 1 ));
 				_commandVOs.push( command );
 				_index = _commandVOs.length - 1;
-
+				numberOfCommandsAdded = _index;
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.COMMAND_ADDED, this ));
 			}
@@ -70,7 +70,25 @@ package watercolor.managers
 			return _index;
 		}
 
-
+		/**
+		 * A read only property that returns total command executed after last saved.
+		 * @return number commands executed after last saved
+		 *
+		 */
+		public function get numberOfCommandsAdded():int
+		{
+			return _numberOfCommandsAdded;
+		}
+		
+		/**
+		 * Sets the number of commands executed after last saved.
+		 * @param value
+		 */
+		public function set numberOfCommandsAdded(value:int):void
+		{
+			_numberOfCommandsAdded = value;
+		}
+		
 		public function removeCommand( command:CommandVO ):void
 		{
 
@@ -78,6 +96,7 @@ package watercolor.managers
 			{
 				_commandVOs.splice( _commandVOs.indexOf( command ), 1 );
 				_index--;
+				numberOfCommandsAdded = _index;
 
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.COMMAND_REMOVED, this ));
@@ -88,6 +107,7 @@ package watercolor.managers
 		{
 			_commandVOs.splice(0, _commandVOs.length);
 			_index = -1;
+			numberOfCommandsAdded = _index;
 			
 			dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
 			dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.COMMAND_REMOVED, this ));
@@ -105,6 +125,7 @@ package watercolor.managers
 				( _index == -1 ) ? _index = 0 : _index++;
 				ExecuteUtil.execute( _commandVOs[ _index ]);
 
+				numberOfCommandsAdded = _index;
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.REDO, this ));
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
 			}
@@ -123,7 +144,7 @@ package watercolor.managers
 
 				ExecuteUtil.undo( _commandVOs[ _index ]);
 				_index--;
-
+				numberOfCommandsAdded = _index;
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.UNDO, this ));
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
 			}
