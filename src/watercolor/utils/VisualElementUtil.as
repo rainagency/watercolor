@@ -483,18 +483,21 @@ package watercolor.utils
 				rectTemp2 = selectionBmp.getColorBoundsRect(0x010100, 0x010100, true);
 				rectTemp2.x += space.x;
 				rectTemp2.y += space.y;
-
-				if(rectTemp2.width < 5)
+				if(rectTemp2.width < 5 && rectTemp2.height > 5)
 				{     
 					rectTemp2.width = element.height;
 					rectTemp2.x -= rectTemp2.width / 2;
 				}
-				else if(rectTemp2.height < 5)
+				else if(rectTemp2.height < 5 && rectTemp2.width > 5)
 				{
 					rectTemp2.height = element.width;
 					rectTemp2.y -= rectTemp2.height / 2;
+				} 
+				else if(rectTemp2.height < 5 && rectTemp2.width < 5)
+				{
+					rectTemp2.width = selectionBmp.width;
+					rectTemp2.height = selectionBmp.height;				
 				}
-
 				selectionBmp.dispose();
 				rectBmp.dispose();
 				alphaRectBmp.dispose();
