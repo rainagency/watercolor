@@ -218,6 +218,10 @@ package watercolor.utils
 			var columnCount:uint = Math.floor( (layer.width - offSetLeft - offSetRight) / ( source.getLayoutBoundsWidth() + padding));
 			var rowCount:uint = Math.floor( (layer.height - offSetTop - offSetBottom) / ( source.getLayoutBoundsHeight() + padding  ));
 
+			if(columnCount < 1 || rowCount < 1)
+			{
+				return null;
+			}
 			// Position variables
 			var leftOffset:uint = offSetLeft;
 			var topOffset:uint = offSetTop;
