@@ -11,7 +11,6 @@ package watercolor.utils
 	import watercolor.elements.Element;
 	import watercolor.elements.Layer;
 	import watercolor.elements.components.IsolationLayer;
-	import watercolor.elements.components.Workarea;
 
 
 	/**
@@ -100,8 +99,11 @@ package watercolor.utils
 
 			// Loop thru rows
 			var groupCommandVO:GroupCommandVO = new GroupCommandVO();
-			groupCommandVO.addCommand( new DeleteVO( Element( source ), Element( source ).getPosition()));
-
+			if(source.parent != null)
+			{
+				groupCommandVO.addCommand( new DeleteVO( Element( source ), Element( source ).getPosition()));
+			}
+			
 			// Create copy of Element, this will make the history functionality work.
 			source = customCopyFunction != null ? customCopyFunction( source ) : VisualElementUtil.clone( source );
 
@@ -115,7 +117,7 @@ package watercolor.utils
 			if( columnCount < columns )
 			{
 				//Need to resize the source...
-				sizeRatio = ( layer.width / columns ) / ( width + padding );
+				//sizeRatio = ( layer.width / columns ) / ( width + padding );
 				ExecuteUtil.execute( TransformUtil.scale( vector, sizeRatio, sizeRatio ));
 
 				width = width * sizeRatio;
@@ -129,7 +131,7 @@ package watercolor.utils
 				var perHeight:uint = ( layer.height / rows );
 				var itemHeight:uint = ( height );
 
-				sizeRatio = ( layer.height / rows ) / ( height + padding );
+				//sizeRatio = ( layer.height / rows ) / ( height + padding );
 				ExecuteUtil.execute( TransformUtil.scale( vector, sizeRatio, sizeRatio ));
 
 				width = width * sizeRatio;
