@@ -385,7 +385,7 @@ package watercolor.elements.components
 						//Top CM Text
 						var topCMText:TextLine = createTextLine(cm.toString(), 0, textSizeCM);
 						topCMText.x = gridX - Math.ceil(topCMText.textWidth / 2);
-						topCMText.y = 12 + topCMText.textHeight;
+						topCMText.y = 9 + topCMText.textHeight;
 						topRuler.addChild(topCMText);
 
 						//Bottom CM Text
@@ -438,13 +438,13 @@ package watercolor.elements.components
 					{
 						//Left CM Text
 						var leftCMText:TextLine = createTextLine(cm.toString(), 90, textSizeCM);
-						leftCMText.x = 12;
+						leftCMText.x = 11;
 						leftCMText.y = gridY - Math.floor(leftCMText.textWidth / 2);
 						leftRuler.addChild(leftCMText);
 
 						//Right CM Text
 						var rightCMText:TextLine = createTextLine(cm.toString(), 270, textSizeCM);
-						rightCMText.x = width - 12;
+						rightCMText.x = width - 11;
 						rightCMText.y = gridY + Math.floor(leftCMText.textWidth / 2);
 						rightRuler.addChild(rightCMText);
 					}

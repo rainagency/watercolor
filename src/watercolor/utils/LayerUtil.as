@@ -1,6 +1,8 @@
 package watercolor.utils
 {
+	import flash.display.DisplayObject;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import mx.core.IVisualElement;
 	
@@ -216,10 +218,15 @@ package watercolor.utils
 			var groupCommandVO:GroupCommandVO = new GroupCommandVO();
 			groupCommandVO.addCommand( new DeleteVO( Element( source ), Element( source ).getPosition()));
 
+			// get the rectangle area for the elements
+			var vector:Vector.<Element> = new Vector.<Element>( 1 );
+			vector[ 0 ] = Element( source );
+			var rect:Rectangle = VisualElementUtil.getElementsRectangle(vector, source.parent as DisplayObject);
+			
 			// Figure out how many we can fit.
-			var columnCount:uint = Math.floor( (layer.width - offSetLeft - offSetRight) / ( source.getLayoutBoundsWidth() + padding));
-			var rowCount:uint = Math.floor( (layer.height - offSetTop - offSetBottom) / ( source.getLayoutBoundsHeight() + padding  ));
-
+			var columnCount:uint = Math.floor( (layer.width - offSetLeft - offSetRight) / (rect.width + padding));
+			var rowCount:uint = Math.floor( (layer.height - offSetTop - offSetBottom) / (rect.height + padding));	
+			
 			if(columnCount < 1 || rowCount < 1)
 			{
 				return null;
@@ -266,11 +273,11 @@ package watercolor.utils
 					}
 
 					// Set new X position for next element
-					leftOffset += source.getLayoutBoundsWidth() + padding;
+					leftOffset += rect.width + padding;
 				}
 
 				// Set new Y position for next element
-				topOffset += source.getLayoutBoundsHeight() + padding;
+				topOffset += rect.height + padding;
 			}
 
 			return groupCommandVO;
