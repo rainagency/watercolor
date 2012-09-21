@@ -823,7 +823,7 @@ package watercolor.transform
 		 * @param bottomLeft
 		 * @param resetBounds
 		 */
-		protected function findCorners(updateBounds:Boolean = false):void
+		public function findCorners(updateBounds:Boolean = false):void
 		{			
 			// if we want to update the selection box
 			if (updateBounds)
