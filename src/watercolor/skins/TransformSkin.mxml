@@ -15,11 +15,13 @@
 		<s:State name="selected"/>
 	</s:states>
 	
-	<s:Rect id="selectionBounds" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}">
-		<s:stroke>
-			<s:SolidColorStroke color="#808080" weight="2" scaleMode="none" alpha="0.7"/>
-		</s:stroke>
-	</s:Rect>
+	<s:Group id="selectionBounds" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}">
+		<s:Rect left="0" right="0" bottom="0" top="0">
+			<s:stroke>
+				<s:SolidColorStroke color="#808080" weight="2" scaleMode="none" alpha="0.7"/>
+			</s:stroke>
+		</s:Rect>
+	</s:Group>
 	
 	<transform:Handle id="topLeftBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>	
 	<transform:Handle id="topRightRotateBtn" width="16" height="16" visible="{currentState != 'nonselected'}" includeInLayout="{currentState != 'nonselected'}"/>

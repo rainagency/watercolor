@@ -407,7 +407,11 @@ package watercolor.utils
 				{
 					for( var x:int = 0; x < target.numChildren; x++ )
 					{
-						rect = rect.union( getElementRectangle( target.getChildAt( x ), ( multiSelected ) ? parent : target, true ));
+						if (target.getChildAt(x) is UIComponent) {
+							rect = rect.union( getElementRectangle( target.getChildAt( x ), ( multiSelected ) ? parent : target, true ));
+						} else {
+							rect = rect.union(target.getRect(( multiSelected ) ? parent : target ));
+						}
 					}
 				}
 				else

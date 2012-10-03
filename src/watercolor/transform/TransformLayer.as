@@ -9,6 +9,9 @@ package watercolor.transform
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
+	import mx.core.IVisualElement;
+	import mx.core.UIComponent;
+	
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.primitives.supportClasses.GraphicElement;
 	
@@ -60,11 +63,22 @@ package watercolor.transform
 		private var totalMatrixInversion:Matrix;
 		
 		
+		private var _currentMatrix:Matrix;
+
+		protected function set currentMatrix(value:Matrix):void
+		{
+			_currentMatrix = value;
+		}
+
+
 		/**
 		 * Current transformation matrix. This is transformation
 		 * matrix is calculated when user moves mouse
 		 */
-		private var currentMatrix:Matrix;
+		protected function get currentMatrix():Matrix
+		{
+			return _currentMatrix;
+		}
 		
 		
 		/**
@@ -254,8 +268,20 @@ package watercolor.transform
 		
 		private var _identityBounds:Boolean;
 		
-		private var dict:Dictionary;
-		private var transformMatrix:Matrix;
+		private var _dict:Dictionary;
+
+		protected function get dict():Dictionary
+		{
+			return _dict;
+		}
+
+		private var _transformMatrix:Matrix;
+
+		protected function get transformMatrix():Matrix
+		{
+			return _transformMatrix;
+		}
+
 		
 		/**
 		 * These are used to determine if the handles should maintain their position 
@@ -330,12 +356,12 @@ package watercolor.transform
 		}
 		
 		
-		[SkinPart(type="spark.primitives.supportClasses.GraphicElement",required="false")]
+		[SkinPart(type="mx.core.UIComponent",required="false")]
 		/**
 		 * 
 		 * @default 
 		 */
-		public var selectionBounds:GraphicElement;
+		public var selectionBounds:UIComponent;
 		
 		/**
 		 * The top right button
@@ -567,9 +593,9 @@ package watercolor.transform
 			_elements = value as Vector.<Element>;
 			
 			// reset the dictionary list
-			for (var key:* in dict)
+			for (var key:* in _dict)
 			{
-				delete dict[key];
+				delete _dict[key];
 			}
 			
 			// update the transformation matrix
@@ -693,10 +719,10 @@ package watercolor.transform
 			flipA = flipD = false;
 			
 			// a dictionary list of elements and their original matrix
-			dict = new Dictionary(true);
+			_dict = new Dictionary(true);
 			
 			// the transformed matrix
-			transformMatrix = new Matrix();
+			_transformMatrix = new Matrix();
 			
 			// sets the elements
 			elements = objects;
@@ -718,7 +744,7 @@ package watercolor.transform
 			if (_elements && _elements.length > 0 && _parentContainer)
 			{
 				// initialize global variables
-				currentMatrix = new Matrix();
+				_currentMatrix = new Matrix();
 				topLeft = new Point();
 				topRight = new Point();
 				bottomRight = new Point();
@@ -746,8 +772,8 @@ package watercolor.transform
 				redrawSelectionBox();
 				
 				// initialize the global matrix variables
-				totalMatrix = transformMatrix;
-				currentMatrix = totalMatrix.clone();
+				totalMatrix = _transformMatrix;
+				_currentMatrix = totalMatrix.clone();
 				totalMatrixInversion = totalMatrix.clone();
 				totalMatrixInversion.invert();
 				
@@ -806,10 +832,10 @@ package watercolor.transform
 				redrawSelectionBox(updateCenter, identityBounds);
 				
 				// update the global matrices from the selected elements 
-				totalMatrix = transformMatrix;
+				totalMatrix = _transformMatrix;
 				totalMatrixInversion = totalMatrix.clone();
 				totalMatrixInversion.invert();
-				currentMatrix = totalMatrix.clone();
+				_currentMatrix = totalMatrix.clone();
 				
 				currentBox = getCurrentRect();
 			}
@@ -839,7 +865,7 @@ package watercolor.transform
 			var temp:Rectangle;
 			if (_elements.length > 1 || _identityBounds)
 			{
-				temp = new Rectangle(0,0,dict[this].width,dict[this].height);
+				temp = new Rectangle(0,0,_dict[this].width,_dict[this].height);
 			}
 			else
 			{
@@ -870,10 +896,10 @@ package watercolor.transform
 			}
 			
 			// find the four corners around the element
-			topLeftTemp = transformMatrix.transformPoint(temp.topLeft);
-			topRightTemp = transformMatrix.transformPoint(new Point(temp.bottomRight.x, temp.topLeft.y));
-			bottomRightTemp = transformMatrix.transformPoint(temp.bottomRight);
-			bottomLeftTemp = transformMatrix.transformPoint(new Point(temp.topLeft.x, temp.bottomRight.y));
+			topLeftTemp = _transformMatrix.transformPoint(temp.topLeft);
+			topRightTemp = _transformMatrix.transformPoint(new Point(temp.bottomRight.x, temp.topLeft.y));
+			bottomRightTemp = _transformMatrix.transformPoint(temp.bottomRight);
+			bottomLeftTemp = _transformMatrix.transformPoint(new Point(temp.topLeft.x, temp.bottomRight.y));
 			
 			topLeft.x = topLeftTemp.x;
 			topLeft.y = topLeftTemp.y;
@@ -908,7 +934,7 @@ package watercolor.transform
 				// go through each element and append the transformation for each element
 				for each (element in _elements)
 				{
-					matrix = dict[element].clone();
+					matrix = _dict[element].clone();
 					matrix.concat(mtx);
 					element.transform.matrix = matrix;
 				}
@@ -918,7 +944,7 @@ package watercolor.transform
 				_elements[0].transform.matrix = mtx;
 			}
 			
-			transformMatrix = mtx.clone();
+			_transformMatrix = mtx.clone();
 		}
 		
 		/**
@@ -929,7 +955,7 @@ package watercolor.transform
 		{
 			
 			// find the updated rectangle and return the transformation matrix
-			return transformMatrix;
+			return _transformMatrix;
 		}
 		
 		/**
@@ -951,29 +977,29 @@ package watercolor.transform
 				for each (var element:Element in _elements)
 				{
 					// the original matrix adjusted to the bounding rectangle
-					dict[element] = element.transform.matrix.clone();
-					dict[element].tx -= _rect.x;
-					dict[element].ty -= _rect.y;
+					_dict[element] = element.transform.matrix.clone();
+					_dict[element].tx -= _rect.x;
+					_dict[element].ty -= _rect.y;
 				}
 				
 				// record the bounding rectangle
-				dict[this] = _rect.clone();
+				_dict[this] = _rect.clone();
 				
 				// get the identity bounding box and set its position to the rectangle
 				
 				if (_elements.length > 1 || _identityBounds)
 				{
-					transformMatrix.identity();
-					transformMatrix.tx = _rect.x;
-					transformMatrix.ty = _rect.y;
+					_transformMatrix.identity();
+					_transformMatrix.tx = _rect.x;
+					_transformMatrix.ty = _rect.y;
 				}
 				else if (_elements.length == 1)
 				{
-					transformMatrix = _elements[0].transform.matrix;
+					_transformMatrix = _elements[0].transform.matrix;
 				}
 				
 				// update the global matrices from the selected elements 
-				totalMatrix = transformMatrix;
+				totalMatrix = _transformMatrix;
 				totalMatrixInversion = totalMatrix.clone();
 				totalMatrixInversion.invert();
 			}
@@ -1040,10 +1066,10 @@ package watercolor.transform
 		 */
 		public function getCurrentRotation():Number
 		{
-			if (totalMatrixInversion && transformMatrix)
+			if (totalMatrixInversion && _transformMatrix)
 			{			
 				var crt:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
-				var um:Matrix = transformMatrix.clone();
+				var um:Matrix = _transformMatrix.clone();
 				
 				if (flipA)
 				{
@@ -1080,7 +1106,7 @@ package watercolor.transform
 		 */
 		public function getSkewX():Number
 		{
-			var um:Matrix = removeRotation(transformMatrix);			
+			var um:Matrix = removeRotation(_transformMatrix);			
 			var vSkewX:Number = Math.atan(-um.c / um.d);
 			
 			if (um.d < 0)
@@ -1223,20 +1249,20 @@ package watercolor.transform
 				selectionBounds.width = _rect.width;
 				selectionBounds.height = _rect.height;
 				
-				var sm:Matrix = transformMatrix.clone();				
+				var sm:Matrix = _transformMatrix.clone();				
 				sm.concat(_parentContainer.transform.concatenatedMatrix);
 				
 				var temp:Rectangle;
 				if (_elements.length > 1 || _identityBounds)
 				{
-					temp = new Rectangle(0,0,dict[this].width,dict[this].height);
+					temp = new Rectangle(0,0,_dict[this].width,_dict[this].height);
 				}
 				else
 				{
 					temp = _rect.clone();
 				}
 				
-				with (globalToLocal(_parentContainer.localToGlobal(transformMatrix.transformPoint(temp.topLeft))))
+				with (globalToLocal(_parentContainer.localToGlobal(_transformMatrix.transformPoint(temp.topLeft))))
 				{
 					sm.ty = y;
 					sm.tx = x;
@@ -1525,6 +1551,8 @@ package watercolor.transform
 					// Stage is CurrentTarget
 					ctrp1.x = mouseX;
 					ctrp1.y = mouseY;
+					buttonOffset.x = 0;
+					buttonOffset.y = 0;
 					cMode = TransformMode.MODE_MOVE;
 				}
 				
@@ -1622,13 +1650,13 @@ package watercolor.transform
 			removeMouseMoveGlobalListener();
 			
 			// grab the transformation and identity transformation matrices for the element(s)
-			totalMatrix = transformMatrix;
+			totalMatrix = _transformMatrix;
 			totalMatrixInversion = totalMatrix.clone();
 			totalMatrixInversion.invert();
 			ctrp1 = null;
 			ctrp2 = null;
 			localMouseDownPoint = null;
-			currentMatrix.identity();
+			_currentMatrix.identity();
 			
 			// Remove SkewLock
 			skewLocked = false;
@@ -1636,8 +1664,8 @@ package watercolor.transform
 			// if we want to maintain the handle positions and the transformation was a scale
 			if (maintainHandlePosition && (cMode == TransformMode.MODE_SCALE || cMode == TransformMode.MODE_SCALEX || cMode == TransformMode.MODE_SCALEY))
 			{
-				flipA = (transformMatrix.a < 0) ? true : false;
-				flipD = (transformMatrix.d < 0) ? true : false;
+				flipA = (_transformMatrix.a < 0) ? true : false;
+				flipD = (_transformMatrix.d < 0) ? true : false;
 			}
 			
 			// dispatch an event to indicate that the transformation is finished
@@ -1771,36 +1799,44 @@ package watercolor.transform
 		 * Mouse move handler function
 		 * @param The mouse click event
 		 */
-		private function onMouseMove(event:MouseEvent):void
+		protected function onMouseMove(event:MouseEvent):void
 		{
 			// get the center point
 			var gp:Point = ctrp1;
 			
 			// calculate the new location
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
-			currentMatrix.identity();
-			p.x = (gp.x - p.x);
-			p.y = (gp.y - p.y);
+			_currentMatrix.identity();
+			
+			p.x = (gp.x - p.x - buttonOffset.x);
+			p.y = (gp.y - p.y - buttonOffset.y);
 			
 			// alter the element's location
-			currentMatrix.translate(-p.x, -p.y);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.translate(-p.x, -p.y);
+			_currentMatrix.concat(totalMatrix);
 			
 			// to restrict selected element from going off the mat from top and left
-			if(currentMatrix.tx<0)
-			{
-				currentMatrix.tx = 0;
-			}
-			if(currentMatrix.ty<0)
-			{
-				currentMatrix.ty = 0;	
-			}
+			restrictBoundaries();
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			// update the selection box and dispatch an event
 			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
+		}
+		
+		protected function restrictBoundaries():void {
+			
+			// to restrict selected element from going off the mat from top and left
+			if(_currentMatrix.tx<0)
+			{
+				_currentMatrix.tx = 0;
+			}
+			if(_currentMatrix.ty<0)
+			{
+				_currentMatrix.ty = 0;	
+			}
+			
 		}
 		
 		/**
@@ -1816,10 +1852,10 @@ package watercolor.transform
 			delta.x = mouseMovePoint.x - mouseDownPoint.x;
 			delta.y = mouseMovePoint.y - mouseDownPoint.y;
 			
-			currentMatrix = totalMatrix.clone();
-			currentMatrix.translate(delta.x, 0);
+			_currentMatrix = totalMatrix.clone();
+			_currentMatrix.translate(delta.x, 0);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			// update the selection box and dispatch an event
 			redrawSelectionBox();
@@ -1839,10 +1875,10 @@ package watercolor.transform
 			delta.x = mouseMovePoint.x - mouseDownPoint.x;
 			delta.y = mouseMovePoint.y - mouseDownPoint.y;
 			
-			currentMatrix = totalMatrix.clone();
-			currentMatrix.translate(0, delta.y);
+			_currentMatrix = totalMatrix.clone();
+			_currentMatrix.translate(0, delta.y);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			// update the selection box and dispatch an event
 			redrawSelectionBox();
@@ -1861,10 +1897,10 @@ package watercolor.transform
 				matrices = getTransformations();
 				
 				// alter the element's location
-				currentMatrix.identity();
-				currentMatrix.translate(moveX, moveY);
-				currentMatrix.concat(totalMatrix);
-				addTransformation(currentMatrix);
+				_currentMatrix.identity();
+				_currentMatrix.translate(moveX, moveY);
+				_currentMatrix.concat(totalMatrix);
+				addTransformation(_currentMatrix);
 				
 				// update the selection box and dispatch an event
 				redrawSelectionBox();
@@ -1896,10 +1932,10 @@ package watercolor.transform
 				
 				if (totalMatrix)
 				{				
-					currentMatrix = totalMatrix.clone();
-					currentMatrix.tx = p.x;
-					currentMatrix.ty = p.y;
-					addTransformation(currentMatrix);
+					_currentMatrix = totalMatrix.clone();
+					_currentMatrix.tx = p.x;
+					_currentMatrix.ty = p.y;
+					addTransformation(_currentMatrix);
 				}
 				
 				if (byBoundingBox && changed)
@@ -1926,12 +1962,12 @@ package watercolor.transform
 				
 				var gp:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
 				
-				currentMatrix.identity();
-				currentMatrix.translate(-gp.x, -gp.y);			
-				currentMatrix.scale((axis == TransformFlip.HORIZONTAL || axis == TransformFlip.BOTH) ? -1 : 1, (axis == TransformFlip.VERTICAL || axis == TransformFlip.BOTH) ? -1 : 1);
-				currentMatrix.translate(gp.x, gp.y);
-				currentMatrix.concat(totalMatrix);
-				addTransformation(currentMatrix);
+				_currentMatrix.identity();
+				_currentMatrix.translate(-gp.x, -gp.y);			
+				_currentMatrix.scale((axis == TransformFlip.HORIZONTAL || axis == TransformFlip.BOTH) ? -1 : 1, (axis == TransformFlip.VERTICAL || axis == TransformFlip.BOTH) ? -1 : 1);
+				_currentMatrix.translate(gp.x, gp.y);
+				_currentMatrix.concat(totalMatrix);
+				addTransformation(_currentMatrix);
 				
 				// if we want to maintain the handle positions
 				if (maintainHandlePosition)
@@ -2020,13 +2056,13 @@ package watercolor.transform
 			localMatrix.rotate(angle);
 			localMatrix.translate(anchor.x, anchor.y);
 			
-			currentMatrix = totalMatrix.clone();
-			currentMatrix.concat(m);
-			currentMatrix.concat(localMatrix);
+			_currentMatrix = totalMatrix.clone();
+			_currentMatrix.concat(m);
+			_currentMatrix.concat(localMatrix);
 			m.invert();
-			currentMatrix.concat(m);
+			_currentMatrix.concat(m);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 		}
 		
 		
@@ -2039,14 +2075,14 @@ package watercolor.transform
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
-			currentMatrix.identity();
+			_currentMatrix.identity();
 			p.y = ((gp.y - p.y) - buttonOffset.y) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y);
 			
-			currentMatrix.translate(0, -gp.y);
-			currentMatrix.scale(1, p.y);
-			currentMatrix.translate(0, gp.y);
-			currentMatrix.concat(totalMatrix);
-			addTransformation(currentMatrix);
+			_currentMatrix.translate(0, -gp.y);
+			_currentMatrix.scale(1, p.y);
+			_currentMatrix.translate(0, gp.y);
+			_currentMatrix.concat(totalMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox(!event.altKey);
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2062,15 +2098,15 @@ package watercolor.transform
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
-			currentMatrix.identity();
+			_currentMatrix.identity();
 			p.x = ((gp.x - p.x) - buttonOffset.x) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x);
 			
-			currentMatrix.translate(-gp.x, 0);
-			currentMatrix.scale(p.x, 1);
-			currentMatrix.translate(gp.x, 0);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.translate(-gp.x, 0);
+			_currentMatrix.scale(p.x, 1);
+			_currentMatrix.translate(gp.x, 0);
+			_currentMatrix.concat(totalMatrix);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox(!event.altKey);
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2086,7 +2122,7 @@ package watercolor.transform
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
-			currentMatrix.identity();
+			_currentMatrix.identity();
 			p.x = ((gp.x - p.x) - buttonOffset.x) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x);
 			p.y = ((gp.y - p.y) - buttonOffset.y) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y);
 			
@@ -2096,11 +2132,11 @@ package watercolor.transform
 				p.y = p.x;
 			}
 			
-			currentMatrix.translate(-gp.x, -gp.y);
-			currentMatrix.scale(p.x, p.y);
-			currentMatrix.translate(gp.x, gp.y);
-			currentMatrix.concat(totalMatrix);
-			addTransformation(currentMatrix);
+			_currentMatrix.translate(-gp.x, -gp.y);
+			_currentMatrix.scale(p.x, p.y);
+			_currentMatrix.translate(gp.x, gp.y);
+			_currentMatrix.concat(totalMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox(!event.altKey);
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2166,13 +2202,13 @@ package watercolor.transform
 					
 					matrices = getTransformations();
 					
-					currentMatrix.identity();
-					currentMatrix.translate(-gp.x, -gp.y);
-					currentMatrix.scale(x, y);
-					currentMatrix.translate(gp.x, gp.y);
-					currentMatrix.concat(totalMatrix);
+					_currentMatrix.identity();
+					_currentMatrix.translate(-gp.x, -gp.y);
+					_currentMatrix.scale(x, y);
+					_currentMatrix.translate(gp.x, gp.y);
+					_currentMatrix.concat(totalMatrix);
 					
-					addTransformation(currentMatrix);	
+					addTransformation(_currentMatrix);	
 					
 					redrawSelectionBox();
 					
@@ -2190,13 +2226,13 @@ package watercolor.transform
 		{
 			var ic:Rectangle = getCurrentRect();	
 			
-			currentMatrix.identity();
-			currentMatrix.translate(-gp.x, -gp.y);
-			currentMatrix.scale(x, y);
-			currentMatrix.translate(gp.x, gp.y);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.identity();
+			_currentMatrix.translate(-gp.x, -gp.y);
+			_currentMatrix.scale(x, y);
+			_currentMatrix.translate(gp.x, gp.y);
+			_currentMatrix.concat(totalMatrix);
 			
-			addTransformation(currentMatrix);	
+			addTransformation(_currentMatrix);	
 			
 			var rect:Rectangle = getCurrentRect();
 			
@@ -2236,13 +2272,13 @@ package watercolor.transform
 			delta.x = p.x - localMouseDownPoint.x;
 			delta.y = p.y - localMouseDownPoint.y;
 			
-			currentMatrix.identity();
-			currentMatrix.translate(-gp.x, -gp.y);
+			_currentMatrix.identity();
+			_currentMatrix.translate(-gp.x, -gp.y);
 			
 			// Both X and Y
 			if (event.altKey)
 			{
-				currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x), -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1)); // SkewX and Y at the same time
+				_currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x), -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1)); // SkewX and Y at the same time
 			}
 			else if ( (skewLocked && !skewVertical) || (!skewLocked && (Math.abs(delta.x) > Math.abs(delta.y)) ))
 			{
@@ -2252,7 +2288,7 @@ package watercolor.transform
 					skewLocked = true;
 					skewVertical = false;
 				}
-				currentMatrix.concat(new Matrix(1, 0, -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1));
+				_currentMatrix.concat(new Matrix(1, 0, -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1));
 			}
 			else
 			{
@@ -2262,13 +2298,13 @@ package watercolor.transform
 					skewLocked = true;
 					skewVertical = true;
 				}
-				currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x)));
+				_currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x)));
 			}
 			
-			currentMatrix.translate(gp.x, gp.y);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.translate(gp.x, gp.y);
+			_currentMatrix.concat(totalMatrix);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2283,13 +2319,13 @@ package watercolor.transform
 			var gp:Point = (event.altKey) ? ctrp1 : ctrp2;
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
-			currentMatrix.identity();
-			currentMatrix.translate(-gp.x, -gp.y);
-			currentMatrix.concat(new Matrix(1, 0, -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1));
-			currentMatrix.translate(gp.x, gp.y);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.identity();
+			_currentMatrix.translate(-gp.x, -gp.y);
+			_currentMatrix.concat(new Matrix(1, 0, -(buttonOffset.x + (p.x - localMouseDownPoint.x)) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y), 1));
+			_currentMatrix.translate(gp.x, gp.y);
+			_currentMatrix.concat(totalMatrix);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2305,13 +2341,13 @@ package watercolor.transform
 			var gp:Point = (event.altKey) ? ctrp1 : ctrp2;
 			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
-			currentMatrix.identity();
-			currentMatrix.translate(-gp.x, -gp.y);
-			currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x)));
-			currentMatrix.translate(gp.x, gp.y);
-			currentMatrix.concat(totalMatrix);
+			_currentMatrix.identity();
+			_currentMatrix.translate(-gp.x, -gp.y);
+			_currentMatrix.concat(new Matrix(1, ((localMouseDownPoint.y - p.y) - buttonOffset.y) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x)));
+			_currentMatrix.translate(gp.x, gp.y);
+			_currentMatrix.concat(totalMatrix);
 			
-			addTransformation(currentMatrix);
+			addTransformation(_currentMatrix);
 			
 			redrawSelectionBox();
 			dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_COMMIT, matrices, _elements, getCurrentRect(), cMode));
@@ -2337,7 +2373,7 @@ package watercolor.transform
 				py = localToGlobal(py);
 				py = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(py));
 				
-				currentMatrix.identity();
+				_currentMatrix.identity();
 				
 				if (fromOrigin)
 				{
@@ -2348,25 +2384,25 @@ package watercolor.transform
 					//var a:Number = tm.a;
 					//var sa:Number = (-(Math.tan(skewY) * ((a < 0) ? a *= -1 : a)) - tm.b) / tm.d;
 					
-					currentMatrix.translate(-px.x, -px.y);
-					currentMatrix.concat(new Matrix(1, 0, sd, 1));
-					currentMatrix.translate(px.x, px.y);
+					_currentMatrix.translate(-px.x, -px.y);
+					_currentMatrix.concat(new Matrix(1, 0, sd, 1));
+					_currentMatrix.translate(px.x, px.y);
 					//currentMatrix.translate(-py.x, -py.y);
 					//currentMatrix.concat(new Matrix(1, sa));
 					//currentMatrix.translate(py.x, py.y);
 				}
 				else
 				{
-					currentMatrix.translate(-px.x, -px.y);
-					currentMatrix.concat(new Matrix(1, 0, -skewX, 1));
-					currentMatrix.translate(px.x, px.y);
-					currentMatrix.translate(-py.x, -py.y);
-					currentMatrix.concat(new Matrix(1, -skewY));
-					currentMatrix.translate(py.x, py.y);
+					_currentMatrix.translate(-px.x, -px.y);
+					_currentMatrix.concat(new Matrix(1, 0, -skewX, 1));
+					_currentMatrix.translate(px.x, px.y);
+					_currentMatrix.translate(-py.x, -py.y);
+					_currentMatrix.concat(new Matrix(1, -skewY));
+					_currentMatrix.translate(py.x, py.y);
 				}
 				
-				currentMatrix.concat(totalMatrix);			
-				addTransformation(currentMatrix);
+				_currentMatrix.concat(totalMatrix);			
+				addTransformation(_currentMatrix);
 				
 				redrawSelectionBox();
 				dispatchEvent(new TransformLayerEvent(TransformLayerEvent.TRANSFORM_FINISH, matrices, _elements, getCurrentRect(), TransformMode.MODE_SKEW));
