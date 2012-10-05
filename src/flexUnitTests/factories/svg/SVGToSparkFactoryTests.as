@@ -315,7 +315,7 @@ package flexUnitTests.factories.svg
 		{
 			var svg:XML = <svg />;
 			var uriManager:URIManager = new URIManager(svg);
-			var element:Graphic = GraphicFactory.createSparkFromSVG(svg, uriManager);
+			var element:Object = GraphicFactory.createSparkFromSVG(svg, uriManager);
 			assertNotNull(element);
 		}
 		
@@ -505,7 +505,7 @@ package flexUnitTests.factories.svg
 				</svg>;
 			
 			var uriManager:URIManager = new URIManager(svg);
-			var element:Graphic = GraphicFactory.createSparkFromSVG(svg, uriManager);
+			var element:Object = GraphicFactory.createSparkFromSVG(svg, uriManager);
 			
 			// Currently all text and gradients will be ignored, so children should only be rect, ellipse, etc
 			assertEquals("Error asserting Graphic children", 8, element.numElements);

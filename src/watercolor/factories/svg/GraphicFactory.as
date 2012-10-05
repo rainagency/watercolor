@@ -30,17 +30,24 @@ package watercolor.factories.svg
 		/**
 		 * Create Spark Graphic from SVG element
 		 */ 
-		public static function createSparkFromSVG(node:XML, uriManager:URIManager, element:Graphic = null):Graphic
+		public static function createSparkFromSVG(node:XML, uriManager:URIManager, element:Object = null):Object
 		{
-			if (!element)
-			{
-				element = new Graphic();
+			if (!element) {
+				element = new Object();
 			}
 			
-			// Send through GroupFactory to create Children 
-			GroupFactory.createSparkFromSVG(node, uriManager, element);
-			
-			// TODO: Viewbox
+			// make sure there are children nodes
+			if (node.children().length() > 0) {
+				
+				// go through each node and create the child graphic and set it on the element
+				for each (var child:XML in node.children()) {					
+					try {
+						element[child.localName()] = ElementFactory.createSparkFromSVG(child, uriManager);
+					} catch (err:Error) {
+						trace("Cannot create property " + child.localName() + " on " + element.toString());
+					}					
+				}
+			} 
 			
 			return element;
 		}
