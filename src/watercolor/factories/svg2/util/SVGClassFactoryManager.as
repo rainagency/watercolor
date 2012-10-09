@@ -6,10 +6,12 @@ package watercolor.factories.svg2.util
 	import watercolor.factories.svg2.FiltersFactory;
 	import watercolor.factories.svg2.GraphicsFactory;
 	import watercolor.factories.svg2.GroupFactory;
+	import watercolor.factories.svg2.LayerFactory;
 	import watercolor.factories.svg2.LineFactory;
 	import watercolor.factories.svg2.MaskFactory;
 	import watercolor.factories.svg2.PathFactory;
 	import watercolor.factories.svg2.RectFactory;
+	import watercolor.factories.svg2.TSpanFactory;
 	import watercolor.factories.svg2.TextAreaFactory;
 	import watercolor.factories.svg2.filters.BlurFilterFactory;
 	import watercolor.factories.svg2.filters.GlowFilterFactory;
@@ -34,8 +36,10 @@ package watercolor.factories.svg2.util
 		private static var _baseMap:Object = { svg:GraphicsFactory,
 												defs:ChildFactory,
 												text:TextAreaFactory,
-												layer:GroupFactory,
+												layer:LayerFactory,
+												tspan:TSpanFactory,
 												group:GroupFactory,
+												g:GroupFactory,
 												bitmapimage:BitmapImageFactory,
 												rect:RectFactory,
 												ellipse:EllipseFactory,

@@ -44,21 +44,7 @@ package watercolor.factories.svg2
 		
 		public static function createSVGFromSpark(workarea:Workarea):XML
 		{
-			XML.ignoreWhitespace = false;
-			
-			var svg:XML = new XML("<svg xmlns='http://www.w3.org/2000/svg'/>");
-			
-			svg.@width = workarea.width;
-			svg.@height = workarea.height;
-			
-			// loop through all the layers
-			for (var x:int = 0; x < workarea.numElements; x++)
-			{
-				var elm:Element = workarea.getElementAt(x) as Element;
-				svg.appendChild(ElementFactory.createSVGFromSpark(elm, workarea));
-			}
-			
-			return svg;
+			return null;
 		}
 	}
 }

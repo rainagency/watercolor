@@ -1,12 +1,14 @@
 package watercolor.factories.svg2
 {
 	import flash.text.engine.FontWeight;
+	import flash.utils.Dictionary;
 	
 	import flashx.textLayout.formats.TextLayoutFormat;
 	
 	import spark.components.TextArea;
 	import spark.components.TextInput;
 	
+	import watercolor.elements.Element;
 	import watercolor.elements.Rect;
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
@@ -32,8 +34,36 @@ package watercolor.factories.svg2
 				element = new Text();
 			}
 			
-			// look for any children such as fills, strokes, or filters
-			GraphicsFactory.createSparkFromSVG(node, uriManager, element);	
+			var start:int = 0;
+			var end:int = 0;
+			
+			var text:String = "";
+			var array:Array = new Array();
+			
+			for each (var child:XML in node.children()) {					
+				
+				if (child.localName() == "tspan") {
+					
+					if (child.children().length() > 0) {
+						
+						if (child.@dy != null && child.@dy.toString().length > 0) {
+							text += "\n";
+						}
+						
+						start = text.length;
+						
+						text += child.children()[0];
+						
+						end = text.length;
+						
+						array.push({start:start, end:end, node:child});
+					}
+				}			
+			}
+			
+			element.text = text;
+			
+			element.textInput.callLater(setTSpans, [array, uriManager, element]);
 			
 			// set any attributes
 			SVGAttributes.parseXMLAttributes(node, element);
@@ -41,78 +71,33 @@ package watercolor.factories.svg2
 			return element;
 		}
 		
+		protected static function setTSpans(array:Array, uriManager:URIManager, element:Text):void {
+			
+			for each (var obj:Object in array) {
+				
+				try {
+					
+					TSpanFactory.createSparkFromSVG(obj.node, uriManager, element, obj.start, obj.end);
+					
+				} catch (err:Error) {
+					
+					trace("Cannot create child " + obj.node.localName() + " on " + element.toString());
+				}
+				
+			}
+		}
+		
 		public static function createSVGFromSpark(element:Text, workarea:Workarea):XML
 		{
 			var text:XML = new XML("<text/>");
-			text.@x = element.x;
-			text.@y = element.y;
+			text.@dy = "0.71em";
+			text.@["text-anchor"] = "start";
+			text.@transform = SVGAttributes.parseMatrix(element.transform.matrix);
 			
-			var input:TextArea = element.textInput;
-			
-			var fmt:TextLayoutFormat;
-			var pfmt:TextLayoutFormat;
-			var start:int = 0;
-			var differences:Boolean = false;
-			
-			for (var x:int = 0; x < input.text.length; x++) {
-				
-				fmt = input.getFormatOfRange(null, x, x);
-				
-				if (!pfmt) {
-					pfmt = fmt;
-				}
-				
-				if (fmt.fontWeight != pfmt.fontWeight || 
-					fmt.fontStyle != pfmt.fontStyle || 
-					fmt.fontFamily != pfmt.fontFamily ||
-					fmt.fontSize != pfmt.fontSize ||
-					(differences && x == (input.text.length - 1))) {
-					
-					differences = true;
-					
-					var tspan:XML = new XML("<tspan/>");
-					parseTextProperties(pfmt, tspan);
-					
-					tspan.appendChild(new XML("<![CDATA[" + input.text.substring(start, (x == (input.text.length - 1)) ? x + 1 : x - 1) + "]]>"));
-					
-					text.appendChild(tspan);
-					
-					start = x - 1;
-					
-				} 
-				
-				pfmt = fmt;
-			}
-			
-			if (!differences) {
-				
-				fmt = input.getFormatOfRange(null, 0, input.text.length);
-				parseTextProperties(fmt, text);
-				
-				text.appendChild(input.text);
-			}
+			TSpanFactory.createSVGFromSpark(text, element, workarea);
 			
 			return text;
 			
-		}
-		
-		protected static function parseTextProperties(fmt:TextLayoutFormat, text:XML):void {
-			
-			if (fmt.fontWeight) {
-				text.@["font-weight"] = fmt.fontWeight;
-			}
-			
-			if (fmt.fontStyle) {
-				text.@["font-style"] = fmt.fontStyle;
-			}
-			
-			if (fmt.fontFamily) {
-				text.@["font-family"] = fmt.fontFamily;
-			}
-			
-			if (fmt.fontSize) {
-				text.@["font-size"] = fmt.fontSize;
-			}
 		}
 	}
 }

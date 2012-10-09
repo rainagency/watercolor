@@ -4,7 +4,7 @@ package watercolor.elements
 	
 	import spark.components.TextArea;
 	
-	import watercolor.elements.Group;
+	import watercolor.components.WatercolorTextArea;
 		
 	[Style(name="skinClass", type="Class", inherit="no")]
 	[Style(name="textFontSize", type="String", inherit="no")]
@@ -17,12 +17,12 @@ package watercolor.elements
 	 */
 	public class Text extends Group
 	{
-		protected var _textInput:spark.components.TextArea;
+		protected var _textInput:WatercolorTextArea;
 
 		/**
 		 * The Flex-based primitive wrapped by this Element.
 		 */
-		public function get textInput():spark.components.TextArea
+		public function get textInput():WatercolorTextArea
 		{
 			return _textInput;
 		}
@@ -30,7 +30,13 @@ package watercolor.elements
 		
 		public function Text()
 		{
-			_textInput = new spark.components.TextArea();
+			_textInput = new WatercolorTextArea();
+			_textInput.prompt = "type";
+			
+			var skinClass:Class = getStyle("skinClass") as Class;
+			
+			if (skinClass)
+				this.skinClass = skinClass;
 		}
 		
 		/**

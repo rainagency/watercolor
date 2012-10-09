@@ -8,6 +8,7 @@ package watercolor.factories.svg2
 	import watercolor.elements.Element;
 	import watercolor.elements.Group;
 	import watercolor.elements.Layer;
+	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
 	import watercolor.factories.svg2.enums.ElementType;
 	import watercolor.factories.svg2.util.SVGAttributes;
@@ -69,7 +70,7 @@ package watercolor.factories.svg2
 				}
 			}
 			
-			element.mouseChildren = false;
+			//element.mouseChildren = false;
 			
 			return element;
 		}
@@ -80,6 +81,7 @@ package watercolor.factories.svg2
 		public static function createSVGFromSpark(element:Element, workarea:Workarea):XML
 		{
 			var g:XML = new XML("<g/>");
+			g.@transform = SVGAttributes.parseMatrix(element.transform.matrix);
 			
 			for (var x:int = 0; x < element.numElements; x++)
 			{

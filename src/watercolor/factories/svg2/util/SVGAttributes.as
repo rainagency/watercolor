@@ -9,6 +9,7 @@ package watercolor.factories.svg2.util
 	import spark.collections.Sort;
 	import spark.collections.SortField;
 	
+	import watercolor.elements.Element;
 	import watercolor.elements.Path;
 	import watercolor.utils.MatrixInfo;
 	import watercolor.utils.TransformUtil;
@@ -103,8 +104,7 @@ package watercolor.factories.svg2.util
 				}
 			}
 		}
-
-
+		
 		/**
 		 *
 		 * @param value
@@ -200,7 +200,10 @@ package watercolor.factories.svg2.util
 				return parseURL( value );
 		}
 
-
+		public static function parseMatrix(m:Matrix):String {
+			return "matrix(" + m.a + " " + m.b + " " + m.c + " " + m.d + " " + m.tx + " " + m.ty + ")";
+		}
+		
 		/**
 		 *
 		 * @param value
