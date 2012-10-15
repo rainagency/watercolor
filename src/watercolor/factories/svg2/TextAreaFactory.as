@@ -1,15 +1,19 @@
 package watercolor.factories.svg2
 {
-	import flash.text.engine.FontWeight;
-	import flash.utils.Dictionary;
+	import flashx.textLayout.container.TextContainerManager;
+	import flashx.textLayout.elements.ListElement;
+	import flashx.textLayout.elements.ListItemElement;
+	import flashx.textLayout.elements.ParagraphElement;
+	import flashx.textLayout.elements.SpanElement;
+	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.formats.ListMarkerFormat;
+	import flashx.textLayout.formats.ListStylePosition;
+	import flashx.textLayout.formats.ListStyleType;
 	
-	import flashx.textLayout.formats.TextLayoutFormat;
+	import mx.core.mx_internal;
 	
-	import spark.components.TextArea;
-	import spark.components.TextInput;
+	import spark.components.RichEditableText;
 	
-	import watercolor.elements.Element;
-	import watercolor.elements.Rect;
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
 	import watercolor.factories.svg2.util.SVGAttributes;
@@ -23,10 +27,20 @@ package watercolor.factories.svg2
 	 */ 
 	public class TextAreaFactory
 	{
+		/**
+		 * 
+		 */
 		public function TextAreaFactory()
 		{
 		}
 		
+		/**
+		 * 
+		 * @param node
+		 * @param uriManager
+		 * @param element
+		 * @return 
+		 */
 		public static function createSparkFromSVG(node:XML, uriManager:URIManager, element:Text = null):Text
 		{
 			if (!element)
@@ -38,7 +52,13 @@ package watercolor.factories.svg2
 			var end:int = 0;
 			
 			var text:String = "";
+			var txt:String = "";
 			var array:Array = new Array();
+			
+			var list:Boolean = false;
+			if (node.@islist && node.@islist.toString().toLowerCase() == "true") {
+				list = true;
+			}
 			
 			for each (var child:XML in node.children()) {					
 				
@@ -52,32 +72,106 @@ package watercolor.factories.svg2
 						
 						start = text.length;
 						
-						text += child.children()[0];
+						txt = child.children()[0].toString();
+						txt = (list) ? txt.substring(3, txt.length) : txt;
+						
+						text += txt;
 						
 						end = text.length;
 						
-						array.push({start:start, end:end, node:child});
+						array.push({start:start, end:end, node:child, text:txt});
 					}
 				}			
 			}
 			
-			element.text = text;
-			
-			element.textInput.callLater(setTSpans, [array, uriManager, element]);
-			
-			// set any attributes
-			SVGAttributes.parseXMLAttributes(node, element);
+			if (!list) {
+				element.text = text;
+				element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
+			} else {
+				element.text = "";
+				element.textInput.callLater(setListTSpans, [array, uriManager, element, node]);
+			}
 			
 			return element;
 		}
 		
-		protected static function setTSpans(array:Array, uriManager:URIManager, element:Text):void {
+		/**
+		 * 
+		 * @param array
+		 * @param uriManager
+		 * @param element
+		 * @param node
+		 */
+		protected static function setListTSpans(array:Array, uriManager:URIManager, element:Text, node:XML):void {
+			
+			var check:TextFlow = RichEditableText(element.textInput.textDisplay).textFlow;
+			check.removeChildAt(0);
+			
+			var listElm:ListElement = new ListElement();
+			listElm.listStyleType = ListStyleType.DISC;
+			listElm.listStylePosition = ListStylePosition.INSIDE;
+			listElm.listAutoPadding = -10;
+			listElm.textIndent = 10;
+			
+			var format:ListMarkerFormat = new ListMarkerFormat();
+			format.afterContent = "  ";
+			
+			listElm.listMarkerFormat = format;
+			
+			check.addChild(listElm);
+			
+			for each (var obj:Object in array) {
+				
+				var first:ListItemElement;
+				var p:ParagraphElement;
+				var s:SpanElement;
+				
+				try {
+					
+					if (check.getChildAt(0) is ListElement) {
+						
+						first = new ListItemElement();
+						
+						p = new ParagraphElement();
+						
+						s = new SpanElement();
+						s.text = obj.text;
+						
+						p.addChild(s);
+						
+						first.addChild(p);
+						
+						ListElement(check.getChildAt(0)).addChild(first);
+					}
+					
+					element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
+					
+				} catch (err:Error) {
+					
+					trace("Cannot create child " + obj.node.localName() + " on " + element.toString());
+				}
+				
+			}
+			
+		}
+		
+		/**
+		 * 
+		 * @param array
+		 * @param uriManager
+		 * @param element
+		 * @param node
+		 */
+		protected static function setTSpans(array:Array, uriManager:URIManager, element:Text, node:XML):void {
 			
 			for each (var obj:Object in array) {
 				
 				try {
 					
 					TSpanFactory.createSparkFromSVG(obj.node, uriManager, element, obj.start, obj.end);
+					
+					// set any attributes
+					SVGAttributes.parseXMLAttributes(node, element);
 					
 				} catch (err:Error) {
 					
@@ -87,14 +181,35 @@ package watercolor.factories.svg2
 			}
 		}
 		
+		/**
+		 * 
+		 * @param element
+		 * @param workarea
+		 * @return 
+		 */
 		public static function createSVGFromSpark(element:Text, workarea:Workarea):XML
 		{
 			var text:XML = new XML("<text/>");
-			text.@dy = "0.71em";
 			text.@["text-anchor"] = "start";
-			text.@transform = SVGAttributes.parseMatrix(element.transform.matrix);
 			
-			TSpanFactory.createSVGFromSpark(text, element, workarea);
+			var manager:TextContainerManager = element.textInput.textDisplay.mx_internal::textContainerManager;
+			var extraHeight:int = 0;
+			if (manager.numLines > 0) {
+				extraHeight = manager.getLineAt(0).height;
+			}
+			
+			with (element.transform.matrix) {
+				text.@transform = "matrix(" + a + " " + b + " " + c + " " + d + " " + tx + " " + (ty + extraHeight) + ")";
+			}
+			
+			var list:Boolean = false;
+			if (element.textInput.textFlow.getChildAt(0) is ListElement) {
+				list = true;
+			}
+			
+			text.@islist = list;
+			
+			TSpanFactory.createSVGFromSpark(text, element, workarea, list);
 			
 			return text;
 			

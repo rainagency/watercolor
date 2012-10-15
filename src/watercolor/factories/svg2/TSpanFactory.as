@@ -1,21 +1,10 @@
 package watercolor.factories.svg2
 {
-	import flash.display.DisplayObject;
-	import flash.text.TextFormat;
-	import flash.text.TextLineMetrics;
-	import flash.text.engine.FontWeight;
-	
-	import flashx.textLayout.container.TextContainerManager;
-	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.formats.TextAlign;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	
-	import mx.core.mx_internal;
-	
 	import spark.components.TextArea;
-	import spark.components.TextInput;
 	
-	import watercolor.elements.Rect;
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
 	import watercolor.factories.svg2.util.SVGAttributes;
@@ -63,7 +52,7 @@ package watercolor.factories.svg2
 			element.textInput.setFormatOfRange(tf, start, end);
 		}
 		
-		public static function createSVGFromSpark(text:XML, element:Text, workarea:Workarea):void
+		public static function createSVGFromSpark(text:XML, element:Text, workarea:Workarea, list:Boolean = false):void
 		{
 			var input:TextArea = element.textInput;
 			
@@ -74,8 +63,6 @@ package watercolor.factories.svg2
 			var lineBreak:Boolean = false;
 			var line:int = 0;
 			
-			//var manager:TextContainerManager = input.textDisplay.mx_internal::textContainerManager;
-			
 			for (var x:int = 0; x < input.text.length + 1; x++) {
 				
 				var s:String = input.text.substr(x, 1);
@@ -85,6 +72,8 @@ package watercolor.factories.svg2
 				if (x < input.text.length) {
 					ffmt = input.getFormatOfRange(null, x + 1, x + 1);
 				}
+				
+				//trace("TSpan Weight: " + fmt.fontWeight);
 				
 				if (ffmt && fmt.fontWeight != ffmt.fontWeight || 
 					fmt.fontStyle != ffmt.fontStyle || 
@@ -97,13 +86,14 @@ package watercolor.factories.svg2
 					differences = true;
 					
 					var tspan:XML = new XML("<tspan/>");
+					tspan.@["xml:space"] = 'preserve';
 					parseTextProperties(fmt, tspan);
 					
 					if (lineBreak) {
 						
 						parseTextAlignment(element, fmt, tspan);
 						
-						tspan.@dy = "1em";
+						tspan.@dy = "1.2em";
 						lineBreak = false;
 					}
 					
@@ -117,7 +107,7 @@ package watercolor.factories.svg2
 						line++;
 					}
 					
-					tspan.appendChild(new XML("<![CDATA[" + input.text.substring(start, x).replace("\n", "") + "]]>"));
+					tspan.appendChild(new XML(((list) ? "&#8226;  " : "") + input.text.substring(start, x).replace("\n", "")));
 					
 					text.appendChild(tspan);
 					
@@ -159,8 +149,9 @@ package watercolor.factories.svg2
 		
 		protected static function parseTextAlignment(element:Text, fmt:TextLayoutFormat, tspan:XML):void {
 			
+			tspan.@x = 0;
+			
 			if (fmt.textAlign == TextAlign.LEFT) {
-				tspan.@x = 0;
 				tspan.@["text-anchor"] = "start";
 			} else if (fmt.textAlign == TextAlign.CENTER) {
 				tspan.@x = element.width / 2;

@@ -25,8 +25,8 @@ package watercolor.execute
 		{			
 			var textFormatVO:TextFormatVO = vo as TextFormatVO;
 			
-			if (textFormatVO.element is Text && Text(textFormatVO.element).textInput) {
-				Text(textFormatVO.element).textInput.setFormatOfRange(textFormatVO.newFmt, textFormatVO.start, textFormatVO.end);
+			if (textFormatVO.element is Text && Text(textFormatVO.element).textInput && textFormatVO.end <= Text(textFormatVO.element).textInput.text.length) {
+				Text(textFormatVO.element).setFormatOfRange(textFormatVO.newFmt, textFormatVO.start, textFormatVO.end);
 			}
 		}
 
@@ -38,8 +38,8 @@ package watercolor.execute
 		{			
 			var textFormatVO:TextFormatVO = vo as TextFormatVO;
 			
-			if (textFormatVO.element is Text && Text(textFormatVO.element).textInput) {
-				Text(textFormatVO.element).textInput.setFormatOfRange(textFormatVO.oldFmt, textFormatVO.start, textFormatVO.end);
+			if (textFormatVO.element is Text && Text(textFormatVO.element).textInput && textFormatVO.end <= Text(textFormatVO.element).textInput.text.length) {
+				Text(textFormatVO.element).setFormatOfRange(textFormatVO.oldFmt, textFormatVO.start, textFormatVO.end);
 			}
 		}
 	}

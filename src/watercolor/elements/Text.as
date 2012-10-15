@@ -1,10 +1,12 @@
 package watercolor.elements
 {
 	import flashx.textLayout.elements.TextFlow;
+	import flashx.textLayout.formats.TextLayoutFormat;
 	
 	import spark.components.TextArea;
 	
 	import watercolor.components.WatercolorTextArea;
+	import watercolor.events.TextEvent;
 		
 	[Style(name="skinClass", type="Class", inherit="no")]
 	[Style(name="textFontSize", type="String", inherit="no")]
@@ -31,7 +33,7 @@ package watercolor.elements
 		public function Text()
 		{
 			_textInput = new WatercolorTextArea();
-			_textInput.prompt = "type";
+			//_textInput.prompt = "type";
 			
 			var skinClass:Class = getStyle("skinClass") as Class;
 			
@@ -66,16 +68,30 @@ package watercolor.elements
 		public function set prompt(value:String):void { _textInput.prompt = value; }
 		
 		public function get text():String { return _textInput.text; }
-		public function set text(value:String):void { _textInput.text = value; }
+		public function set text(value:String):void { 
+			
+			var old:String = _textInput.text;
+			_textInput.text = value; 
+			
+			dispatchEvent(new TextEvent(TextEvent.EVENT_TEXT_MODIFIED, old));
+		}
 		
 		public function get textFlow():TextFlow { return _textInput.textFlow; }
 		public function set textFlow(value:TextFlow):void { _textInput.textFlow = value; }
 		
 		public function get skinClass():Class { return _textInput.getStyle("skinClass"); }
-		public function set skinClass(value:Class):void { _textInput.setStyle("skinClass", value); }
+		public function set skinClass(value:Class):void { 
+			_textInput.setStyle("skinClass", value); 
+		}
 		
 		public function get textFontSize():String { return _textInput.getStyle("fontSize"); }
 		public function set textFontSize(value:String):void { _textInput.setStyle("fontSize", value); }
 		
+		public function setFormatOfRange(format:TextLayoutFormat, anchorPosition:int=-1, activePosition:int=-1):void {
+			
+			_textInput.setFormatOfRange(format, anchorPosition, activePosition);
+			
+			dispatchEvent(new TextEvent(TextEvent.EVENT_TEXT_AREA_CHANGED));
+		}
 	}
 }
