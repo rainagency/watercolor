@@ -57,10 +57,15 @@ package watercolor.transform
 		private var totalMatrix:Matrix;
 		
 		
+		private var _totalMatrixInversion:Matrix;
+
 		/**
 		 * Invertion of the total transformation matrix
 		 */
-		private var totalMatrixInversion:Matrix;
+		protected function get totalMatrixInversion():Matrix
+		{
+			return _totalMatrixInversion;
+		}
 		
 		
 		private var _currentMatrix:Matrix;
@@ -234,10 +239,15 @@ package watercolor.transform
 		private var cMode:String;
 		
 		
+		private var _parentContainer:DisplayObjectContainer;
+
 		/**
 		 * level where all transformed objects are placed
 		 */
-		private var _parentContainer:DisplayObjectContainer;
+		protected function get parentContainer():DisplayObjectContainer
+		{
+			return _parentContainer;
+		}
 		
 		
 		/**
@@ -774,8 +784,8 @@ package watercolor.transform
 				// initialize the global matrix variables
 				totalMatrix = _transformMatrix;
 				_currentMatrix = totalMatrix.clone();
-				totalMatrixInversion = totalMatrix.clone();
-				totalMatrixInversion.invert();
+				_totalMatrixInversion = totalMatrix.clone();
+				_totalMatrixInversion.invert();
 				
 				center = globalToLocal(pcenter);
 				adjustBtnByRotation(center, centerBtn);
@@ -795,7 +805,7 @@ package watercolor.transform
 			// remove any mouse move listeners
 			removeMouseMoveGlobalListener();
 			totalMatrix = null;
-			totalMatrixInversion = null;
+			_totalMatrixInversion = null;
 			currentBox = null;
 			
 			// clear any graphics on the transformation later
@@ -833,8 +843,8 @@ package watercolor.transform
 				
 				// update the global matrices from the selected elements 
 				totalMatrix = _transformMatrix;
-				totalMatrixInversion = totalMatrix.clone();
-				totalMatrixInversion.invert();
+				_totalMatrixInversion = totalMatrix.clone();
+				_totalMatrixInversion.invert();
 				_currentMatrix = totalMatrix.clone();
 				
 				currentBox = getCurrentRect();
@@ -1000,8 +1010,8 @@ package watercolor.transform
 				
 				// update the global matrices from the selected elements 
 				totalMatrix = _transformMatrix;
-				totalMatrixInversion = totalMatrix.clone();
-				totalMatrixInversion.invert();
+				_totalMatrixInversion = totalMatrix.clone();
+				_totalMatrixInversion.invert();
 			}
 		}
 		
@@ -1066,9 +1076,9 @@ package watercolor.transform
 		 */
 		public function getCurrentRotation():Number
 		{
-			if (totalMatrixInversion && _transformMatrix)
+			if (_totalMatrixInversion && _transformMatrix)
 			{			
-				var crt:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
+				var crt:Point = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
 				var um:Matrix = _transformMatrix.clone();
 				
 				if (flipA)
@@ -1168,9 +1178,9 @@ package watercolor.transform
 		{
 			var um:Matrix = m.clone();
 			
-			if (totalMatrixInversion)
+			if (_totalMatrixInversion)
 			{			
-				var crt:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
+				var crt:Point = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
 				
 				if (um.a < 0)
 				{
@@ -1368,7 +1378,7 @@ package watercolor.transform
 			adjustBtnByRotation(center, centerBtn);
 		}
 		
-		private function adjustBtnByRotation(btnp:Point, btn:Sprite, width:Boolean = true, height:Boolean = true):void
+		protected function adjustBtnByRotation(btnp:Point, btn:Sprite, width:Boolean = true, height:Boolean = true):void
 		{
 			var tempM:Matrix = new Matrix();
 			tempM.translate(-btnp.x, -btnp.y);
@@ -1387,7 +1397,7 @@ package watercolor.transform
 		 */
 		private function mouseDownHandler(event:MouseEvent):void
 		{
-			if (event.currentTarget.visible && totalMatrixInversion)
+			if (event.currentTarget.visible && _totalMatrixInversion)
 			{			
 				// remove any mouse move listeners
 				removeMouseMoveGlobalListener();
@@ -1400,7 +1410,7 @@ package watercolor.transform
 				globalMouseDownPoint = new Point(event.stageX, event.stageY);
 				
 				// determine the local mouse down location
-				localMouseDownPoint = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(globalMouseDownPoint));
+				localMouseDownPoint = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(globalMouseDownPoint));
 				
 				// offset for when the user clicks anyway inside the handle
 				buttonOffset = CoordinateUtils.localToLocal(event.currentTarget, this, new Point(event.currentTarget.mouseX, event.currentTarget.mouseY));
@@ -1598,8 +1608,8 @@ package watercolor.transform
 				
 				if(cMode != TransformMode.MODE_ROTATE)
 				{
-					ctrp1 = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(ctrp1));
-					ctrp2 = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(ctrp2));
+					ctrp1 = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(ctrp1));
+					ctrp2 = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(ctrp2));
 				}
 				
 				//localMouseDownPoint = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localMouseDownPoint));
@@ -1615,7 +1625,7 @@ package watercolor.transform
 		/**
 		 * Convert Enums to Actual Points from handles in a custom TransformLayerSkin
 		 */ 
-		private function convertCenterPointEnumToPoint(centerPointEnum:String):Point
+		protected function convertCenterPointEnumToPoint(centerPointEnum:String):Point
 		{
 			switch (centerPointEnum)
 			{
@@ -1644,15 +1654,15 @@ package watercolor.transform
 		 * Function called when the mouse button is let go after clicking on a handler
 		 * @param event The mouse up event
 		 */
-		private function deactivateHandler(event:MouseEvent):void
+		protected function deactivateHandler(event:MouseEvent = null):void
 		{
 			// remove any mouse move listeners
 			removeMouseMoveGlobalListener();
 			
 			// grab the transformation and identity transformation matrices for the element(s)
 			totalMatrix = _transformMatrix;
-			totalMatrixInversion = totalMatrix.clone();
-			totalMatrixInversion.invert();
+			_totalMatrixInversion = totalMatrix.clone();
+			_totalMatrixInversion.invert();
 			ctrp1 = null;
 			ctrp2 = null;
 			localMouseDownPoint = null;
@@ -1805,7 +1815,7 @@ package watercolor.transform
 			var gp:Point = ctrp1;
 			
 			// calculate the new location
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			_currentMatrix.identity();
 			
 			p.x = (gp.x - p.x - buttonOffset.x);
@@ -1960,7 +1970,7 @@ package watercolor.transform
 			{
 				matrices = getTransformations();
 				
-				var gp:Point = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
+				var gp:Point = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(center)));
 				
 				_currentMatrix.identity();
 				_currentMatrix.translate(-gp.x, -gp.y);			
@@ -2073,7 +2083,7 @@ package watercolor.transform
 		private function onMouseScaleY(event:MouseEvent):void
 		{
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			_currentMatrix.identity();
 			p.y = ((gp.y - p.y) - buttonOffset.y) / ((gp.y - localMouseDownPoint.y) - buttonOffset.y);
@@ -2096,10 +2106,12 @@ package watercolor.transform
 		private function onMouseScaleX(event:MouseEvent):void
 		{
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			_currentMatrix.identity();
 			p.x = ((gp.x - p.x) - buttonOffset.x) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x);
+			
+			trace(p.x);
 			
 			_currentMatrix.translate(-gp.x, 0);
 			_currentMatrix.scale(p.x, 1);
@@ -2120,7 +2132,7 @@ package watercolor.transform
 		private function onMouseScale(event:MouseEvent):void
 		{
 			var gp:Point = (event.altKey) ? ctrp2 : ctrp1;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			_currentMatrix.identity();
 			p.x = ((gp.x - p.x) - buttonOffset.x) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x);
@@ -2167,7 +2179,7 @@ package watercolor.transform
 					updateTransformMatrix();
 					
 					// grab the anchor point and make the transformation
-					gp = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));					
+					gp = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));					
 					matrices = getTransformations();					
 					scaleRecursive(gp, x, y);
 					
@@ -2198,7 +2210,7 @@ package watercolor.transform
 				
 				if (gp)
 				{																						
-					gp = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));
+					gp = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localToGlobal(gp)));
 					
 					matrices = getTransformations();
 					
@@ -2266,7 +2278,7 @@ package watercolor.transform
 		private function onMouseSkew(event:MouseEvent):void
 		{
 			var gp:Point = ctrp1;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			var delta:Point = new Point();
 			delta.x = p.x - localMouseDownPoint.x;
@@ -2317,7 +2329,7 @@ package watercolor.transform
 		private function onMouseSkewX(event:MouseEvent):void
 		{
 			var gp:Point = (event.altKey) ? ctrp1 : ctrp2;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			_currentMatrix.identity();
 			_currentMatrix.translate(-gp.x, -gp.y);
@@ -2339,7 +2351,7 @@ package watercolor.transform
 		private function onMouseSkewY(event:MouseEvent):void
 		{
 			var gp:Point = (event.altKey) ? ctrp1 : ctrp2;
-			var p:Point = totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
+			var p:Point = _totalMatrixInversion.transformPoint(new Point(_parentContainer.mouseX, _parentContainer.mouseY));
 			
 			_currentMatrix.identity();
 			_currentMatrix.translate(-gp.x, -gp.y);
@@ -2367,11 +2379,11 @@ package watercolor.transform
 				
 				var px:Point = new Point(Point.interpolate(bottomRight, bottomLeft, 0.5).x, Point.interpolate(bottomRight, bottomLeft, 0.5).y);
 				px = localToGlobal(px);
-				px = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(px));
+				px = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(px));
 				
 				var py:Point = new Point(Point.interpolate(topLeft, bottomLeft, 0.5).x, Point.interpolate(topLeft, bottomLeft, 0.5).y);
 				py = localToGlobal(py);
-				py = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(py));
+				py = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(py));
 				
 				_currentMatrix.identity();
 				

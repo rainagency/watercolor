@@ -10,6 +10,7 @@ package watercolor.factories.svg2
 	import flashx.textLayout.formats.ListStylePosition;
 	import flashx.textLayout.formats.ListStyleType;
 	
+	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	
 	import spark.components.RichEditableText;
@@ -20,10 +21,10 @@ package watercolor.factories.svg2
 	import watercolor.factories.svg2.util.URIManager;
 	
 	/**
-	 * Spark Rect Factory
+	 * Text Factory
 	 * 
 	 * SVG Documentation: 
-	 * Spark Documentation: http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/spark/primitives/Rect.html
+	 * Spark Documentation: 
 	 */ 
 	public class TextAreaFactory
 	{
@@ -66,7 +67,7 @@ package watercolor.factories.svg2
 					
 					if (child.children().length() > 0) {
 						
-						if (child.@dy != null && child.@dy.toString().length > 0) {
+						if (text.length > 0 && child.@dy != null && child.@dy.toString().length > 0) {
 							text += "\n";
 						}
 						
@@ -110,8 +111,8 @@ package watercolor.factories.svg2
 			var listElm:ListElement = new ListElement();
 			listElm.listStyleType = ListStyleType.DISC;
 			listElm.listStylePosition = ListStylePosition.INSIDE;
-			listElm.listAutoPadding = -10;
-			listElm.textIndent = 10;
+			listElm.listAutoPadding = 0;
+			listElm.textIndent = 0;
 			
 			var format:ListMarkerFormat = new ListMarkerFormat();
 			format.afterContent = "  ";
@@ -198,8 +199,9 @@ package watercolor.factories.svg2
 				extraHeight = manager.getLineAt(0).height;
 			}
 			
-			with (element.transform.matrix) {
-				text.@transform = "matrix(" + a + " " + b + " " + c + " " + d + " " + tx + " " + (ty + extraHeight) + ")";
+			with (element.transform) {
+				text.@transform = "matrix(" + matrix.a + " " + matrix.b + " " + matrix.c + " " + matrix.d + " " + matrix.tx + " " + (matrix.ty + extraHeight) + ")";
+				text.@as3transform = SVGAttributes.parseMatrix(matrix);
 			}
 			
 			var list:Boolean = false;
@@ -210,6 +212,15 @@ package watercolor.factories.svg2
 			text.@islist = list;
 			
 			TSpanFactory.createSVGFromSpark(text, element, workarea, list);
+			
+			var width:Number = element.textInput.explicitWidth;
+			if (element.textInput.textDisplay is UIComponent) {
+				width = UIComponent(element.textInput.textDisplay).explicitWidth
+			}
+			
+			if (!(isNaN(width))) {
+				text.@viewWidth = width;
+			}
 			
 			return text;
 			

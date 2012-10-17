@@ -3,6 +3,8 @@ package watercolor.elements
 	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	
+	import mx.core.UIComponent;
+	
 	import spark.components.TextArea;
 	
 	import watercolor.components.WatercolorTextArea;
@@ -92,6 +94,30 @@ package watercolor.elements
 			_textInput.setFormatOfRange(format, anchorPosition, activePosition);
 			
 			dispatchEvent(new TextEvent(TextEvent.EVENT_TEXT_AREA_CHANGED));
+		}
+		
+		public function get textWidth():Number {
+			
+			if (textInput && textInput.textDisplay is UIComponent) {
+				return UIComponent(textInput.textDisplay).width;
+			}
+			
+			return textInput.width;
+		}
+		
+		public function set textWidth(value:Number):void {
+			
+			var fontSize:Number = textInput.getStyle("fontSize");
+			
+			if (value > fontSize) {
+			
+				if (textInput && textInput.textDisplay is UIComponent) {
+					UIComponent(textInput.textDisplay).width = value;
+				} else {
+					textInput.width = value;
+				}
+				
+			}
 		}
 	}
 }

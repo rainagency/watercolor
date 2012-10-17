@@ -3,6 +3,7 @@ package watercolor.factories.svg2.util
 	import flash.geom.Matrix;
 	
 	import mx.collections.XMLListCollection;
+	import mx.core.UIComponent;
 	import mx.graphics.SolidColor;
 	import mx.graphics.SolidColorStroke;
 	
@@ -11,6 +12,7 @@ package watercolor.factories.svg2.util
 	
 	import watercolor.elements.Element;
 	import watercolor.elements.Path;
+	import watercolor.elements.Text;
 	import watercolor.utils.MatrixInfo;
 	import watercolor.utils.TransformUtil;
 
@@ -68,7 +70,8 @@ package watercolor.factories.svg2.util
 							break;
 						
 						case "transform": // special case transform
-							element.transform.matrix = parseTransform( attribute.toXMLString());
+						case "as3transform":
+							element.transform.matrix = parseTransform(attribute.toXMLString());
 							break;
 						case "color": // special case color
 						case "bg":
@@ -79,6 +82,12 @@ package watercolor.factories.svg2.util
 							break;
 						case "viewWidth":
 							element.width = Number( attribute.toXMLString());
+							break;
+						case "textWidth":
+							
+							if (element is Text && Text(element).textInput.textDisplay is UIComponent) {
+								UIComponent(Text(element).textInput.textDisplay).width = Number( attribute.toXMLString());
+							}
 							break;
 						case "viewHeight":
 							element.height = Number( attribute.toXMLString());

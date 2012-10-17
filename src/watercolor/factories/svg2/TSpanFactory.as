@@ -1,8 +1,15 @@
 package watercolor.factories.svg2
 {
+	import flash.text.engine.TextLine;
+	
+	import flashx.textLayout.container.TextContainerManager;
 	import flashx.textLayout.formats.TextAlign;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	
+	import mx.core.UIComponent;
+	import mx.core.mx_internal;
+	
+	import spark.components.RichEditableText;
 	import spark.components.TextArea;
 	
 	import watercolor.elements.Text;
@@ -59,68 +66,93 @@ package watercolor.factories.svg2
 			var fmt:TextLayoutFormat;
 			var ffmt:TextLayoutFormat;
 			var start:int = 0;
-			var differences:Boolean = false;
-			var lineBreak:Boolean = false;
-			var line:int = 0;
+			var cindex:int = 0;
+			var prefix:String = "";
 			
-			for (var x:int = 0; x < input.text.length + 1; x++) {
+			var manualLineBreak:Boolean = false;
+			var beginAlign:Boolean = false;
+			
+			var manager:TextContainerManager = element.textInput.textDisplay.mx_internal::textContainerManager;
+			var txt:String = element.textInput.text;
+			
+			for (var l:int = 0; l < manager.numLines; l++) {
 				
-				var s:String = input.text.substr(x, 1);
+				var textline:TextLine = manager.getLineAt(l);
+				var s:String = txt.substr(start, textline.rawTextLength);
 				
-				fmt = input.getFormatOfRange(null, x, x);
+				cindex = 0;
 				
-				if (x < input.text.length) {
-					ffmt = input.getFormatOfRange(null, x + 1, x + 1);
+				for (var x:int = 0; x < textline.rawTextLength + 1; x++) {
+					
+					var index:int = start + x;
+					
+					if (index <= txt.length) {
+					
+						fmt = input.getFormatOfRange(null, index, index);
+						
+						try
+						{
+							ffmt = input.getFormatOfRange(null, index + 1, index + 1);
+						} 
+						catch (err:Error) 
+						{
+							ffmt = null;
+						}
+						
+						if ((x == textline.rawTextLength || !ffmt) || 
+							(ffmt && fmt.fontWeight != ffmt.fontWeight || 
+							 fmt.textAlign != ffmt.textAlign ||
+							 fmt.fontStyle != ffmt.fontStyle || 
+							 fmt.fontFamily != ffmt.fontFamily ||
+							 fmt.fontSize != ffmt.fontSize ||
+							 fmt.color != ffmt.color)) {
+							
+							var formattedText:String = s.substring(cindex, x);
+							if (formattedText.length > 0 && formattedText != "\n") {
+								
+								var tspan:XML = new XML("<tspan/>");
+								tspan.@["xml:space"] = 'preserve';
+								
+								parseTextProperties(fmt, tspan);
+								
+								if (cindex == 0) {
+									tspan.@x = 0;
+									tspan.@dy = "1.2em";
+								}
+								
+								if (cindex == 0 || (ffmt && (fmt.textAlign != ffmt.textAlign))) {
+									
+									if (!beginAlign || cindex == 0) {
+										parseTextAlignment(element, fmt, tspan);
+										beginAlign = true;
+									} else {
+										beginAlign = false;
+									}
+									
+								}
+								
+								if (list && (manualLineBreak || (start == 0 && cindex ==0))) {
+									prefix = "&#8226;  ";
+									manualLineBreak = false;
+								} else {
+									prefix = "";
+								}
+								
+								tspan.appendChild(new XML(prefix + formattedText.replace(/\n/g, "")));
+								text.appendChild(tspan);
+								
+							} 
+							
+							if (formattedText.lastIndexOf("\n") == formattedText.length - 1) {
+								manualLineBreak = true;
+							}
+							
+							cindex = x;
+						}
+					}
 				}
 				
-				//trace("TSpan Weight: " + fmt.fontWeight);
-				
-				if (ffmt && fmt.fontWeight != ffmt.fontWeight || 
-					fmt.fontStyle != ffmt.fontStyle || 
-					fmt.fontFamily != ffmt.fontFamily ||
-					fmt.fontSize != ffmt.fontSize ||
-					fmt.color != ffmt.color || 
-					s == "\n" ||
-					(differences && x == input.text.length)) {
-					
-					differences = true;
-					
-					var tspan:XML = new XML("<tspan/>");
-					tspan.@["xml:space"] = 'preserve';
-					parseTextProperties(fmt, tspan);
-					
-					if (lineBreak) {
-						
-						parseTextAlignment(element, fmt, tspan);
-						
-						tspan.@dy = "1.2em";
-						lineBreak = false;
-					}
-					
-					// if first one then set the x
-					if (text.children().length() == 0) {
-						parseTextAlignment(element, fmt, tspan);
-					}
-					
-					if (s == "\n") {
-						lineBreak = true;
-						line++;
-					}
-					
-					tspan.appendChild(new XML(((list) ? "&#8226;  " : "") + input.text.substring(start, x).replace("\n", "")));
-					
-					text.appendChild(tspan);
-					
-					start = x;
-				}
-			}
-			
-			if (!differences) {
-				
-				fmt = input.getFormatOfRange(null, 0, input.text.length);
-				parseTextProperties(fmt, text);
-				
-				text.appendChild(input.text);
+				start += textline.rawTextLength;
 			}
 		}
 		
@@ -149,15 +181,18 @@ package watercolor.factories.svg2
 		
 		protected static function parseTextAlignment(element:Text, fmt:TextLayoutFormat, tspan:XML):void {
 			
-			tspan.@x = 0;
+			var width:Number = element.textInput.width;
+			if (element.textInput.textDisplay is UIComponent) {
+				width = UIComponent(element.textInput.textDisplay).width;
+			}
 			
 			if (fmt.textAlign == TextAlign.LEFT) {
 				tspan.@["text-anchor"] = "start";
 			} else if (fmt.textAlign == TextAlign.CENTER) {
-				tspan.@x = element.width / 2;
+				tspan.@x = width / 2;
 				tspan.@["text-anchor"] = "middle";
 			} else if (fmt.textAlign == TextAlign.RIGHT) {
-				tspan.@x = element.width;
+				tspan.@x = width;
 				tspan.@["text-anchor"] = "end";
 			}
 		}
