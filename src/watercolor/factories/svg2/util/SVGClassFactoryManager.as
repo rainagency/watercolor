@@ -41,6 +41,7 @@ package watercolor.factories.svg2.util
 												group:GroupFactory,
 												g:GroupFactory,
 												bitmapimage:BitmapImageFactory,
+												image:BitmapImageFactory,
 												rect:RectFactory,
 												ellipse:EllipseFactory,
 												circle:EllipseFactory,

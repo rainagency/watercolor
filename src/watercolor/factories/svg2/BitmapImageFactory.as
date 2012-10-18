@@ -38,8 +38,18 @@ package watercolor.factories.svg2
 		
 		public static function createSVGFromSpark(element:BitmapImage, workarea:Workarea):XML
 		{
-			// TODO: Generate FXG
-			return null;
+			var image:XML = new XML("<image/>");
+			
+			if (element.sourceURL.length > 0) {
+				image.@["xlink:href"] = element.sourceURL;
+			}
+			
+			image.@transform = SVGAttributes.parseMatrix(element.transform.matrix);
+			
+			image.@width = element.width;
+			image.@height = element.height;
+			
+			return image;
 		}
 	}
 }

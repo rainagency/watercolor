@@ -70,6 +70,11 @@ package watercolor.factories.svg2.util
 							break;
 						
 						case "transform": // special case transform
+							
+							if (!(element is Text)) { 
+								element.transform.matrix = parseTransform(attribute.toXMLString());
+							}
+							break;
 						case "as3transform":
 							element.transform.matrix = parseTransform(attribute.toXMLString());
 							break;
@@ -94,6 +99,9 @@ package watercolor.factories.svg2.util
 							break;
 						case "fill-mode":
 							element.fillMode = attribute.toXMLString();
+							break;
+						case "href":
+							element.source = attribute.toXMLString();
 							break;
 						case "version":
 							break;

@@ -5,6 +5,8 @@ package watercolor.elements
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	import flash.utils.ByteArray;
 	
 	import mx.graphics.BitmapFill;
@@ -82,6 +84,9 @@ package watercolor.elements
 		public function get stroke():IStroke { return bitmapImage.stroke; }
 		public function set stroke(value:IStroke):void { bitmapImage.stroke = value; }
 		
+		private var _sourceURL:String = "";
+		public function get sourceURL():String { return _sourceURL; }
+
 		/**
 		 * @copy spark.primitives.BitmapImage#source;
 		 */
@@ -98,7 +103,7 @@ package watercolor.elements
 			}
 		}
 		
-		public function get displayObject():Object { return bitmapImage.displayObject; }
+		//public function get displayObject():Object { return bitmapImage.displayObject; }
 		
 		/**
 		 * Bleed color used for overprint
@@ -106,6 +111,9 @@ package watercolor.elements
 		public var backgroundColor:uint;
 
 		private function loadBytes(value:ByteArray):void {
+			
+			_sourceURL = "";
+			
 			loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, sourceLoaded, false, 0, true);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
@@ -113,22 +121,40 @@ package watercolor.elements
 		}
 		
 		private function loadSource(url:String):void {
+			
+			_sourceURL = url;
+			
+			var context:LoaderContext = new LoaderContext();
+			context.checkPolicyFile = true;
+			context.applicationDomain = new ApplicationDomain();
+			
 			loader = new Loader();
 			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, sourceLoaded, false, 0, true);
 			loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler, false, 0, true);
-			loader.load(new URLRequest(url));						
+			loader.load(new URLRequest(url), context);						
 		}
 		
 		private function sourceLoaded(event:Event):void {
 			trace("completeHandler: " + event);
 			
 			event.currentTarget.removeEventListener(Event.COMPLETE, sourceLoaded);
-			BitmapFill(bitmapImage.fill).source = Bitmap(event.currentTarget.content);
+			
+			var content:Bitmap = Bitmap(event.currentTarget.content);
+			
+			if (width == 0 && height == 0) {
+				width = content.width;
+				height = content.height;
+			}
+			
+			BitmapFill(bitmapImage.fill).source = content;
 			dispatchEvent(new Event(Event.COMPLETE));
 		}
 		
 		private function ioErrorHandler(event:IOErrorEvent):void {
 			event.currentTarget.removeEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+			
+			dispatchEvent(event.clone());
+			
 			trace("ioErrorHandler: " + event);
 		}
 	}

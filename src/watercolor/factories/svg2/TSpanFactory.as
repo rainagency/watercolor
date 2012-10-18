@@ -8,6 +8,7 @@ package watercolor.factories.svg2
 	
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
+	import mx.utils.StringUtil;
 	
 	import spark.components.RichEditableText;
 	import spark.components.TextArea;
@@ -69,6 +70,8 @@ package watercolor.factories.svg2
 			var cindex:int = 0;
 			var prefix:String = "";
 			
+			var lineSpaces:int = 1;
+			
 			var manualLineBreak:Boolean = false;
 			var beginAlign:Boolean = false;
 			
@@ -115,9 +118,9 @@ package watercolor.factories.svg2
 								
 								parseTextProperties(fmt, tspan);
 								
-								if (cindex == 0) {
+								if (cindex == 0 && l != 0) {
 									tspan.@x = 0;
-									tspan.@dy = "1.2em";
+									tspan.@dy = (1.2 * ((list) ? 1 : lineSpaces)) + "em";
 								}
 								
 								if (cindex == 0 || (ffmt && (fmt.textAlign != ffmt.textAlign))) {
@@ -141,7 +144,14 @@ package watercolor.factories.svg2
 								tspan.appendChild(new XML(prefix + formattedText.replace(/\n/g, "")));
 								text.appendChild(tspan);
 								
+								lineSpaces = 1;
 							} 
+							
+							if (l != 0 && StringUtil.trim(formattedText).length == 0 && formattedText.indexOf("\n") != -1) {
+								lineSpaces++;
+							} else {
+								lineSpaces = 1;
+							}
 							
 							if (formattedText.lastIndexOf("\n") == formattedText.length - 1) {
 								manualLineBreak = true;

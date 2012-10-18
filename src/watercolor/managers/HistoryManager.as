@@ -21,6 +21,27 @@ package watercolor.managers
 		public var enabled:Boolean = true;
 
 
+		private var _limit:int = -1;
+
+		/**
+		 * 
+		 * @return 
+		 */
+		public function get limit():int
+		{
+			return _limit;
+		}
+
+		/**
+		 * 
+		 * @param value
+		 */
+		public function set limit(value:int):void
+		{
+			_limit = value;
+		}
+
+		
 		private var _commandVOs:Vector.<CommandVO> = new Vector.<CommandVO>;
 
 
@@ -39,6 +60,10 @@ package watercolor.managers
 		 *  @private
 		 */
 		protected var _index:int = -1;
+		/**
+		 * 
+		 * @default 
+		 */
 		protected var _numberOfCommandsAdded:int = -1;
 
 		/**
@@ -52,6 +77,11 @@ package watercolor.managers
 			{
 				_commandVOs.splice( _index + 1, _commandVOs.length - ( _index + 1 ));
 				_commandVOs.push( command );
+				
+				if (_commandVOs.length > _limit && _limit != -1) {
+					_commandVOs.splice(0, _commandVOs.length - _limit);
+				}
+				
 				_index = _commandVOs.length - 1;
 				numberOfCommandsAdded = _index;
 				dispatchEvent( new HistoryManagerEvent( HistoryManagerEvent.INDEX_CHANGE, this ));
@@ -89,6 +119,10 @@ package watercolor.managers
 			_numberOfCommandsAdded = value;
 		}
 		
+		/**
+		 * 
+		 * @param command
+		 */
 		public function removeCommand( command:CommandVO ):void
 		{
 
@@ -103,6 +137,9 @@ package watercolor.managers
 			}
 		}
 		
+		/**
+		 * 
+		 */
 		public function removeAllCommands():void
 		{
 			_commandVOs.splice(0, _commandVOs.length);
