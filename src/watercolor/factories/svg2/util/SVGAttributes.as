@@ -8,13 +8,9 @@ package watercolor.factories.svg2.util
 	import mx.graphics.SolidColorStroke;
 	
 	import spark.collections.Sort;
-	import spark.collections.SortField;
 	
-	import watercolor.elements.Element;
-	import watercolor.elements.Path;
 	import watercolor.elements.Text;
 	import watercolor.utils.MatrixInfo;
-	import watercolor.utils.TransformUtil;
 
 
 	/**
@@ -23,6 +19,10 @@ package watercolor.factories.svg2.util
 	 */
 	public class SVGAttributes
 	{
+		public static const LINE_BREAK:String = "\n";
+		public static const BULLET_POINT:String = "&#8226;";
+		public static const LINE_BREAK_EXPRESSION:RegExp = /\n/g;
+		
 		/**
 		 * This function is for parsing through the attributes of an fxg node and inserting them into the
 		 * matching element.  If an invalid attribute is specified in the fxg, then it will be ignored.
@@ -89,9 +89,8 @@ package watercolor.factories.svg2.util
 							element.width = Number( attribute.toXMLString());
 							break;
 						case "textWidth":
-							
 							if (element is Text && Text(element).textInput.textDisplay is UIComponent) {
-								UIComponent(Text(element).textInput.textDisplay).width = Number( attribute.toXMLString());
+								Text(element).textWidth = Number( attribute.toXMLString());
 							}
 							break;
 						case "viewHeight":

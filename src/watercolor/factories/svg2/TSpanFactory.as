@@ -10,7 +10,6 @@ package watercolor.factories.svg2
 	import mx.core.mx_internal;
 	import mx.utils.StringUtil;
 	
-	import spark.components.RichEditableText;
 	import spark.components.TextArea;
 	
 	import watercolor.elements.Text;
@@ -78,21 +77,27 @@ package watercolor.factories.svg2
 			var manager:TextContainerManager = element.textInput.textDisplay.mx_internal::textContainerManager;
 			var txt:String = element.textInput.text;
 			
+			// go through each line
 			for (var l:int = 0; l < manager.numLines; l++) {
 				
 				var textline:TextLine = manager.getLineAt(l);
 				var s:String = txt.substr(start, textline.rawTextLength);
 				
+				// the current index used for string parsing
 				cindex = 0;
 				
+				// now go through each character at a time
 				for (var x:int = 0; x < textline.rawTextLength + 1; x++) {
 					
+					// used for keeping track of where we are in the text as a whole
 					var index:int = start + x;
 					
 					if (index <= txt.length) {
 					
+						// grab the current text format
 						fmt = input.getFormatOfRange(null, index, index);
 						
+						// try to grab the format of the text next in line
 						try
 						{
 							ffmt = input.getFormatOfRange(null, index + 1, index + 1);
@@ -102,6 +107,7 @@ package watercolor.factories.svg2
 							ffmt = null;
 						}
 						
+						// compare the formats and if there is a difference
 						if ((x == textline.rawTextLength || !ffmt) || 
 							(ffmt && fmt.fontWeight != ffmt.fontWeight || 
 							 fmt.textAlign != ffmt.textAlign ||
@@ -110,19 +116,24 @@ package watercolor.factories.svg2
 							 fmt.fontSize != ffmt.fontSize ||
 							 fmt.color != ffmt.color)) {
 							
+							// check the text for line breaks
 							var formattedText:String = s.substring(cindex, x);
-							if (formattedText.length > 0 && formattedText != "\n") {
+							if (formattedText.length > 0 && formattedText != SVGAttributes.LINE_BREAK) {
 								
+								// create the tspan element
 								var tspan:XML = new XML("<tspan/>");
 								tspan.@["xml:space"] = 'preserve';
 								
+								// parse properties
 								parseTextProperties(fmt, tspan);
 								
+								// if this line is not the first line
 								if (cindex == 0 && l != 0) {
 									tspan.@x = 0;
 									tspan.@dy = (1.2 * ((list) ? 1 : lineSpaces)) + "em";
 								}
 								
+								// look for alignment changes
 								if (cindex == 0 || (ffmt && (fmt.textAlign != ffmt.textAlign))) {
 									
 									if (!beginAlign || cindex == 0) {
@@ -134,32 +145,37 @@ package watercolor.factories.svg2
 									
 								}
 								
+								// check if this is a list and needs the bullet point included
 								if (list && (manualLineBreak || (start == 0 && cindex ==0))) {
-									prefix = "&#8226;  ";
+									tspan.@listItem = true;
+									prefix = SVGAttributes.BULLET_POINT + "  ";
 									manualLineBreak = false;
 								} else {
 									prefix = "";
 								}
 								
-								tspan.appendChild(new XML(prefix + formattedText.replace(/\n/g, "")));
+								// add the parsed text to the tspan node
+								tspan.appendChild(new XML(prefix + formattedText.replace(SVGAttributes.LINE_BREAK_EXPRESSION, "")));
 								text.appendChild(tspan);
 								
 								lineSpaces = 1;
 							} 
 							
-							if (l != 0 && StringUtil.trim(formattedText).length == 0 && formattedText.indexOf("\n") != -1) {
-								lineSpaces++;
-							} else {
-								lineSpaces = 1;
-							}
-							
-							if (formattedText.lastIndexOf("\n") == formattedText.length - 1) {
+							// if the parsed text is a line break
+							if (formattedText.lastIndexOf(SVGAttributes.LINE_BREAK) == formattedText.length - 1) {
 								manualLineBreak = true;
 							}
 							
 							cindex = x;
 						}
 					}
+				}
+				
+				// keep track of line breaks
+				if (l != 0 && StringUtil.trim(s).length == 0 && s.indexOf(SVGAttributes.LINE_BREAK) != -1) {
+					lineSpaces++;
+				} else {
+					lineSpaces = 1;
 				}
 				
 				start += textline.rawTextLength;

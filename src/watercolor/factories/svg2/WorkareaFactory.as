@@ -23,6 +23,9 @@ package watercolor.factories.svg2
 		 */ 
 		public static function createSparkFromSVG(node:XML, uriManager:URIManager):Vector.<Element>
 		{
+			XML.ignoreWhitespace = false;
+			XML.prettyPrinting = false;
+			
 			var vec:Vector.<Element> = new Vector.<Element>();
 			
 			// make sure there are children nodes

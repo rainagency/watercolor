@@ -56,6 +56,7 @@ package watercolor.factories.svg2
 			var txt:String = "";
 			var array:Array = new Array();
 			
+			var listItem:Boolean = false;
 			var list:Boolean = false;
 			if (node.@islist && node.@islist.toString().toLowerCase() == "true") {
 				list = true;
@@ -65,22 +66,36 @@ package watercolor.factories.svg2
 				
 				if (child.localName() == "tspan") {
 					
+					listItem = (child.@listItem && child.@listItem.toString().toLowerCase() == "true") ? true : false;
+					
 					if (child.children().length() > 0) {
 						
+						txt = "";
+						
 						if (text.length > 0 && child.@dy != null && child.@dy.toString().length > 0) {
-							text += "\n";
+							
+							try {
+								
+								var dy:String = child.@dy.toString();
+								for (var b:int = 0; b < (Number(dy.substr(0, dy.length - 2)) / 1.2); b++) {
+									text += ((list && !listItem) ? "" : SVGAttributes.LINE_BREAK);
+								}
+								
+							} catch (err:Error) {
+								// don't do anything
+							}
 						}
 						
 						start = text.length;
 						
-						txt = child.children()[0].toString();
-						txt = (list) ? txt.substring(3, txt.length) : txt;
+						txt += child.children()[0].toString();
+						txt = (list && listItem) ? txt.substring(3, txt.length) : txt;
 						
 						text += txt;
 						
 						end = text.length;
 						
-						array.push({start:start, end:end, node:child, text:txt});
+						array.push({start:start, end:end, node:child, text:txt, listItem:listItem});
 					}
 				}			
 			}
@@ -121,39 +136,59 @@ package watercolor.factories.svg2
 			
 			check.addChild(listElm);
 			
-			for each (var obj:Object in array) {
+			var txt:String = "";
+			var first:ListItemElement;
+			var p:ParagraphElement;
+			var s:SpanElement;
+			var obj:Object;
+			var objNext:Object;
+			
+			var next:Boolean = false;
+			
+			for (var x:int = 0; x < array.length; x++) {
 				
-				var first:ListItemElement;
-				var p:ParagraphElement;
-				var s:SpanElement;
+				obj = array[x];
+			
+				if (obj.listItem) {
+					txt = obj.text;
+				} else {
+					txt += obj.text;
+				}
 				
-				try {
+				if (x < (array.length - 1)) {
+					
+					objNext = array[x + 1];
+					
+					if (objNext.listItem) {
+						next = true;
+					} else {
+						next = false;
+					}
+					
+				} else {
+					next = false;
+				}
+				
+				if (next || x == (array.length - 1)) {
 					
 					if (check.getChildAt(0) is ListElement) {
 						
 						first = new ListItemElement();
-						
 						p = new ParagraphElement();
-						
 						s = new SpanElement();
-						s.text = obj.text;
 						
+						s.text = txt;
 						p.addChild(s);
-						
 						first.addChild(p);
 						
 						ListElement(check.getChildAt(0)).addChild(first);
+						
+						txt = "";
 					}
-					
-					element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
-					
-				} catch (err:Error) {
-					
-					trace("Cannot create child " + obj.node.localName() + " on " + element.toString());
 				}
-				
 			}
 			
+			element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
 		}
 		
 		/**
@@ -219,7 +254,7 @@ package watercolor.factories.svg2
 			}
 			
 			if (!(isNaN(width))) {
-				text.@viewWidth = width;
+				text.@textWidth = width;
 			}
 			
 			return text;
