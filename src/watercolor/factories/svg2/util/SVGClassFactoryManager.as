@@ -22,6 +22,8 @@ package watercolor.factories.svg2.util
 	import watercolor.factories.svg2.graphics.RadialGradientStrokeFactory;
 	import watercolor.factories.svg2.graphics.SolidColorFactory;
 	import watercolor.factories.svg2.graphics.SolidColorStrokeFactory;
+	import watercolor.factories.svg2.text.ParagraphElementFactory;
+	import watercolor.factories.svg2.text.SpanElementFactory;
 
 	public class SVGClassFactoryManager
 	{
@@ -59,7 +61,9 @@ package watercolor.factories.svg2.util
 												mask:MaskFactory,
 												blurfilter:BlurFilterFactory,
 												glowfilter:GlowFilterFactory,
-												filters:FiltersFactory
+												filters:FiltersFactory,
+												paragraphelement:ParagraphElementFactory,
+												spanelement:SpanElementFactory
 									  		 };
 			
 		/**

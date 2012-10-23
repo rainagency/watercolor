@@ -1,6 +1,8 @@
 package watercolor.factories.svg2
 {
 	import flashx.textLayout.container.TextContainerManager;
+	import flashx.textLayout.elements.FlowElement;
+	import flashx.textLayout.elements.FlowGroupElement;
 	import flashx.textLayout.elements.ListElement;
 	import flashx.textLayout.elements.ListItemElement;
 	import flashx.textLayout.elements.ParagraphElement;
@@ -9,11 +11,10 @@ package watercolor.factories.svg2
 	import flashx.textLayout.formats.ListMarkerFormat;
 	import flashx.textLayout.formats.ListStylePosition;
 	import flashx.textLayout.formats.ListStyleType;
+	import flashx.textLayout.formats.TextAlign;
 	
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
-	
-	import spark.components.RichEditableText;
 	
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
@@ -28,193 +29,116 @@ package watercolor.factories.svg2
 	 */ 
 	public class TextAreaFactory
 	{
-		/**
-		 * 
-		 */
-		public function TextAreaFactory()
-		{
-		}
 		
-		/**
-		 * 
-		 * @param node
-		 * @param uriManager
-		 * @param element
-		 * @return 
-		 */
 		public static function createSparkFromSVG(node:XML, uriManager:URIManager, element:Text = null):Text
 		{
-			if (!element)
-			{
+			if (!element) {
+				
 				element = new Text();
+				element.textFlow = new TextFlow();
 			}
 			
-			var start:int = 0;
-			var end:int = 0;
+			var listElm:ListElement;
+			var par:ParagraphElement;
+			var blank:SpanElement;
+			var parent:FlowGroupElement;
+			var first:ListItemElement;
 			
-			var text:String = "";
-			var txt:String = "";
-			var array:Array = new Array();
-			
-			var listItem:Boolean = false;
 			var list:Boolean = false;
 			if (node.@islist && node.@islist.toString().toLowerCase() == "true") {
-				list = true;
-			}
-			
-			for each (var child:XML in node.children()) {					
 				
-				if (child.localName() == "tspan") {
+				list = true;
+				
+				listElm = new ListElement();
+				listElm.listStyleType = ListStyleType.DISC;
+				listElm.listStylePosition = ListStylePosition.INSIDE;
+				listElm.listAutoPadding = 0;
+				listElm.textIndent = 0;
+				
+				var format:ListMarkerFormat = new ListMarkerFormat();
+				format.afterContent = "  ";
+				
+				listElm.listMarkerFormat = format;
+				
+				element.textFlow.addChild(listElm);
+				
+			} 
+			
+			for each (var child:XML in node.children()) {	
+				
+				if (listElm && child.@listItem && child.@listItem.toString().length > 0) {
 					
-					listItem = (child.@listItem && child.@listItem.toString().toLowerCase() == "true") ? true : false;
+					first = new ListItemElement();
+					listElm.addChild(first);
 					
-					if (child.children().length() > 0) {
+					parent = first;
+					
+				} else if (!list) {
+					
+					parent = element.textFlow;
+				}
+				
+				// take care of blank lines
+				if (child.@dy && child.@dy.toString().length > 0 && child.@x && child.@x.toString().length > 0) {
+					
+					try {
 						
-						txt = "";
-						
-						if (text.length > 0 && child.@dy != null && child.@dy.toString().length > 0) {
+						var dy:String = child.@dy.toString();
+						for (var b:int = 1; b < (Number(dy.substr(0, dy.length - 2)) / 1.2); b++) {
 							
-							try {
-								
-								var dy:String = child.@dy.toString();
-								for (var b:int = 0; b < (Number(dy.substr(0, dy.length - 2)) / 1.2); b++) {
-									text += ((list && !listItem) ? "" : SVGAttributes.LINE_BREAK);
-								}
-								
-							} catch (err:Error) {
-								// don't do anything
-							}
+							par = new ParagraphElement();
+							blank = new SpanElement();
+							par.addChild(blank);
+							parent.addChild(par);
 						}
 						
-						start = text.length;
+						par = new ParagraphElement();
+						parent.addChild(par);
 						
-						txt += child.children()[0].toString();
-						txt = (list && listItem) ? txt.substring(3, txt.length) : txt;
-						
-						text += txt;
-						
-						end = text.length;
-						
-						array.push({start:start, end:end, node:child, text:txt, listItem:listItem});
+					} catch (err:Error) {
+						// don't do anything
 					}
-				}			
+				}
+				
+				var elm:Object = ElementFactory.createSparkFromSVG(child, uriManager);
+				
+				if (elm is FlowElement) {
+					
+					if (!par) {
+						par = new ParagraphElement();
+						parent.addChild(par);
+					}
+					
+					// set the alignment on the line
+					if (child.@["text-anchor"] && child.@["text-anchor"].toString().length > 0) {
+						
+						switch (child.@["text-anchor"].toString()) {
+							
+							case "start":
+								par.textAlign = TextAlign.LEFT;
+								break;
+							case "middle":
+								par.textAlign = TextAlign.CENTER;
+								break;
+							case "end":
+								par.textAlign = TextAlign.RIGHT;
+								break;
+							
+						}
+					}
+					
+					par.addChild(FlowElement(elm));
+				}
+				
 			}
 			
-			if (!list) {
-				element.text = text;
-				element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
-			} else {
-				element.text = "";
-				element.textInput.callLater(setListTSpans, [array, uriManager, element, node]);
-			}
+			element.textInput.callLater(parseAttributes, [element, node]);
 			
 			return element;
 		}
 		
-		/**
-		 * 
-		 * @param array
-		 * @param uriManager
-		 * @param element
-		 * @param node
-		 */
-		protected static function setListTSpans(array:Array, uriManager:URIManager, element:Text, node:XML):void {
-			
-			var check:TextFlow = RichEditableText(element.textInput.textDisplay).textFlow;
-			check.removeChildAt(0);
-			
-			var listElm:ListElement = new ListElement();
-			listElm.listStyleType = ListStyleType.DISC;
-			listElm.listStylePosition = ListStylePosition.INSIDE;
-			listElm.listAutoPadding = 0;
-			listElm.textIndent = 0;
-			
-			var format:ListMarkerFormat = new ListMarkerFormat();
-			format.afterContent = "  ";
-			
-			listElm.listMarkerFormat = format;
-			
-			check.addChild(listElm);
-			
-			var txt:String = "";
-			var first:ListItemElement;
-			var p:ParagraphElement;
-			var s:SpanElement;
-			var obj:Object;
-			var objNext:Object;
-			
-			var next:Boolean = false;
-			
-			for (var x:int = 0; x < array.length; x++) {
-				
-				obj = array[x];
-			
-				if (obj.listItem) {
-					txt = obj.text;
-				} else {
-					txt += obj.text;
-				}
-				
-				if (x < (array.length - 1)) {
-					
-					objNext = array[x + 1];
-					
-					if (objNext.listItem) {
-						next = true;
-					} else {
-						next = false;
-					}
-					
-				} else {
-					next = false;
-				}
-				
-				if (next || x == (array.length - 1)) {
-					
-					if (check.getChildAt(0) is ListElement) {
-						
-						first = new ListItemElement();
-						p = new ParagraphElement();
-						s = new SpanElement();
-						
-						s.text = txt;
-						p.addChild(s);
-						first.addChild(p);
-						
-						ListElement(check.getChildAt(0)).addChild(first);
-						
-						txt = "";
-					}
-				}
-			}
-			
-			element.textInput.callLater(setTSpans, [array, uriManager, element, node]);
-		}
-		
-		/**
-		 * 
-		 * @param array
-		 * @param uriManager
-		 * @param element
-		 * @param node
-		 */
-		protected static function setTSpans(array:Array, uriManager:URIManager, element:Text, node:XML):void {
-			
-			for each (var obj:Object in array) {
-				
-				try {
-					
-					TSpanFactory.createSparkFromSVG(obj.node, uriManager, element, obj.start, obj.end);
-					
-					// set any attributes
-					SVGAttributes.parseXMLAttributes(node, element);
-					
-				} catch (err:Error) {
-					
-					trace("Cannot create child " + obj.node.localName() + " on " + element.toString());
-				}
-				
-			}
+		protected static function parseAttributes(element:Text, node:XML):void {
+			SVGAttributes.parseXMLAttributes(node, element);
 		}
 		
 		/**

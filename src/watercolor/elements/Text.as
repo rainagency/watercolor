@@ -6,11 +6,13 @@ package watercolor.elements
 	import mx.core.UIComponent;
 	
 	import spark.components.TextArea;
+	import spark.utils.TextFlowUtil;
 	
 	import watercolor.components.WatercolorTextArea;
 	import watercolor.events.TextEvent;
 		
 	[Style(name="skinClass", type="Class", inherit="no")]
+	//[Style(name="lineBreak", type="String", inherit="no")]
 	[Style(name="textFontSize", type="String", inherit="no")]
 	
 	/**
@@ -78,6 +80,14 @@ package watercolor.elements
 			dispatchEvent(new TextEvent(TextEvent.EVENT_TEXT_MODIFIED, old));
 		}
 		
+		public function set formattedText(value:String):void { 
+			
+			var old:String = _textInput.text;
+			_textInput.textFlow = TextFlowUtil.importFromString(value); 
+			
+			dispatchEvent(new TextEvent(TextEvent.EVENT_TEXT_MODIFIED, old));
+		}
+		
 		public function get textFlow():TextFlow { return _textInput.textFlow; }
 		public function set textFlow(value:TextFlow):void { _textInput.textFlow = value; }
 		
@@ -85,6 +95,11 @@ package watercolor.elements
 		public function set skinClass(value:Class):void { 
 			_textInput.setStyle("skinClass", value); 
 		}
+		
+		/*public function get lineBreak():String { return _textInput.getStyle("lineBreak"); }
+		public function set lineBreak(value:String):void { 
+			_textInput.setStyle("lineBreak", value);
+		}*/
 		
 		public function get textFontSize():String { return _textInput.getStyle("fontSize"); }
 		public function set textFontSize(value:String):void { _textInput.setStyle("fontSize", value); }

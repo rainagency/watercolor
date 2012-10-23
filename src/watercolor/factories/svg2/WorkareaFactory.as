@@ -47,7 +47,7 @@ package watercolor.factories.svg2
 		public static function createSVGFromSpark(workarea:Workarea):XML
 		{
 			XML.ignoreWhitespace = false;
-			XML.prettyPrinting = false;
+			//XML.prettyPrinting = false;
 			
 			var svg:XML = new XML("<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'/>");
 			
