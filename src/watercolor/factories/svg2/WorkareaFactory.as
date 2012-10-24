@@ -28,6 +28,8 @@ package watercolor.factories.svg2
 			
 			var vec:Vector.<Element> = new Vector.<Element>();
 			
+			node = node.normalize();
+			
 			// make sure there are children nodes
 			if (node.children().length() > 0) {
 				

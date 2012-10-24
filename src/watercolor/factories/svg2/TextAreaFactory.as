@@ -16,6 +16,8 @@ package watercolor.factories.svg2
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	
+	import spark.utils.TextFlowUtil;
+	
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
 	import watercolor.factories.svg2.util.SVGAttributes;

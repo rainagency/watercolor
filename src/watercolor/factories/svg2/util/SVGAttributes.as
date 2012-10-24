@@ -2,6 +2,8 @@ package watercolor.factories.svg2.util
 {
 	import flash.geom.Matrix;
 	
+	import flashx.textLayout.elements.LinkElement;
+	
 	import mx.collections.XMLListCollection;
 	import mx.core.UIComponent;
 	import mx.graphics.SolidColor;
@@ -100,7 +102,12 @@ package watercolor.factories.svg2.util
 							element.fillMode = attribute.toXMLString();
 							break;
 						case "href":
-							element.source = attribute.toXMLString();
+							
+							if (element is LinkElement) {
+								LinkElement(element).href = attribute.toXMLString();
+							} else {
+								element.source = attribute.toXMLString();
+							}
 							break;
 						case "version":
 							break;

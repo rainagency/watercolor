@@ -1,7 +1,15 @@
 package watercolor.factories.svg2.text
 {
 	import flashx.textLayout.compose.TextFlowLine;
+	import flashx.textLayout.elements.FlowElement;
+	import flashx.textLayout.elements.LinkElement;
 	import flashx.textLayout.elements.SpanElement;
+	import flashx.textLayout.tlf_internal;
+	
+	import mx.core.mx_internal;
+	import mx.utils.object_proxy;
+	
+	import org.flexunit.internals.namespaces.classInternal;
 	
 	import watercolor.elements.Text;
 	import watercolor.factories.svg2.util.SVGClassFactoryManager;
@@ -29,8 +37,13 @@ package watercolor.factories.svg2.text
 		public static function createSVGFromSpark(xml:XML, flow:Object, line:TextFlowLine, start:int, element:Text):Object
 		{
 			var elmName:String = "";
+			
+			// there has to be a way to get a class name from these classes
+			// I want it to be similar to ElementFactory
 			if (flow is SpanElement) {
 				elmName = "spanelement";
+			} else if (flow is LinkElement) {
+				elmName = "linkelement";
 			}
 			
 			// Get Spark Factory

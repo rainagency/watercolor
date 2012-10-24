@@ -27,8 +27,8 @@ package watercolor.factories.svg2.text
 		
 		public static function createSVGFromSpark(xml:XML, span:SpanElement, line:TextFlowLine, start:int, element:Text):Object
 		{
-			var sBegin:int = span.parentRelativeStart;
-			var sEnd:int = span.parentRelativeEnd;
+			var sBegin:int = span.getElementRelativeStart(line.paragraph);
+			var sEnd:int = span.getElementRelativeStart(line.paragraph) + span.textLength;
 			var text:String = span.text;
 			var txt:String = "";
 			
@@ -98,10 +98,9 @@ package watercolor.factories.svg2.text
 						}
 					}
 					
-					tspan.@x = 0;
-					
 					if ((start == 0 && lbegin > 0) || (start > 0)) {
 						
+						tspan.@x = 0;
 						tspan.@dy = "1.2em";
 						
 						TSpanUtil.parseTextAlignment(element, span, tspan);
