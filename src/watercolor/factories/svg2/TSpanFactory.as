@@ -31,10 +31,25 @@ package watercolor.factories.svg2
 				
 				span.text = (node.@listItem && node.@listItem.toString().length > 0) ? node.children()[0].toString().substring(3, node.children()[0].toString().length) : node.children()[0];
 				
-				span.fontFamily = node.@["font-family"].toString();
-				span.fontStyle = node.@["font-style"];
-				span.fontSize = node.@["font-size"];
-				span.fontWeight = node.@["font-weight"];
+				if (node.@["font-family"] && node.@["font-family"].toString().length > 0) {
+					span.fontFamily = node.@["font-family"].toString();
+				}
+				
+				if (node.@["font-style"] && node.@["font-style"].toString().length > 0) {
+					span.fontStyle = node.@["font-style"];
+				}
+				
+				if (node.@["font-size"] && node.@["font-size"].toString().length > 0) {
+					span.fontSize = node.@["font-size"];
+				}
+				
+				if (node.@["font-weight"] && node.@["font-weight"].toString().length > 0) {
+					span.fontWeight = node.@["font-weight"];
+				}
+				
+				if (node.@["text-decoration"] && node.@["text-decoration"].toString().length > 0) {
+					span.textDecoration = node.@["text-decoration"];
+				}
 				
 				span.color = SVGAttributes.parseColor(node.@fill);
 				

@@ -26,6 +26,7 @@ package watercolor.utils
 			vec.push("fontSize");
 			vec.push("color");
 			vec.push("textAlign");
+			vec.push("textDecoration");
 			
 			return vec;
 		}

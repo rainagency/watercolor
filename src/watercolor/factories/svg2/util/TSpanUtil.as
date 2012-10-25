@@ -18,8 +18,7 @@ package watercolor.factories.svg2.util
 			} else if (xml && xml.children().length() > 0) {
 				
 				for each (var x:XML in xml.children()) {
-					
-					lookForTSpanElement(x);
+					return lookForTSpanElement(x);
 				}
 			}
 			
@@ -46,6 +45,10 @@ package watercolor.factories.svg2.util
 			
 			if (flow.computedFormat.fontSize) {
 				tspan.@["font-size"] = flow.computedFormat.fontSize;
+			}
+			
+			if (flow.computedFormat.textDecoration) {
+				tspan.@["text-decoration"] = flow.computedFormat.textDecoration;
 			}
 		}
 		

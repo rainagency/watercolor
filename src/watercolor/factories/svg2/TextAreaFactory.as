@@ -16,11 +16,10 @@ package watercolor.factories.svg2
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	
-	import spark.utils.TextFlowUtil;
-	
 	import watercolor.elements.Text;
 	import watercolor.elements.components.Workarea;
 	import watercolor.factories.svg2.util.SVGAttributes;
+	import watercolor.factories.svg2.util.TSpanUtil;
 	import watercolor.factories.svg2.util.URIManager;
 	
 	/**
@@ -68,7 +67,9 @@ package watercolor.factories.svg2
 			
 			for each (var child:XML in node.children()) {	
 				
-				if (listElm && child.@listItem && child.@listItem.toString().length > 0) {
+				var tspan:XML = TSpanUtil.lookForTSpanElement(child);
+				
+				if (listElm && tspan.@listItem && tspan.@listItem.toString().length > 0) {
 					
 					first = new ListItemElement();
 					listElm.addChild(first);

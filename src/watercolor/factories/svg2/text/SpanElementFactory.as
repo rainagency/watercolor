@@ -76,7 +76,7 @@ package watercolor.factories.svg2.text
 			var tspan:XML = null;
 			var listText:String = "";
 			
-			if (StringUtil.trim(txt).length > 0) {
+			if (txt.length > 0) {
 				
 				trace("Span: " + txt);
 				

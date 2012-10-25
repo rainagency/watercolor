@@ -3,9 +3,9 @@ package watercolor.factories.svg2.text
 	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.elements.LinkElement;
-	import flashx.textLayout.elements.SpanElement;
 	
 	import watercolor.elements.Text;
+	import watercolor.factories.svg2.ElementFactory;
 	import watercolor.factories.svg2.util.SVGAttributes;
 	import watercolor.factories.svg2.util.URIManager;
 	
@@ -19,10 +19,17 @@ package watercolor.factories.svg2.text
 		{
 			var link:LinkElement = new LinkElement();
 			
-			var span:SpanElement = new SpanElement();
-			span.text = "test";
-			
-			link.addChild(span);
+			for each (var child:XML in node.children()) {	
+				
+				var elm:Object = ElementFactory.createSparkFromSVG(child, uriManager);
+				
+				if (elm is FlowElement) {
+					
+					link.addChild(FlowElement(elm));
+					
+				}
+				
+			}
 			
 			SVGAttributes.parseXMLAttributes(node, link);
 			
