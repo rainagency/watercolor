@@ -3,8 +3,10 @@ package watercolor.factories.svg2.text
 	import flashx.textLayout.compose.TextFlowLine;
 	import flashx.textLayout.elements.FlowElement;
 	import flashx.textLayout.elements.ListElement;
+	import flashx.textLayout.elements.ListItemElement;
 	import flashx.textLayout.elements.ParagraphElement;
 	import flashx.textLayout.elements.SpanElement;
+	import flashx.textLayout.formats.ListStyleType;
 	
 	import mx.utils.StringUtil;
 	
@@ -19,6 +21,8 @@ package watercolor.factories.svg2.text
 	 */ 
 	public class SpanElementFactory
 	{
+		
+		
 		
 		public static function createSparkFromSVG(node:XML, uriManager:URIManager):SpanElement
 		{
@@ -36,9 +40,16 @@ package watercolor.factories.svg2.text
 			var lend:int = lbegin + line.textLength;
 			var llength:int = line.textLength;
 			
-			var list:Boolean = false;
-			if (element.textInput.textFlow.getChildAt(0) is ListElement) {
-				list = true;
+			var listType:String = "";
+			var index:int = 0;
+			if (line.paragraph.parent && line.paragraph.parent is ListItemElement) {
+				
+				var e:ListItemElement = ListItemElement(line.paragraph.parent);
+				if (e.parent is ListElement) {
+					index = e.parent.getChildIndex(e) + 1;
+					listType = ListElement(e.parent).listStyleType;
+				}
+				
 			}
 			
 			if ((sBegin >= lbegin && sBegin <= lend) || (sEnd >= lbegin && sEnd <= lend) || (lbegin >= sBegin && lend <= sEnd)) {
@@ -78,7 +89,7 @@ package watercolor.factories.svg2.text
 			
 			if (txt.length > 0) {
 				
-				trace("Span: " + txt);
+				//trace("Span: " + txt);
 				
 				tspan = new XML("<tspan/>");
 				tspan.@["xml:space"] = 'preserve';
@@ -88,13 +99,21 @@ package watercolor.factories.svg2.text
 				
 				if (sBegin <= lbegin && lbegin >= 0) {
 					
-					if (list && lbegin == 0) {
+					if (index > 0 && lbegin == 0) {
 						
-						tspan.@listItem = true;
 						if (tspan.children().length() > 0) {
 							listText = tspan.children()[0];
 							delete tspan.children()[0];
-							tspan.appendChild(new XML(SVGAttributes.BULLET_POINT + "  " + listText));
+							tspan.@listItem = true;
+							
+							switch(listType) {
+								case ListStyleType.DISC:
+									tspan.appendChild(new XML(SVGAttributes.BULLET_POINT + "  " + listText));
+									break;
+								case ListStyleType.DECIMAL:
+									tspan.appendChild(new XML(index + ".  " + listText));
+									break;
+							}
 						}
 					}
 					

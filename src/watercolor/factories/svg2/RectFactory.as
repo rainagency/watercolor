@@ -35,8 +35,13 @@ package watercolor.factories.svg2
 		
 		public static function createSVGFromSpark(element:Rect, workarea:Workarea):XML
 		{
-			// TODO: Generate SVG
-			return null;
+			//<rect x="50" y="20" width="150" height="150" fill="rgb(255,255,255)" fill-opacity="0.1" stroke="black" stroke-width="1"/>
+			
+			var rect:XML = new XML("<rect/>");
+			
+			SVGAttributes.parseMXMLAttributes(element, rect);
+			
+			return rect;
 		}
 	}
 }

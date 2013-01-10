@@ -2111,8 +2111,6 @@ package watercolor.transform
 			_currentMatrix.identity();
 			p.x = ((gp.x - p.x) - buttonOffset.x) / ((gp.x - localMouseDownPoint.x) - buttonOffset.x);
 			
-			trace(p.x);
-			
 			_currentMatrix.translate(-gp.x, 0);
 			_currentMatrix.scale(p.x, 1);
 			_currentMatrix.translate(gp.x, 0);

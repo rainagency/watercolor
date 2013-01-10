@@ -1,5 +1,6 @@
 package watercolor.elements
 {
+	import flashx.textLayout.elements.ListElement;
 	import flashx.textLayout.elements.TextFlow;
 	import flashx.textLayout.formats.TextLayoutFormat;
 	
@@ -132,6 +133,20 @@ package watercolor.elements
 					textInput.width = value;
 				}
 				
+			}
+		}
+		
+		public function get listType():String {
+			if (textFlow.getChildAt(0) is ListElement) {
+				return ListElement(textFlow.getChildAt(0)).listStyleType;
+			}
+			
+			return "";
+		}
+		
+		public function set listType(value:String):void {
+			if (value.length > 0 && textFlow.getChildAt(0) is ListElement) {
+				ListElement(textFlow.getChildAt(0)).listStyleType = value;
 			}
 		}
 	}

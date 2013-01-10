@@ -41,8 +41,11 @@ package watercolor.factories.svg2
 		 */ 
 		public static function createSVGFromSpark(element:Ellipse, workarea:Workarea):XML
 		{
-			// TODO: Generate SVG
-			return null;
+			var ellipse:XML = new XML("<ellipse/>");
+			
+			SVGAttributes.parseMXMLAttributes(element, ellipse);
+			
+			return ellipse;
 		}
 	}
 }

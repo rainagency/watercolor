@@ -46,12 +46,12 @@ package watercolor.factories.svg2
 			var first:ListItemElement;
 			
 			var list:Boolean = false;
-			if (node.@islist && node.@islist.toString().toLowerCase() == "true") {
+			if (node.@listType && node.@listType.toString().length > 0) {
 				
 				list = true;
 				
 				listElm = new ListElement();
-				listElm.listStyleType = ListStyleType.DISC;
+				listElm.listStyleType = node.@listType.toString().toLowerCase();
 				listElm.listStylePosition = ListStylePosition.INSIDE;
 				listElm.listAutoPadding = 0;
 				listElm.textIndent = 0;
@@ -166,14 +166,15 @@ package watercolor.factories.svg2
 				text.@as3transform = SVGAttributes.parseMatrix(matrix);
 			}
 			
-			var list:Boolean = false;
+			var listType:String = "";
 			if (element.textInput.textFlow.getChildAt(0) is ListElement) {
-				list = true;
+				var e:ListElement = ListElement(element.textInput.textFlow.getChildAt(0));
+				listType = e.listStyleType;
 			}
 			
-			text.@islist = list;
+			text.@listType = listType;
 			
-			TSpanFactory.createSVGFromSpark(text, element, workarea, list);
+			TSpanFactory.createSVGFromSpark(text, element, workarea, (listType.length > 0) ? true : false);
 			
 			var width:Number = element.textInput.explicitWidth;
 			if (element.textInput.textDisplay is UIComponent) {

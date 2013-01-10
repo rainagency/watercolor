@@ -2,6 +2,8 @@ package watercolor.factories.svg2.graphics
 {
 	import mx.graphics.SolidColorStroke;
 	
+	import org.osmf.layout.ScaleMode;
+	
 	import watercolor.factories.svg2.util.SVGAttributes;
 	import watercolor.factories.svg2.util.URIManager;
 	
@@ -25,6 +27,7 @@ package watercolor.factories.svg2.graphics
 			if (!element)
 			{
 				element = new SolidColorStroke();
+				element.scaleMode = ScaleMode.NONE;
 			}
 			
 			// get attributes

@@ -472,7 +472,7 @@ package watercolor.utils
 				space.width = (space.width < 1 && space.width >= 0) ? 1 : Math.ceil(space.width);
 				space.height = (space.height < 1 && space.height >= 0) ? 1 : Math.ceil(space.height);
 				
-				var selectionBmp:BitmapData = getAlphaMap(element as DisplayObject, space, BitmapDataChannel.RED, element.parent);
+				var selectionBmp:BitmapData = getAlphaMap(element as DisplayObject, space, BitmapDataChannel.RED, element.parent );
 				var rectBmp:BitmapData = new BitmapData(space.width, space.height, false, 0xFF0000);
 				var alphaRectBmp:BitmapData = new BitmapData(space.width, space.height, false, 0);
 
@@ -487,21 +487,7 @@ package watercolor.utils
 				rectTemp2 = selectionBmp.getColorBoundsRect(0x010100, 0x010100, true);
 				rectTemp2.x += space.x;
 				rectTemp2.y += space.y;
-				if(rectTemp2.width < 5 && rectTemp2.height > 5)
-				{     
-					rectTemp2.width = element.height;
-					rectTemp2.x -= rectTemp2.width / 2;
-				}
-				else if(rectTemp2.height < 5 && rectTemp2.width > 5)
-				{
-					rectTemp2.height = element.width;
-					rectTemp2.y -= rectTemp2.height / 2;
-				} 
-				else if(rectTemp2.height < 5 && rectTemp2.width < 5)
-				{
-					rectTemp2.width = selectionBmp.width;
-					rectTemp2.height = selectionBmp.height;				
-				}
+				
 				selectionBmp.dispose();
 				rectBmp.dispose();
 				alphaRectBmp.dispose();

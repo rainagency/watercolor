@@ -1,16 +1,26 @@
 package watercolor.factories.svg2.util
 {
+	import flash.display.LineScaleMode;
 	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.utils.describeType;
 	
 	import flashx.textLayout.elements.LinkElement;
 	
 	import mx.collections.XMLListCollection;
 	import mx.core.UIComponent;
+	import mx.graphics.IFill;
+	import mx.graphics.IStroke;
 	import mx.graphics.SolidColor;
 	import mx.graphics.SolidColorStroke;
 	
+	import org.osmf.layout.ScaleMode;
+	
 	import spark.collections.Sort;
 	
+	import watercolor.elements.Ellipse;
+	import watercolor.elements.Path;
+	import watercolor.elements.Rect;
 	import watercolor.elements.Text;
 	import watercolor.utils.MatrixInfo;
 
@@ -24,6 +34,113 @@ package watercolor.factories.svg2.util
 		public static const LINE_BREAK:String = "\n";
 		public static const BULLET_POINT:String = "&#8226;";
 		public static const LINE_BREAK_EXPRESSION:RegExp = /\n/g;
+		
+		public static function parseMXMLAttributes(element:Object, xml:XML):void {
+			
+			var classInfo:XML = describeType(element);
+			
+			for each (var a:XML in classInfo..accessor) {
+				
+				switch (a.@name.toString()) {
+					
+					case "transform":
+						
+						var m:Matrix = element[a.@name].matrix;
+						
+						if (element is Ellipse) {
+							
+							var p:Point = m.transformPoint(new Point(element.width / 2, element.height / 2));
+							
+							m.tx = p.x;
+							m.ty = p.y;
+						}
+						
+						xml.@transform = parseMatrix(m);
+						break;
+					case "width":
+						if (element is Ellipse) {
+							xml.@rx = Number(element[a.@name].toString()) / 2;
+						} else {
+							xml.@width = element[a.@name].toString();
+						}
+						break;
+					case "height":
+						if (element is Ellipse) {
+							xml.@ry = Number(element[a.@name].toString()) / 2;
+						} else {
+							xml.@height = element[a.@name].toString();
+						}
+						break;
+					case "stroke":
+						var stroke:IStroke = element.stroke;
+						
+						if (stroke && stroke is SolidColorStroke) {
+							xml.@stroke = SVGAttributes.createColor(SolidColorStroke(stroke).color);
+							xml.@["stroke-opacity"] = SolidColorStroke(stroke).alpha.toString();
+							xml.@["stroke-width"] = SolidColorStroke(stroke).weight.toString();
+							xml.@["vector-effect"] = (SolidColorStroke(stroke).scaleMode == LineScaleMode.NONE) ? "non-scaling-stroke" : "none";
+						}
+						
+						break;
+					case "fill":
+						
+						var fill:IFill = element.fill;
+						
+						if (fill && fill is SolidColor) {
+							xml.@fill = SVGAttributes.createColor(SolidColor(fill).color);
+							xml.@["fill-opacity"] = SolidColor(fill).alpha;
+							
+						}
+						
+						break;
+					case "radiusX":
+						
+						if (element is Rect) {
+							xml.@rx = Rect(element).radiusX;
+						}
+						
+						break;
+					
+					case "radiusY":
+						
+						if (element is Rect) {
+							xml.@ry = Rect(element).radiusY;
+						}
+						
+						break;
+					
+					/*case "x":
+						
+						if (element is Ellipse) {
+							xml.@cx = element[a.@name].toString();
+						} else {
+							xml.@x = element[a.@name].toString();
+						}
+						break;
+					
+					case "y":
+						
+						if (element is Ellipse) {
+							xml.@cy = element[a.@name].toString();
+						} else {
+							xml.@y = element[a.@name].toString();
+						}
+						break;*/
+					
+					case "data":
+						
+						if (element is Path) {
+							xml.@d = element.data.toString();
+						}
+						
+						break;
+					
+				}
+				
+			}
+			
+			
+		}
 		
 		/**
 		 * This function is for parsing through the attributes of an fxg node and inserting them into the
@@ -61,6 +178,7 @@ package watercolor.factories.svg2.util
 							
 							if (!element.stroke) {
 								element.stroke = new SolidColorStroke();
+								element.stroke.scaleMode = ScaleMode.NONE;
 							}
 							
 							element.stroke.color = parseColor( attribute.toXMLString());
@@ -69,6 +187,14 @@ package watercolor.factories.svg2.util
 						case "fill":
 							
 							element.fill = new SolidColor(parseColor( attribute.toXMLString()));
+							break;
+						
+						case "fill-opacity":
+							
+							if (element.fill) {
+								element.fill.alpha = Number(attribute.toXMLString());
+							}
+							
 							break;
 						
 						case "transform": // special case transform
@@ -101,6 +227,56 @@ package watercolor.factories.svg2.util
 						case "fill-mode":
 							element.fillMode = attribute.toXMLString();
 							break;
+						
+						case "cx":
+							if (element is Ellipse) {
+								element.x = Number(attribute.toXMLString()) - (element.width / 2);
+							}
+							break;
+						
+						case "rx":
+							if (element is Ellipse) {
+								element.width = Number(attribute.toXMLString()) * 2;
+							} else if (element is Rect) {
+								Rect(element).radiusX = Number(attribute.toXMLString());
+							}
+							break;
+						
+						case "cy":
+							if (element is Ellipse) {
+								element.y = Number(attribute.toXMLString()) - (element.height / 2);
+							}
+							break;
+						
+						case "ry":
+							if (element is Ellipse) {
+								element.height = Number(attribute.toXMLString()) * 2;
+							} else if (element is Rect) {
+								Rect(element).radiusY = Number(attribute.toXMLString());
+							}
+							break;
+						
+						case "vector-effect":
+							
+							switch(attribute.toXMLString()) {
+								
+								case "none":
+									element.scaleMode = LineScaleMode.NORMAL;
+									break;
+								case "non-scaling-stroke":
+									element.scaleMode = LineScaleMode.NONE;
+									break;
+								
+							}
+							
+							break;
+						
+						case "d":
+							if (element is Path) {
+								element.data = attribute.toXMLString();	
+							}
+							break;
+						
 						case "href":
 							
 							if (element is LinkElement) {

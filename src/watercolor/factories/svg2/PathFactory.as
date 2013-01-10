@@ -66,8 +66,11 @@ package watercolor.factories.svg2
 		 */ 
 		public static function createSVGFromSpark(element:Path, workarea:Workarea):XML
 		{
-			// TODO: Generate SVG
-			return null;
+			var path:XML = new XML("<path/>");
+			
+			SVGAttributes.parseMXMLAttributes(element, path);
+			
+			return path;
 		}
 	}
 }
