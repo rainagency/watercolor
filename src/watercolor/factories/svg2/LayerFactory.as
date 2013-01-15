@@ -43,7 +43,11 @@ package watercolor.factories.svg2
 			for (var x:int = 0; x < element.numElements; x++)
 			{
 				var elm:Element = element.getElementAt(x) as Element;
-				node.appendChild(ElementFactory.createSVGFromSpark(elm, workarea));
+				var elmXML:XML = ElementFactory.createSVGFromSpark(elm, workarea);
+				
+				if (elmXML) {
+					node.appendChild(elmXML);
+				}
 			}
 		}
 	}

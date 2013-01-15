@@ -64,7 +64,11 @@ package watercolor.factories.svg2
 				if (elm is Layer) {
 					LayerFactory.createSVGFromSpark(svg, elm, workarea);
 				} else {
-					svg.appendChild(ElementFactory.createSVGFromSpark(elm, workarea));
+					
+					var elmXML:XML = ElementFactory.createSVGFromSpark(elm, workarea);
+					if (elmXML) {
+						svg.appendChild(elmXML);
+					}
 				}
 				
 			}

@@ -152,40 +152,46 @@ package watercolor.factories.svg2
 		 */
 		public static function createSVGFromSpark(element:Text, workarea:Workarea):XML
 		{
-			var text:XML = new XML("<text/>");
-			text.@["text-anchor"] = "start";
-			
-			var manager:TextContainerManager = element.textInput.textDisplay.mx_internal::textContainerManager;
-			var extraHeight:int = 0;
-			if (manager.numLines > 0) {
-				extraHeight = manager.getLineAt(0).height;
+			if (element.text.length > 0) {
+				
+				var text:XML = new XML("<text/>");
+				text.@["text-anchor"] = "start";
+				
+				var manager:TextContainerManager = element.textInput.textDisplay.mx_internal::textContainerManager;
+				var extraHeight:int = 0;
+				if (manager.numLines > 0) {
+					extraHeight = manager.getLineAt(0).height;
+				}
+				
+				with (element.transform) {
+					text.@transform = "matrix(" + matrix.a + " " + matrix.b + " " + matrix.c + " " + matrix.d + " " + matrix.tx + " " + (matrix.ty + extraHeight) + ")";
+					text.@as3transform = SVGAttributes.parseMatrix(matrix);
+				}
+				
+				var listType:String = "";
+				if (element.textInput.textFlow.getChildAt(0) is ListElement) {
+					var e:ListElement = ListElement(element.textInput.textFlow.getChildAt(0));
+					listType = e.listStyleType;
+				}
+				
+				text.@listType = listType;
+				
+				TSpanFactory.createSVGFromSpark(text, element, workarea, (listType.length > 0) ? true : false);
+				
+				var width:Number = element.textInput.explicitWidth;
+				if (element.textInput.textDisplay is UIComponent) {
+					width = UIComponent(element.textInput.textDisplay).explicitWidth
+				}
+				
+				if (!(isNaN(width))) {
+					text.@textWidth = width;
+				}
+				
+				return text;
+				
+			} else {
+				return null;
 			}
-			
-			with (element.transform) {
-				text.@transform = "matrix(" + matrix.a + " " + matrix.b + " " + matrix.c + " " + matrix.d + " " + matrix.tx + " " + (matrix.ty + extraHeight) + ")";
-				text.@as3transform = SVGAttributes.parseMatrix(matrix);
-			}
-			
-			var listType:String = "";
-			if (element.textInput.textFlow.getChildAt(0) is ListElement) {
-				var e:ListElement = ListElement(element.textInput.textFlow.getChildAt(0));
-				listType = e.listStyleType;
-			}
-			
-			text.@listType = listType;
-			
-			TSpanFactory.createSVGFromSpark(text, element, workarea, (listType.length > 0) ? true : false);
-			
-			var width:Number = element.textInput.explicitWidth;
-			if (element.textInput.textDisplay is UIComponent) {
-				width = UIComponent(element.textInput.textDisplay).explicitWidth
-			}
-			
-			if (!(isNaN(width))) {
-				text.@textWidth = width;
-			}
-			
-			return text;
 			
 		}
 	}

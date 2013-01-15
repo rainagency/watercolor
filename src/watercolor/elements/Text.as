@@ -70,7 +70,7 @@ package watercolor.elements
 		// :: TextInput Properties :: //
 	
 		public function get prompt():String { return _textInput.prompt; }
-		public function set prompt(value:String):void { _textInput.prompt = value; }
+		public function set prompt(value:String):void { /*_textInput.prompt = value;*/ }
 		
 		public function get text():String { return _textInput.text; }
 		public function set text(value:String):void { 
