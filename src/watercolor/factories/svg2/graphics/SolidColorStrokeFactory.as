@@ -1,5 +1,7 @@
 package watercolor.factories.svg2.graphics
 {
+	import flash.display.JointStyle;
+	
 	import mx.graphics.SolidColorStroke;
 	
 	import org.osmf.layout.ScaleMode;
@@ -28,6 +30,7 @@ package watercolor.factories.svg2.graphics
 			{
 				element = new SolidColorStroke();
 				element.scaleMode = ScaleMode.NONE;
+				element.joints = JointStyle.MITER;
 			}
 			
 			// get attributes

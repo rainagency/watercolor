@@ -1612,7 +1612,7 @@ package watercolor.transform
 					ctrp2 = _totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(ctrp2));
 				}
 				
-				//localMouseDownPoint = totalMatrixInversion.transformPoint(_parentContainer.globalToLocal(localMouseDownPoint));
+				buttonOffset = totalMatrixInversion.deltaTransformPoint(buttonOffset);
 				
 				event.stopImmediatePropagation();
 				
