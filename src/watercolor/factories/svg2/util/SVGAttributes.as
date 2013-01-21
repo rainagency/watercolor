@@ -200,7 +200,20 @@ package watercolor.factories.svg2.util
 						case "transform": // special case transform
 							
 							if (!(element is Text)) { 
-								element.transform.matrix = parseTransform(attribute.toXMLString());
+								
+								var m:Matrix = parseTransform(attribute.toXMLString());
+								
+								if (element is Ellipse) {
+									
+									var p:Point = m.transformPoint(new Point(-(element.width / 2), -(element.height / 2)));
+									
+									m.tx = p.x;
+									m.ty = p.y;
+									
+								}
+								
+								
+								element.transform.matrix = m;
 							}
 							break;
 						case "as3transform":
@@ -258,15 +271,16 @@ package watercolor.factories.svg2.util
 						
 						case "vector-effect":
 							
-							switch(attribute.toXMLString()) {
+							if (element.stroke) {
+								switch(attribute.toXMLString()) {
 								
-								case "none":
-									element.scaleMode = LineScaleMode.NORMAL;
-									break;
-								case "non-scaling-stroke":
-									element.scaleMode = LineScaleMode.NONE;
-									break;
-								
+									case "none":
+										element.stroke.scaleMode = LineScaleMode.NORMAL;
+										break;
+									case "non-scaling-stroke":
+										element.stroke.scaleMode = LineScaleMode.NONE;
+										break;
+								}
 							}
 							
 							break;
