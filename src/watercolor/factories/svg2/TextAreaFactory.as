@@ -95,8 +95,8 @@ package watercolor.factories.svg2
 							parent.addChild(par);
 						}
 						
-						par = new ParagraphElement();
-						parent.addChild(par);
+						//par = new ParagraphElement();
+						//parent.addChild(par);
 						
 					} catch (err:Error) {
 						// don't do anything
