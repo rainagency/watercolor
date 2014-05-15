@@ -95,8 +95,10 @@ package watercolor.factories.svg2
 							parent.addChild(par);
 						}
 						
-						//par = new ParagraphElement();
-						//parent.addChild(par);
+						if (child.@lineBreak && child.@lineBreak.toString().length > 0 && child.@lineBreak.toString().toLowerCase() == "true") {
+							par = new ParagraphElement();
+							parent.addChild(par);
+						}
 						
 					} catch (err:Error) {
 						// don't do anything

@@ -21,7 +21,7 @@ package watercolor.factories.svg2.text
 			return null;
 		}
 		
-		public static function createSVGFromSpark(xml:XML, paragraph:ParagraphElement, line:TextFlowLine, start:int, element:Text):Object
+		public static function createSVGFromSpark(xml:XML, paragraph:ParagraphElement, line:TextFlowLine, start:int, element:Text, newParagraph:Boolean = false):Object
 		{
 			var list:Array = new Array();
 			var blankLines:int = 1;
@@ -29,6 +29,11 @@ package watercolor.factories.svg2.text
 			for (var x:int = 0; x < line.paragraph.numChildren; x++) {
 				
 				var tspan:XML = TextElementFactory.createSVGFromSpark(xml, line.paragraph.getChildAt(x), line, start, element) as XML;
+				
+				if (newParagraph) {
+					tspan.@lineBreak = "true";
+				}
+				
 				list.push(tspan);
 			}
 			

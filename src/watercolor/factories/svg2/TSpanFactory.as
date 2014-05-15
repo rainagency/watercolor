@@ -68,6 +68,7 @@ package watercolor.factories.svg2
 			var start:int = 0;
 			var cparagraph:ParagraphElement;
 			var xlist:Array = new Array();
+			var newParagraph:Boolean = false;
 			
 			for (var x:int = 0; x < lines; x++) {
 				
@@ -75,9 +76,12 @@ package watercolor.factories.svg2
 				
 				if (cparagraph && cparagraph != line.paragraph) {
 					start += cparagraph.textLength;
+					newParagraph = true;
+				} else {
+					newParagraph = false;
 				}
 				
-				xlist.push(ParagraphElementFactory.createSVGFromSpark(text, line.paragraph, line, start, element));
+				xlist.push(ParagraphElementFactory.createSVGFromSpark(text, line.paragraph, line, start, element, newParagraph));
 				
 				cparagraph = line.paragraph;
 			}
